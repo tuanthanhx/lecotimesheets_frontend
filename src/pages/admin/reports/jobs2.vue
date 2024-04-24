@@ -1,35 +1,21 @@
 <template>
   <v-container fluid class="pa-8">
-    <h1 class="text-h5 mb-8">Timesheets</h1>
-    <v-sheet class="mb-8" color="transparent">
-      <v-row>
-        <v-col cols="auto">
-          <v-row>
-            <v-col cols="auto">
-              <v-text-field style="width: 300px;" dense variant="solo" clearable label="Date Range"
-                append-inner-icon="mdi-calendar-month"></v-text-field>
-            </v-col>
-            <v-col cols="auto">
-              <v-select style="width: 300px;" dense variant="solo" clearable label="Jobs"
-                :items="['144 California', '145 Colorado', '146 Florida', '147 Georgia', '148 Texas']"></v-select>
-            </v-col>
-            <v-col cols="auto">
-              <v-select style="width: 200px;" dense variant="solo" clearable label="Member"
-                :items="['John Smith', 'Nancy Anderson']"></v-select>
-            </v-col>
-            <v-col cols="auto">
-              <v-select style="width: 200px;" dense variant="solo" clearable label="Status"
-                :items="['Submitted', 'Approved', 'Paid']"></v-select>
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="56" color="#2B343F">
-            Add Time
-          </v-btn>
-        </v-col>
-      </v-row>
+    <h1 class="text-h5 mb-8">Job Reports</h1>
+
+    <v-select style="width: 300px;" dense variant="solo" clearable label="Select Job" v-model="selectedJob"
+        :items="['144 California', '145 Colorado', '146 Florida', '147 Georgia', '148 Texas']"></v-select>
+
+    <h2 class="text-h6 mb-4">144 California</h2>
+
+    <v-sheet class="pa-8 mb-4" color="#ffffff" border="sm" rounded="lg">
+      Revenue: $50,000<br>
+      Material Costs: $10,000<br>
+      Labor Costs: $20,000 (Paid: $15,000, Unpaid: $5,000)<br>
+      Profit: $20,000
     </v-sheet>
+
+    <h2 class="text-h6 mb-4">Timesheets</h2>
+
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
       <v-data-table :headers="headers" :items="items" :items-per-page="-1">
         <template v-slot:[`item.break`]="{ item }">
@@ -44,6 +30,7 @@
 
 <script setup>
 import { ref } from 'vue';
+const selectedJob = ref('144 California');
 const headers = ref([
   { title: 'Date', value: 'date', width: 140 },
   { title: 'Job', value: 'job', width: 'auto' },
@@ -178,5 +165,4 @@ const items = ref([
 </script>
 
 <style lang="scss" scoped>
-
 </style>

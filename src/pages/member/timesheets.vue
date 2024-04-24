@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-8">
-    <h1 class="text-h5 mb-8">Timesheets</h1>
+    <h1 class="text-h5 mb-8">Timesheets (Member)</h1>
     <v-sheet class="mb-8" color="transparent">
       <v-row>
         <v-col cols="auto">
@@ -178,5 +178,9 @@ const items = ref([
 </script>
 
 <style lang="scss" scoped>
-
+.v-text-field .v-input__control .v-input__slot {
+  min-height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+}
 </style>

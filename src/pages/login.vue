@@ -12,12 +12,15 @@
             <v-card-title class="text-h5 pa-0 mb-6" align="center">Sign in to continue</v-card-title>
             <v-card-text class="pa-0">
               <v-form>
-                <v-text-field label="Username" variant="outlined" v-model="data.username"></v-text-field>
-                <v-text-field label="Password" variant="outlined" v-model="data.password" type="password"></v-text-field>
+                <v-text-field prepend-inner-icon="mdi-account" variant="outlined"
+                  v-model="data.username"></v-text-field>
+                <v-text-field prepend-inner-icon="mdi-lock" variant="outlined" v-model="data.password"
+                  type="password"></v-text-field>
               </v-form>
             </v-card-text>
             <v-card-actions class="pa-0">
-              <v-btn variant="tonal" block height="48" @click="submitLogin">Login</v-btn>
+              <v-btn class="text-none" variant="elevated" block width="160" height="56" color="#2B343F"
+                @click="submitLogin">Login</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -27,7 +30,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 
 const data = ref({
   username: '',
@@ -36,6 +42,7 @@ const data = ref({
 
 const submitLogin = () => {
   console.log('Login data submitted:', data.value);
+  router.push('/admin/timesheets'); // TODO: Sample action
 }
 
 </script>
