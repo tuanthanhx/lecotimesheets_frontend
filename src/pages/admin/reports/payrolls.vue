@@ -1,60 +1,90 @@
 <template>
-  <v-container style="background: orange;">
-    PAYROLLS
+  <v-container fluid class="pa-8">
+    <h1 class="text-h5 mb-8">Payroll Reports</h1>
 
-    <!-- <v-container
-      class="py-8 px-6"
-      fluid
-    >
+    <v-select style="width: 300px;" dense variant="solo" clearable label="Select Member" v-model="selectedMember"
+      :items="['John Smith', 'Nancy Anderson']"></v-select>
 
-    </v-container> -->
-    <!-- <v-responsive class="mx-auto pa-4" max-width="600">
-      <v-row justify="center" class="mb-4">
-        <v-col cols="12">
-          <v-img class="mx-auto" width="400" height="122" src="@/assets/img/logo.png" />
-        </v-col>
-      </v-row>
-      <v-row justify="center">
-        <v-col cols="12">
-          <v-card class="pa-8" elevation="4">
-            <v-card-title class="text-h5 pa-0 mb-6" align="center">TIMESHEET TEST</v-card-title>
-            <v-card-text class="pa-0">
-              <v-form>
-                <v-text-field label="Username" variant="outlined" v-model="data.username"></v-text-field>
-                <v-text-field label="Password" variant="outlined" v-model="data.password" type="password"></v-text-field>
-              </v-form>
-            </v-card-text>
-            <v-card-actions class="pa-0">
-              <v-btn variant="tonal" block height="48" @click="submitLogin">Login</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-responsive> -->
-    <!-- <aside class="common-sidebar">
-      SIDEBAR
-      <p>xxx</p>
-    </aside> -->
+    <template v-if="!selectedMember">
+      <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg">
+        <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
+          <v-card-text class="text-center">
+            <v-icon icon="mdi-text-search" size="64" color="rgba(0,0,0,.3)"></v-icon>
+            <p class="mt-4">Select a member to analyze data</p>
+          </v-card-text>
+        </v-card>
+      </v-sheet>
+    </template>
 
+    <template v-else>
+      <h2 class="text-h6 mb-4">{{ selectedMember }}</h2>
+      <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
+        <v-data-table :headers="headers" :items="items" :items-per-page="25">
+          <template v-slot:[`item.break`]="{ item }">
+            <v-icon v-if="item.break" icon="mdi-check-circle" />
+          </template>
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-btn class="text-none" @click="openModalPayrollDetail(item)" color="#2B343F" height="32">Detail</v-btn>
+          </template>
+        </v-data-table>
+      </v-sheet>
+    </template>
 
+    <ModalPayrollDetail v-model="isModalPayrollDetailVisible" @closeModal="closeModalPayrollDetail" />
 
   </v-container>
 </template>
 
 <script setup>
-// import { ref } from 'vue'
+import { ref } from 'vue';
 
-// const data = ref({
-//   username: '',
-//   password: ''
-// });
+const selectedMember = ref(null);
 
-// const submitLogin = () => {
-//   console.log('Login data submitted:', data.value);
-// }
+const headers = ref([
+  { title: 'Pay Date', value: 'date', width: 140 },
+  { title: 'Paid Amount', value: 'amount', width: 'auto' },
+  { title: '', value: 'actions', width: 140 },
+]);
+
+const items = ref([
+  {
+    id: 1,
+    date: '05-03-2024',
+    amount: 200,
+  },
+  {
+    id: 2,
+    date: '06-03-2024',
+    amount: 300,
+  },
+  {
+    id: 3,
+    date: '07-03-2024',
+    amount: 400,
+  },
+  {
+    id: 4,
+    date: '08-03-2024',
+    amount: 500,
+  },
+  {
+    id: 5,
+    date: '09-03-2024',
+    amount: 600,
+  },
+]);
+
+const isModalPayrollDetailVisible = ref(false);
+
+const openModalPayrollDetail = (item) => {
+  console.log(item);
+  isModalPayrollDetailVisible.value = true;
+};
+
+const closeModalPayrollDetail = () => {
+  isModalPayrollDetailVisible.value = false;
+};
 
 </script>
 
-<style lang="scss" scoped>
-  //
-</style>
+<style lang="scss" scoped></style>

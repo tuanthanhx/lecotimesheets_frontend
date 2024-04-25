@@ -27,7 +27,7 @@
       </v-row>
     </v-sheet>
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
-      <v-data-table :headers="headers" :items="items" :items-per-page="20">
+      <v-data-table :headers="headers" :items="items" :items-per-page="25">
         <template v-slot:[`item.break`]="{ item }">
           <v-icon v-if="item.break" icon="mdi-check-circle" />
         </template>
