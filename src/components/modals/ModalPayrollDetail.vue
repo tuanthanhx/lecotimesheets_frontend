@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isModalVisible" max-width="1200px">
     <v-card class="pa-4">
-      <v-card-text style="background:orange;" class="pa-0">
+      <v-card-text class="pa-0">
         <v-data-table :headers="headers" :items="items" :items-per-page="-1">
           <template v-slot:[`item.break`]="{ item }">
             <v-icon v-if="item.break" icon="mdi-check-circle" />

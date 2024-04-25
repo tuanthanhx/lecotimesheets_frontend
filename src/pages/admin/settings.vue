@@ -56,48 +56,45 @@
   </v-container>
 </template>
 
-<script>
-export default {
-  data: () => ({
-    valid: false,
-    username: 'admin',
-    lastname: '',
-    show1: false,
-    show2: false,
-    password1: 'Password',
-    password2: 'Password',
-    rules: {
-      required: value => !!value || 'Required.',
-      min: v => v.length >= 8 || 'Min 8 characters',
-      emailMatch: () => (`The email and password you entered don't match`),
-    },
-    nameRules: [
-      value => {
-        if (value) return true
+<script setup>
+import { ref } from 'vue';
 
-        return 'Name is required.'
-      },
-      value => {
-        if (value?.length <= 10) return true
+const valid = ref(false);
+const username = ref('admin');
+const lastname = ref('');
+const show1 = ref(false);
+const show2 = ref(false);
+const password1 = ref('Password');
+const password2 = ref('Password');
+const email = ref('');
 
-        return 'Name must be less than 10 characters.'
-      },
-    ],
-    email: '',
-    emailRules: [
-      value => {
-        if (value) return true
+const rules = {
+  required: value => !!value || 'Required.',
+  min: v => v.length >= 8 || 'Min 8 characters',
+  emailMatch: () => (`The email and password you entered don't match`),
+};
 
-        return 'E-mail is requred.'
-      },
-      value => {
-        if (/.+@.+\..+/.test(value)) return true
+const nameRules = [
+  value => {
+    if (value) return true
+    return 'Name is required.'
+  },
+  value => {
+    if (value?.length <= 10) return true
+    return 'Name must be less than 10 characters.'
+  },
+];
 
-        return 'E-mail must be valid.'
-      },
-    ],
-  }),
-}
+const emailRules = [
+  value => {
+    if (value) return true
+    return 'E-mail is required.'
+  },
+  value => {
+    if (/.+@.+\..+/.test(value)) return true
+    return 'E-mail must be valid.'
+  },
+];
 </script>
 
 <style lang="scss" scoped>

@@ -16,7 +16,7 @@
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="56" color="#2B343F">
+          <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="56" color="#2B343F" @click="openModalMemberAdd">
             Add Member
           </v-btn>
         </v-col>
@@ -29,6 +29,8 @@
         </template>
       </v-data-table>
     </v-sheet>
+
+    <ModalMemberAdd v-model="isModalMemberAddVisible" @closeModal="closeModalMemberAdd" />
 
   </v-container>
 </template>
@@ -96,6 +98,16 @@ const items = ref([
     status: 'Active',
   },
 ]);
+
+const isModalMemberAddVisible = ref(false);
+
+const openModalMemberAdd = () => {
+  isModalMemberAddVisible.value = true;
+};
+
+const closeModalMemberAdd = () => {
+  isModalMemberAddVisible.value = false;
+};
 </script>
 
 <style lang="scss" scoped>
