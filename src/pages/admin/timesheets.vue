@@ -44,6 +44,30 @@
 
 <script setup>
 import { ref } from 'vue';
+import axios from '../../plugins/axios';
+
+// try {
+//   axios.post('/auth/me').then((res) => {
+//     if (res?.data) {
+//       console.log(res.data);
+//     }
+//   });
+// } catch (error) {
+//   console.error('An error occurred');
+//   console.error(error);
+// }
+
+// try {
+//   axios.post('/auth/is_login').then((res) => {
+//     if (res?.data) {
+//       console.log(res.data);
+//     }
+//   });
+// } catch (error) {
+//   console.error('An error occurred');
+//   console.error(error);
+// }
+
 const headers = ref([
   { title: 'Date', value: 'date', width: 140 },
   { title: 'Job', value: 'job', width: 'auto' },
@@ -177,6 +201,4 @@ const items = ref([
 ]);
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

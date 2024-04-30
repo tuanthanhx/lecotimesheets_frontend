@@ -13,8 +13,8 @@
             <v-card-text class="pa-0">
               <v-form>
                 <v-text-field prepend-inner-icon="mdi-account" variant="outlined"
-                  v-model="data.username"></v-text-field>
-                <v-text-field prepend-inner-icon="mdi-lock" variant="outlined" v-model="data.password"
+                  v-model="username"></v-text-field>
+                <v-text-field prepend-inner-icon="mdi-lock" variant="outlined" v-model="password"
                   type="password"></v-text-field>
               </v-form>
             </v-card-text>
@@ -31,18 +31,27 @@
 
 <script setup>
 import { ref } from 'vue';
+import axios from '../plugins/axios';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
+const username = ref('incrxi@gmail.com'); // TODO: Test
+const password = ref('12345678'); // TODO: Test
 
-const data = ref({
-  username: '',
-  password: ''
-});
-
-const submitLogin = () => {
-  console.log('Login data submitted:', data.value);
-  router.push('/admin/timesheets'); // TODO: Sample action
+const submitLogin = async () => {
+  try {
+    const response = await axios.post('/auth/login', {
+      email: username.value,
+      password: password.value,
+    });
+    if (response?.data) {
+      localStorage.setItem('access_token', response.data.access_token);
+      router.push('/admin/timesheets');
+    }
+  } catch (error) {
+    console.error('An error occurred');
+    console.error(error);
+  }
 }
 
 </script>
