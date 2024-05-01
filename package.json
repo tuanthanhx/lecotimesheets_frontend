@@ -13,6 +13,7 @@
     "@vee-validate/yup": "^4.12.6",
     "axios": "^1.6.8",
     "core-js": "^3.34.0",
+    "dayjs": "^1.11.11",
     "roboto-fontface": "*",
     "vee-validate": "^4.12.6",
     "vue": "^3.4.0",

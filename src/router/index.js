@@ -5,7 +5,7 @@
  */
 
 // Composables
-import axios from '../plugins/axios';
+import axios from '@/plugins/axios';
 import { createRouter, createWebHistory } from 'vue-router/auto';
 import { setupLayouts } from 'virtual:generated-layouts';
 

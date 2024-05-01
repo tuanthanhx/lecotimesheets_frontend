@@ -79,7 +79,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from '../../plugins/axios';
+import axios from '@/plugins/axios';
 
 // try {
 //   axios.post('/auth/me').then((res) => {

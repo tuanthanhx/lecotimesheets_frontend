@@ -72,7 +72,7 @@ import { ref } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { useRouter } from 'vue-router';
-import axios from '../plugins/axios';
+import axios from '@/plugins/axios';
 
 const router = useRouter();
 const isLoading = ref(false);

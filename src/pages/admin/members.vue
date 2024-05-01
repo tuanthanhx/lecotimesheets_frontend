@@ -13,6 +13,8 @@
                 clearable
                 label="Search Members"
                 append-inner-icon="mdi-magnify"
+                v-model="searchKeyword"
+                @update:modelValue="search"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
@@ -22,7 +24,11 @@
                 variant="solo"
                 clearable
                 label="Status"
-                :items="['Active', 'Deactivated']"
+                :items="statuses"
+                item-title="name"
+                item-value="id"
+                v-model="searchStatus"
+                @update:modelValue="search"
               ></v-select>
             </v-col>
           </v-row>
@@ -42,9 +48,15 @@
       </v-row>
     </v-sheet>
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
-      <v-data-table :headers="headers" :items="items" :items-per-page="25">
-        <template v-slot:[`item.break`]="{ item }">
-          <v-icon v-if="item.break" icon="mdi-check-circle" />
+      <v-data-table :headers="headers" :items="members" :items-per-page="25">
+        <template v-slot:[`item.dob`]="{ item }">
+          {{ formatDateString(item.dob) }}
+        </template>
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ formatDateString(item.created_at) }}
+        </template>
+        <template v-slot:[`item.status`]="{ item }">
+          {{ item.status === 1 ? 'Active' : 'Deactivated' }}
         </template>
       </v-data-table>
     </v-sheet>
@@ -57,68 +69,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from '@/plugins/axios';
+import { formatDateString } from '@/plugins/utils';
+
 const headers = ref([
-  { title: 'Username', value: 'username', width: 140 },
-  { title: 'Full Name', value: 'fullname', width: 140 },
-  { title: 'D.O.B', value: 'dob', width: 140 },
-  { title: 'Address', value: 'address', width: 'auto' },
+  { title: 'Created On', value: 'created_at', width: 120 },
+  { title: 'Login', value: 'username', width: 140 },
+  { title: 'Full Name', value: 'name', width: 140 },
+  { title: 'D.O.B', value: 'dob', width: 120 },
   { title: 'Phone', value: 'phone', width: 140 },
-  { title: 'Hourly Rate', value: 'rate', width: 140 },
-  { title: 'Status', value: 'status', width: 140 },
+  { title: 'Address', value: 'address', width: 'auto' },
+  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
+  { title: 'Status', value: 'status', width: 120 },
 ]);
-const items = ref([
+
+const searchKeyword = ref('');
+const searchStatus = ref(1);
+
+const statuses = ref([
   {
     id: 1,
-    username: 'johnsm',
-    fullname: 'John Smith',
-    dob: '01-02-1993',
-    address: '100 Sample st.',
-    phone: '021 234-5678',
-    rate: 20,
-    status: 'Active',
+    name: 'Active',
   },
   {
     id: 2,
-    username: 'johnsm',
-    fullname: 'John Smith',
-    dob: '01-02-1993',
-    address: '100 Sample st.',
-    phone: '021 234-5678',
-    rate: 20,
-    status: 'Active',
-  },
-  {
-    id: 3,
-    username: 'johnsm',
-    fullname: 'John Smith',
-    dob: '01-02-1993',
-    address: '100 Sample st.',
-    phone: '021 234-5678',
-    rate: 20,
-    status: 'Active',
-  },
-  {
-    id: 4,
-    username: 'johnsm',
-    fullname: 'John Smith',
-    dob: '01-02-1993',
-    address: '100 Sample st.',
-    phone: '021 234-5678',
-    rate: 20,
-    status: 'Active',
-  },
-  {
-    id: 5,
-    username: 'johnsm',
-    fullname: 'John Smith',
-    dob: '01-02-1993',
-    address: '100 Sample st.',
-    phone: '021 234-5678',
-    rate: 20,
-    status: 'Active',
+    name: 'Deactivated',
   },
 ]);
+
+const members = ref([]);
 
 const isModalMemberAddVisible = ref(false);
 
@@ -129,6 +109,23 @@ const openModalMemberAdd = () => {
 const closeModalMemberAdd = () => {
   isModalMemberAddVisible.value = false;
 };
+
+const search = async () => {
+  try {
+    const response = await axios.get(
+      `/users?keyword=${searchKeyword.value || ''}&status=${searchStatus.value ?? ''}`,
+    );
+    if (response?.data) {
+      members.value = response.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(() => {
+  search();
+});
 </script>
 
 <style lang="scss" scoped></style>
