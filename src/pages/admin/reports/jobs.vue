@@ -2,14 +2,35 @@
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Job Reports</h1>
 
-    <v-select style="width: 300px;" dense variant="solo" clearable label="Select Job" v-model="selectedJob"
-      :items="['144 California', '145 Colorado', '146 Florida', '147 Georgia', '148 Texas']"></v-select>
+    <v-select
+      style="width: 300px"
+      dense
+      variant="solo"
+      clearable
+      label="Select Job"
+      v-model="selectedJob"
+      :items="[
+        '144 California',
+        '145 Colorado',
+        '146 Florida',
+        '147 Georgia',
+        '148 Texas',
+      ]"
+    ></v-select>
 
     <template v-if="!selectedJob">
       <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg">
-        <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
+        <v-card
+          class="d-flex flex-nowrap justify-center align-center"
+          min-height="260"
+          elevation="0"
+        >
           <v-card-text class="text-center">
-            <v-icon icon="mdi-text-search" size="64" color="rgba(0,0,0,.3)"></v-icon>
+            <v-icon
+              icon="mdi-text-search"
+              size="64"
+              color="rgba(0,0,0,.3)"
+            ></v-icon>
             <p class="mt-4">Select a job to analyze data</p>
           </v-card-text>
         </v-card>
@@ -19,9 +40,9 @@
     <template v-else>
       <h2 class="text-h6 mb-4">{{ selectedJob }}</h2>
       <v-sheet class="pa-8 mb-4" color="#ffffff" border="sm" rounded="lg">
-        Revenue: $50,000<br>
-        Material Costs: $10,000<br>
-        Labor Costs: $20,000 (Paid: $15,000, Unpaid: $5,000)<br>
+        Revenue: $50,000<br />
+        Material Costs: $10,000<br />
+        Labor Costs: $20,000 (Paid: $15,000, Unpaid: $5,000)<br />
         Profit: $20,000
       </v-sheet>
 
@@ -35,7 +56,6 @@
         </v-data-table>
       </v-sheet>
     </template>
-
   </v-container>
 </template>
 

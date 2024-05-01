@@ -6,25 +6,61 @@
         <v-col cols="auto">
           <v-row>
             <v-col cols="auto">
-              <v-text-field style="width: 300px;" dense variant="solo" clearable label="Date Range"
-                append-inner-icon="mdi-calendar-month"></v-text-field>
+              <v-text-field
+                style="width: 300px"
+                dense
+                variant="solo"
+                clearable
+                label="Date Range"
+                append-inner-icon="mdi-calendar-month"
+              ></v-text-field>
             </v-col>
             <v-col cols="auto">
-              <v-select style="width: 300px;" dense variant="solo" clearable label="Jobs"
-                :items="['144 California', '145 Colorado', '146 Florida', '147 Georgia', '148 Texas']"></v-select>
+              <v-select
+                style="width: 300px"
+                dense
+                variant="solo"
+                clearable
+                label="Jobs"
+                :items="[
+                  '144 California',
+                  '145 Colorado',
+                  '146 Florida',
+                  '147 Georgia',
+                  '148 Texas',
+                ]"
+              ></v-select>
             </v-col>
             <v-col cols="auto">
-              <v-select style="width: 200px;" dense variant="solo" clearable label="Member"
-                :items="['John Smith', 'Nancy Anderson']"></v-select>
+              <v-select
+                style="width: 200px"
+                dense
+                variant="solo"
+                clearable
+                label="Member"
+                :items="['John Smith', 'Nancy Anderson']"
+              ></v-select>
             </v-col>
             <v-col cols="auto">
-              <v-select style="width: 200px;" dense variant="solo" clearable label="Status"
-                :items="['Submitted', 'Approved', 'Paid']"></v-select>
+              <v-select
+                style="width: 200px"
+                dense
+                variant="solo"
+                clearable
+                label="Status"
+                :items="['Submitted', 'Approved', 'Paid']"
+              ></v-select>
             </v-col>
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="56" color="#2B343F">
+          <v-btn
+            class="text-none"
+            prepend-icon="mdi-plus"
+            width="160"
+            height="56"
+            color="#2B343F"
+          >
             Add Time
           </v-btn>
         </v-col>
@@ -38,7 +74,6 @@
         <template #bottom></template>
       </v-data-table>
     </v-sheet>
-
   </v-container>
 </template>
 

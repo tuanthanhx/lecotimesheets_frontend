@@ -6,17 +6,36 @@
         <v-col cols="auto">
           <v-row>
             <v-col cols="auto">
-              <v-text-field style="width: 300px;" dense variant="solo" clearable label="Search Members"
-                append-inner-icon="mdi-magnify"></v-text-field>
+              <v-text-field
+                style="width: 300px"
+                dense
+                variant="solo"
+                clearable
+                label="Search Members"
+                append-inner-icon="mdi-magnify"
+              ></v-text-field>
             </v-col>
             <v-col cols="auto">
-              <v-select style="width: 200px;" dense variant="solo" clearable label="Status"
-                :items="['Active', 'Deactivated']"></v-select>
+              <v-select
+                style="width: 200px"
+                dense
+                variant="solo"
+                clearable
+                label="Status"
+                :items="['Active', 'Deactivated']"
+              ></v-select>
             </v-col>
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="56" color="#2B343F" @click="openModalMemberAdd">
+          <v-btn
+            class="text-none"
+            prepend-icon="mdi-plus"
+            width="160"
+            height="56"
+            color="#2B343F"
+            @click="openModalMemberAdd"
+          >
             Add Member
           </v-btn>
         </v-col>
@@ -30,8 +49,10 @@
       </v-data-table>
     </v-sheet>
 
-    <ModalMemberAdd v-model="isModalMemberAddVisible" @closeModal="closeModalMemberAdd" />
-
+    <ModalMemberAdd
+      v-model="isModalMemberAddVisible"
+      @closeModal="closeModalMemberAdd"
+    />
   </v-container>
 </template>
 
@@ -110,6 +131,4 @@ const closeModalMemberAdd = () => {
 };
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

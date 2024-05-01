@@ -6,8 +6,8 @@
 
 // Composables
 import axios from '../plugins/axios';
-import { createRouter, createWebHistory } from 'vue-router/auto'
-import { setupLayouts } from 'virtual:generated-layouts'
+import { createRouter, createWebHistory } from 'vue-router/auto';
+import { setupLayouts } from 'virtual:generated-layouts';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,8 +16,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (!to.path.startsWith('/log')) {
-    axios.post('/auth/is_login')
-      .then(response => {
+    axios
+      .post('/auth/is_login')
+      .then((response) => {
         if (response.data) {
           next();
         } else {
@@ -32,4 +33,4 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-export default router
+export default router;

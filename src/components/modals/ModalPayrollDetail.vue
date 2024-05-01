@@ -10,8 +10,15 @@
         </v-data-table>
       </v-card-text>
       <v-card-actions class="mt-4 justify-center">
-        <v-btn class="text-none" variant="elevated" width="120" height="40" color="#2B343F"
-          @click="closeModal">Close</v-btn>
+        <v-btn
+          class="text-none"
+          variant="elevated"
+          width="120"
+          height="40"
+          color="#2B343F"
+          @click="closeModal"
+          >Close</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>

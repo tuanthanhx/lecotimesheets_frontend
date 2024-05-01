@@ -3,25 +3,63 @@
     <v-responsive class="mx-auto pa-4" max-width="600">
       <v-row justify="center" class="mb-4">
         <v-col cols="12">
-          <v-img class="mx-auto" width="440" height="132" src="@/assets/img/logo.png" />
+          <v-img
+            class="mx-auto"
+            width="440"
+            height="132"
+            src="@/assets/img/logo.png"
+          />
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col cols="12">
           <v-card class="pa-8" elevation="4">
-            <v-card-title class="text-h5 pa-0 mb-6" align="center">Sign in to continue</v-card-title>
-            <v-card-text class="pa-0">
-              <v-form>
-                <v-text-field prepend-inner-icon="mdi-account" variant="outlined"
-                  v-model="username"></v-text-field>
-                <v-text-field prepend-inner-icon="mdi-lock" variant="outlined" v-model="password"
-                  type="password"></v-text-field>
-              </v-form>
-            </v-card-text>
-            <v-card-actions class="pa-0">
-              <v-btn class="text-none" variant="elevated" block width="160" height="56" color="#2B343F"
-                @click="submitLogin">Login</v-btn>
-            </v-card-actions>
+            <form @submit.prevent="submit">
+              <v-card-title class="text-h5 pa-0 mb-6" align="center"
+                >Sign in to continue</v-card-title
+              >
+              <v-card-text class="pa-0">
+                <v-text-field
+                  class="mb-2"
+                  prepend-inner-icon="mdi-account"
+                  variant="outlined"
+                  v-model="username"
+                  v-bind="usernameAttrs"
+                  :error-messages="errors.username"
+                ></v-text-field>
+                <v-text-field
+                  class="mb-2"
+                  prepend-inner-icon="mdi-lock"
+                  variant="outlined"
+                  v-model="password"
+                  v-bind="passwordAttrs"
+                  :error-messages="errors.password"
+                  type="password"
+                ></v-text-field>
+              </v-card-text>
+              <v-card-actions class="pa-0">
+                <v-btn
+                  type="submit"
+                  class="text-none"
+                  variant="elevated"
+                  block
+                  width="160"
+                  height="56"
+                  color="#2B343F"
+                  :loading="isLoading"
+                  :disabled="!meta.valid"
+                  >Login</v-btn
+                >
+              </v-card-actions>
+              <v-alert
+                class="mt-8"
+                type="error"
+                v-if="formAlert"
+                transition="scale-transition"
+              >
+                {{ formAlert }}</v-alert
+              >
+            </form>
           </v-card>
         </v-col>
       </v-row>
@@ -31,27 +69,41 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from '../plugins/axios';
+import { useForm } from 'vee-validate';
+import * as yup from 'yup';
 import { useRouter } from 'vue-router';
+import axios from '../plugins/axios';
+
 const router = useRouter();
+const isLoading = ref(false);
+const formAlert = ref('');
 
-const username = ref('incrxi@gmail.com'); // TODO: Test
-const password = ref('12345678'); // TODO: Test
+const { meta, errors, defineField, handleSubmit } = useForm({
+  validationSchema: yup.object({
+    username: yup.string().required(),
+    password: yup.string().min(6).required(),
+  }),
+});
 
-const submitLogin = async () => {
+const [username, usernameAttrs] = defineField('username');
+const [password, passwordAttrs] = defineField('password');
+
+const submit = handleSubmit(async (values) => {
+  isLoading.value = true;
+  formAlert.value = '';
   try {
     const response = await axios.post('/auth/login', {
-      email: username.value,
-      password: password.value,
+      username: values.username,
+      password: values.password,
     });
     if (response?.data) {
       localStorage.setItem('access_token', response.data.access_token);
       router.push('/admin/timesheets');
     }
   } catch (error) {
-    console.error('An error occurred');
+    isLoading.value = false;
+    formAlert.value = 'Invalid username or password.';
     console.error(error);
   }
-}
-
+});
 </script>

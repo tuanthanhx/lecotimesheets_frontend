@@ -4,11 +4,24 @@
 
     <v-row>
       <v-col cols="auto">
-        <v-select style="width: 300px;" dense variant="solo" clearable label="Select Member" v-model="selectedMember"
-          :items="['John Smith', 'Nancy Anderson']"></v-select>
+        <v-select
+          style="width: 300px"
+          dense
+          variant="solo"
+          clearable
+          label="Select Member"
+          v-model="selectedMember"
+          :items="['John Smith', 'Nancy Anderson']"
+        ></v-select>
       </v-col>
       <v-col cols="auto" class="ml-auto" v-if="selectedMember">
-        <v-btn class="text-none" prepend-icon="mdi-currency-usd" width="160" height="56" color="#2B343F">
+        <v-btn
+          class="text-none"
+          prepend-icon="mdi-currency-usd"
+          width="160"
+          height="56"
+          color="#2B343F"
+        >
           Pay now
         </v-btn>
       </v-col>
@@ -16,9 +29,17 @@
 
     <template v-if="!selectedMember">
       <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg">
-        <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
+        <v-card
+          class="d-flex flex-nowrap justify-center align-center"
+          min-height="260"
+          elevation="0"
+        >
           <v-card-text class="text-center">
-            <v-icon icon="mdi-text-search" size="64" color="rgba(0,0,0,.3)"></v-icon>
+            <v-icon
+              icon="mdi-text-search"
+              size="64"
+              color="rgba(0,0,0,.3)"
+            ></v-icon>
             <p class="mt-4">Select a member to analyze data</p>
           </v-card-text>
         </v-card>
@@ -36,7 +57,6 @@
         </v-data-table>
       </v-sheet>
     </template>
-
   </v-container>
 </template>
 
