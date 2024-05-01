@@ -1,28 +1,33 @@
 <template>
-  <div>Logging out...</div>
+  <v-container fluid class="fill-height justify-center">
+    <div class="text-center">Logging out...</div>
+  </v-container>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
 import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from '../plugins/axios';
 
-onMounted(() => {
-  // Function to clear localStorage
+const router = useRouter();
+
+onMounted(async () => {
+  try {
+    await axios.post('/auth/logout');
+  } catch (error) {
+    console.error('Logout failed', error);
+  }
+  // Clear Local Storage
   localStorage.clear();
 
-  // Function to clear all cookies
-  function clearCookies() {
+  // Clear Cookies
+  const clearCookies = () => {
     document.cookie.split(';').forEach((c) => {
       document.cookie = c.replace(/^ +/, '')
         .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
     });
   }
-
-  // Clear cookies
   clearCookies();
-
-  // Use useRouter to handle redirection
-  const router = useRouter();
 
   // Redirect to login page
   router.push('/login');

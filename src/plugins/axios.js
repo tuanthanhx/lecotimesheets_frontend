@@ -17,7 +17,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(response => response, async error => {
   const originalRequest = error.config;
-  if (error.response.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/refresh') {
+  if (error.response.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/refresh' && originalRequest.url !== '/auth/logout') {
     originalRequest._retry = true;
     return axios.post('/auth/refresh', {}, {
       headers: {
