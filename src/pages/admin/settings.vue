@@ -6,10 +6,7 @@
         <v-row>
           <v-col cols="12">
             <h3 class="text-subtitle-2 mb-2">Username</h3>
-            <v-text-field
-              variant="solo-filled"
-              v-model="username"
-            ></v-text-field>
+            <v-text-field variant="solo-filled" v-model="username"></v-text-field>
           </v-col>
         </v-row>
         <v-row>
@@ -53,19 +50,12 @@
         <v-row>
           <v-col cols="12">
             <h3 class="text-subtitle-2 mb-2">Language</h3>
-            <v-select
-              style="width: 200px"
-              variant="solo-filled"
-              value="Default"
-              :items="['Default', 'English', 'Tiếng Việt']"
-            ></v-select>
+            <v-select style="width: 200px" variant="solo-filled" value="Default" :items="['Default', 'English', 'Tiếng Việt']"></v-select>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="auto">
-            <v-btn class="text-none" width="160" height="56" color="#2B343F">
-              Save
-            </v-btn>
+            <v-btn class="text-none" width="160" height="56" color="#2B343F"> Save </v-btn>
           </v-col>
           <v-col cols="auto">
             <v-btn class="text-none" width="160" height="56"> Cancel </v-btn>

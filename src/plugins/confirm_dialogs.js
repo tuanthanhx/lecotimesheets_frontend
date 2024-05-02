@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 
-export function useConfirmDialog () {
+export function useConfirmDialog() {
   const isConfirmDialogVisible = ref(false);
   const confirmTitle = ref('');
   const confirmMessage = ref('');

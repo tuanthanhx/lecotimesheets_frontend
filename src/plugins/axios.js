@@ -41,10 +41,8 @@ axios.interceptors.response.use(
           if (res.status === 200) {
             const newAccessToken = res.data.access_token;
             localStorage.setItem('access_token', newAccessToken);
-            axios.defaults.headers.common['Authorization'] =
-              `Bearer ${newAccessToken}`;
-            originalRequest.headers['Authorization'] =
-              `Bearer ${newAccessToken}`;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
             return axios(originalRequest);
           }
           return Promise.reject(res);

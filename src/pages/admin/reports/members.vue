@@ -2,28 +2,13 @@
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Member Reports</h1>
 
-    <v-select
-      style="width: 300px"
-      variant="solo"
-      clearable
-      label="Select Member"
-      v-model="selectedMember"
-      :items="['John Smith', 'Nancy Anderson']"
-    ></v-select>
+    <v-select style="width: 300px" variant="solo" clearable label="Select Member" v-model="selectedMember" :items="['John Smith', 'Nancy Anderson']"></v-select>
 
     <template v-if="!selectedMember">
       <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg">
-        <v-card
-          class="d-flex flex-nowrap justify-center align-center"
-          min-height="260"
-          elevation="0"
-        >
+        <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
           <v-card-text class="text-center">
-            <v-icon
-              icon="mdi-text-search"
-              size="64"
-              color="rgba(0,0,0,.3)"
-            ></v-icon>
+            <v-icon icon="mdi-text-search" size="64" color="rgba(0,0,0,.3)"></v-icon>
             <p class="mt-4">Select a member to analyze data</p>
           </v-card-text>
         </v-card>

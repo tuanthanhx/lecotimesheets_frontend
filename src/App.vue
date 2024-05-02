@@ -13,9 +13,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const shouldShowSidebar = computed(
-  () => route.name?.startsWith('/admin') || route.name?.startsWith('/member'),
-);
+const shouldShowSidebar = computed(() => route.name?.startsWith('/admin') || route.name?.startsWith('/member'));
 </script>
 
 <style lang="scss" scoped>
