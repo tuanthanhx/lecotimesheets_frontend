@@ -6,7 +6,6 @@
       <v-col cols="auto">
         <v-select
           style="width: 300px"
-          dense
           variant="solo"
           clearable
           label="Select Member"

@@ -8,7 +8,6 @@
             <v-col cols="auto">
               <v-text-field
                 style="width: 300px"
-                dense
                 variant="solo"
                 clearable
                 label="Search Jobs"
@@ -18,7 +17,6 @@
             <v-col cols="auto">
               <v-text-field
                 style="width: 300px"
-                dense
                 variant="solo"
                 clearable
                 label="Date Range"
@@ -28,7 +26,6 @@
             <v-col cols="auto">
               <v-select
                 style="width: 200px"
-                dense
                 variant="solo"
                 clearable
                 label="Status"

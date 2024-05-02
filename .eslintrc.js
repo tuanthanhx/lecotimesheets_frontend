@@ -11,6 +11,7 @@ module.exports = {
       {
         semi: true,
         singleQuote: true,
+        printWidth: 160,
       },
     ],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

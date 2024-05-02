@@ -55,7 +55,6 @@
             <h3 class="text-subtitle-2 mb-2">Language</h3>
             <v-select
               style="width: 200px"
-              dense
               variant="solo-filled"
               value="Default"
               :items="['Default', 'English', 'Tiếng Việt']"
