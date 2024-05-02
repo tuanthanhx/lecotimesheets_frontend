@@ -102,7 +102,11 @@ const submit = handleSubmit(async (values) => {
     }
   } catch (error) {
     isLoading.value = false;
-    formAlert.value = 'Invalid username or password.';
+    if (error?.response?.data?.error === 'Deactivated') {
+      formAlert.value = 'Your account is deactivated.';
+    } else {
+      formAlert.value = 'Invalid username or password.';
+    }
     console.error(error);
   }
 });

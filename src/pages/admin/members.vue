@@ -58,6 +58,38 @@
         <template v-slot:[`item.status`]="{ item }">
           {{ item.status === 1 ? 'Active' : 'Deactivated' }}
         </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
+            </template>
+            <v-list>
+              <v-list-item link>
+                <v-list-item-title>Detail</v-list-item-title>
+              </v-list-item>
+              <v-list-item link>
+                <v-list-item-title>Edit</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                link
+                @click="activateMember(item)"
+                v-if="item.status === 2"
+              >
+                <v-list-item-title>Activate</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                link
+                @click="deactivateMember(item)"
+                v-if="item.status === 1"
+              >
+                <v-list-item-title>Deactivate</v-list-item-title>
+              </v-list-item>
+              <v-list-item link @click="deleteMember(item)">
+                <v-list-item-title>Delete</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </template>
       </v-data-table>
     </v-sheet>
 
@@ -76,16 +108,17 @@ import { formatDateString } from '@/plugins/utils';
 const headers = ref([
   { title: 'Created On', value: 'created_at', width: 120 },
   { title: 'Login', value: 'username', width: 140 },
-  { title: 'Full Name', value: 'name', width: 140 },
+  { title: 'Full Name', value: 'name', width: 180 },
   { title: 'D.O.B', value: 'dob', width: 120 },
   { title: 'Phone', value: 'phone', width: 140 },
   { title: 'Address', value: 'address', width: 'auto' },
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
   { title: 'Status', value: 'status', width: 120 },
+  { title: '', value: 'actions', width: 80 },
 ]);
 
 const searchKeyword = ref('');
-const searchStatus = ref(1);
+const searchStatus = ref(null);
 
 const statuses = ref([
   {
@@ -118,6 +151,33 @@ const search = async () => {
     if (response?.data) {
       members.value = response.data;
     }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const activateMember = async (item) => {
+  try {
+    await axios.post(`/users/${item.id}/activate`);
+    search();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deactivateMember = async (item) => {
+  try {
+    await axios.post(`/users/${item.id}/deactivate`);
+    search();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteMember = async (item) => {
+  try {
+    await axios.delete(`/users/${item.id}`);
+    search();
   } catch (error) {
     console.error(error);
   }

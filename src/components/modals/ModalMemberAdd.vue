@@ -2,7 +2,7 @@
   <v-dialog v-model="isModalVisible" max-width="1200px">
     <v-card class="pa-4">
       <v-card-title>
-        <span class="headline">Add member</span>
+        <span class="headline">Add Member</span>
       </v-card-title>
       <v-card-text class="pa-4">
         <v-responsive max-width="900">
