@@ -1,38 +1,42 @@
 <template>
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Members</h1>
-    <v-sheet class="mb-8" color="transparent">
+    <v-sheet class="mb-2" color="transparent">
       <v-row>
         <v-col cols="auto">
           <v-row>
             <v-col cols="auto">
+              <h3 class="text-subtitle-2 mb-2">Keyword</h3>
               <v-text-field
                 style="width: 300px"
                 variant="solo"
+                density="compact"
                 clearable
-                label="Search Members"
                 append-inner-icon="mdi-magnify"
                 v-model="searchKeyword"
+                placeholder="Search items"
                 @update:modelValue="search"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
+              <h3 class="text-subtitle-2 mb-2">Status</h3>
               <v-select
                 style="width: 200px"
                 variant="solo"
+                density="compact"
                 clearable
-                label="Status"
                 :items="statuses"
                 item-title="name"
                 item-value="id"
                 v-model="searchStatus"
+                placeholder="All statuses"
                 @update:modelValue="search"
               ></v-select>
             </v-col>
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="56" color="#2B343F" @click="openModalMemberAdd"> Add Member </v-btn>
+          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalMemberAdd"> Add Member </v-btn>
         </v-col>
       </v-row>
     </v-sheet>
@@ -101,10 +105,7 @@ const { isConfirmDialogVisible, confirmTitle, confirmMessage, confirmButtonText,
 const headers = ref([
   { title: 'Created On', value: 'created_at', width: 120 },
   { title: 'Login', value: 'username', width: 140 },
-  { title: 'Full Name', value: 'name', width: 180 },
-  { title: 'D.O.B', value: 'dob', width: 120 },
-  { title: 'Phone', value: 'phone', width: 140 },
-  { title: 'Address', value: 'address', width: 'auto' },
+  { title: 'Full Name', value: 'name', width: 'auto' },
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
   { title: 'Status', value: 'status', width: 120 },
   { title: '', value: 'actions', width: 80 },

@@ -9,6 +9,7 @@
         v-bind="props"
         append-inner-icon="mdi-calendar"
         :variant="variant"
+        :density="density"
         hide-details
       ></v-text-field>
     </template>
@@ -22,7 +23,7 @@
 import { ref, computed, watch, defineProps, defineEmits } from 'vue';
 import { formatDateString } from '@/plugins/utils';
 
-const { label, variant, color, modelValue, maxWidth } = defineProps(['label', 'variant', 'color', 'modelValue', 'maxWidth']);
+const { label, variant, density, color, modelValue, maxWidth } = defineProps(['label', 'variant', 'density', 'color', 'modelValue', 'maxWidth']);
 
 const emit = defineEmits(['update:modelValue']);
 

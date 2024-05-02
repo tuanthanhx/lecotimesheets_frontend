@@ -8,16 +8,27 @@
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
+                <h3 class="text-subtitle-2 mb-2">Full Name <span class="text-red">*</span></h3>
+                <v-text-field variant="solo-filled" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
+              </v-col>
+              <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Login <span class="text-red">*</span></h3>
-                <v-text-field variant="solo-filled" v-model="username" v-bind="username_attrs" :error-messages="errors.username"></v-text-field>
+                <v-text-field
+                  variant="solo-filled"
+                  density="compact"
+                  v-model="username"
+                  v-bind="username_attrs"
+                  :error-messages="errors.username"
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Password <span class="text-red">*</span></h3>
                 <v-text-field
                   variant="solo-filled"
+                  density="compact"
                   autocomplete="new-password"
                   v-model="password"
                   v-bind="password_attrs"
@@ -28,12 +39,11 @@
                   @click:append-inner="showPassword = !showPassword"
                 ></v-text-field>
               </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Confirm Password <span class="text-red">*</span></h3>
                 <v-text-field
                   variant="solo-filled"
+                  density="compact"
                   autocomplete="new-password"
                   v-model="password_confirm"
                   v-bind="password_confirm_attrs"
@@ -46,49 +56,26 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12">
-                <h3 class="text-subtitle-2 mb-2">Full Name <span class="text-red">*</span></h3>
-                <v-text-field variant="solo-filled" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">D.O.B</h3>
-                <date-picker variant="solo-filled" v-model="dob" v-bind="dob_attrs" maxWidth="328px"></date-picker>
+                <date-picker variant="solo-filled" density="compact" v-model="dob" v-bind="dob_attrs"></date-picker>
               </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Phone</h3>
-                <v-text-field variant="solo-filled" v-model="phone" v-bind="phone_attrs" :error-messages="errors.phone"></v-text-field>
+                <v-text-field variant="solo-filled" density="compact" v-model="phone" v-bind="phone_attrs" :error-messages="errors.phone"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Address</h3>
-                <v-text-field variant="solo-filled" v-model="address" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
+                <v-text-field variant="solo-filled" density="compact" v-model="address" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
               </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <h3 class="text-subtitle-2 mb-2">Hourly Rate <span class="text-red">*</span></h3>
-                <v-text-field
-                  variant="solo-filled"
-                  prefix="$"
-                  type="number"
-                  step="0.01"
-                  v-model="hourly_rate"
-                  v-bind="hourly_rate_attrs"
-                  :error-messages="errors.hourly_rate"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Language</h3>
                 <v-select
                   style="width: 200px"
                   variant="solo-filled"
+                  density="compact"
                   v-model="language"
                   v-bind="language_attrs"
                   :items="languages"
@@ -98,11 +85,25 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
+                <h3 class="text-subtitle-2 mb-2">Hourly Rate <span class="text-red">*</span></h3>
+                <v-text-field
+                  variant="solo-filled"
+                  density="compact"
+                  prefix="$"
+                  type="number"
+                  step="0.01"
+                  v-model="hourly_rate"
+                  v-bind="hourly_rate_attrs"
+                  :error-messages="errors.hourly_rate"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
                   style="width: 200px"
                   variant="solo-filled"
+                  density="compact"
                   v-model="status"
                   v-bind="status_attrs"
                   :items="statuses"

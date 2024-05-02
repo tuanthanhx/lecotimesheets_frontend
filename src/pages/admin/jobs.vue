@@ -6,44 +6,25 @@
         <v-col cols="auto">
           <v-row>
             <v-col cols="auto">
-              <v-text-field
-                style="width: 300px"
-                variant="solo"
-                clearable
-                label="Search Jobs"
-                append-inner-icon="mdi-magnify"
-              ></v-text-field>
+              <v-text-field style="width: 300px" variant="solo" density="compact" clearable label="Search Jobs" append-inner-icon="mdi-magnify"></v-text-field>
             </v-col>
             <v-col cols="auto">
               <v-text-field
                 style="width: 300px"
                 variant="solo"
+                density="compact"
                 clearable
                 label="Date Range"
                 append-inner-icon="mdi-calendar-month"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
-              <v-select
-                style="width: 200px"
-                variant="solo"
-                clearable
-                label="Status"
-                :items="['Open', 'Close']"
-              ></v-select>
+              <v-select style="width: 200px" variant="solo" clearable label="Status" :items="['Open', 'Close']"></v-select>
             </v-col>
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn
-            class="text-none"
-            prepend-icon="mdi-plus"
-            width="160"
-            height="56"
-            color="#2B343F"
-          >
-            Add Job
-          </v-btn>
+          <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F"> Add Job </v-btn>
         </v-col>
       </v-row>
     </v-sheet>
