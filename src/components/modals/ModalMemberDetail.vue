@@ -10,11 +10,11 @@
             <v-row>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Full Name</h3>
-                <v-text-field variant="solo-filled" density="compact" :value="viewItem.name" readonly></v-text-field>
+                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.name" readonly></v-text-field>
               </v-col>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Login</h3>
-                <v-text-field variant="solo-filled" density="compact" :value="viewItem.username" readonly></v-text-field>
+                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.username" readonly></v-text-field>
               </v-col>
             </v-row>
             <v-row>
@@ -24,13 +24,13 @@
               </v-col>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Phone</h3>
-                <v-text-field variant="solo-filled" density="compact" :value="viewItem.phone" readonly></v-text-field>
+                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.phone" readonly></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Address</h3>
-                <v-text-field variant="solo-filled" density="compact" :value="viewItem.address" readonly></v-text-field>
+                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.address" readonly></v-text-field>
               </v-col>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Language</h3>
@@ -38,7 +38,7 @@
                   style="width: 200px"
                   variant="solo-filled"
                   density="compact"
-                  :value="viewItem.language"
+                  v-model="viewItem.language"
                   :items="languages"
                   item-title="name"
                   item-value="code"
@@ -55,7 +55,7 @@
                   prefix="$"
                   type="number"
                   step="0.01"
-                  :value="viewItem.hourly_rate"
+                  v-model="viewItem.hourly_rate"
                   readonly
                 ></v-text-field>
               </v-col>
@@ -65,7 +65,7 @@
                   style="width: 200px"
                   variant="solo-filled"
                   density="compact"
-                  :value="viewItem.status"
+                  v-model="viewItem.status"
                   :items="statuses"
                   item-title="name"
                   item-value="id"
