@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, defineProps, defineEmits } from 'vue';
+import { ref, computed, watch, defineProps } from 'vue';
 import { formatDateString } from '@/plugins/utils';
 
 const { label, variant, density, color, modelValue, maxWidth } = defineProps(['label', 'variant', 'density', 'color', 'modelValue', 'maxWidth']);

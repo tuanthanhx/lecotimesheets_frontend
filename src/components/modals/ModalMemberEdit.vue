@@ -2,7 +2,7 @@
   <v-dialog persistent v-model="isModalVisible" max-width="1000px">
     <v-card class="pa-4">
       <v-card-title>
-        <span class="headline">Add Member</span>
+        <span class="headline">Edit Member</span>
       </v-card-title>
       <form @submit.prevent="submit">
         <v-card-text class="pa-4">
@@ -25,7 +25,7 @@
             </v-row>
             <v-row>
               <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">Password <span class="text-red">*</span></h3>
+                <h3 class="text-subtitle-2 mb-2">New Password</h3>
                 <v-text-field
                   variant="solo-filled"
                   density="compact"
@@ -40,7 +40,7 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">Confirm Password <span class="text-red">*</span></h3>
+                <h3 class="text-subtitle-2 mb-2">Confirm Password <span v-if="password" class="text-red">*</span></h3>
                 <v-text-field
                   variant="solo-filled"
                   density="compact"
@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, defineProps } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import axios from '@/plugins/axios';
@@ -137,6 +137,13 @@ import { useMessageDialog } from '@/plugins/message_dialogs';
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
 
 const emit = defineEmits(['close', 'submit']);
+
+const props = defineProps({
+  item: Object,
+});
+
+const editItem = ref({});
+editItem.value = { ...props.item };
 
 const isModalVisible = ref(false);
 const isLoading = ref(false);
@@ -167,31 +174,68 @@ const languages = ref([
 const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
   validationSchema: yup.object().shape({
     username: yup.string().required().label('Login'),
-    password: yup.string().min(6).required().label('Password'),
-    password_confirm: yup
-      .string()
-      .min(6)
-      .required()
-      .oneOf([yup.ref('password'), null], 'Passwords must match')
-      .label('Confirm Password'),
-    name: yup.string().optional().label('Name'),
-    dob: yup.string().optional().label('D.O.B'),
-    phone: yup.string().optional().label('Phone'),
-    address: yup.string().optional().label('Address'),
+    password: yup.string().when({
+      is: (val) => !!val,
+      then: () => yup.string().min(6).required(),
+      otherwise: () => yup.string().notRequired(),
+    }),
+    password_confirm: yup.string().when('password', {
+      is: (val) => !!val,
+      then: () =>
+        yup
+          .string()
+          .min(6)
+          .required()
+          .oneOf([yup.ref('password'), null], 'Passwords must match'),
+      otherwise: () => yup.string().notRequired(),
+    }),
+    name: yup.string().required().label('Name'),
+    dob: yup.string().optional().nullable().label('D.O.B'),
+    phone: yup.string().optional().nullable().label('Phone'),
+    address: yup.string().optional().nullable().label('Address'),
     hourly_rate: yup
       .number()
       .min(1)
       .required()
       .transform((value) => (isNaN(value) ? 0 : value))
       .label('Hourly Rate'),
-    language: yup.string().optional().label('Language'),
-    status: yup.number().optional().label('Status'),
+    language: yup.string().optional().nullable().label('Language'),
+    status: yup.number().optional().nullable().label('Status'),
   }),
   initialValues: {
-    status: 1,
-    language: 'en',
+    username: editItem.value.username,
+    password: '',
+    password_confirm: '',
+    name: editItem.value.name,
+    dob: editItem.value.dob ? new Date(editItem.value.dob) : null,
+    phone: editItem.value.phone,
+    address: editItem.value.address,
+    hourly_rate: editItem.value.hourly_rate,
+    status: editItem.value.status,
+    language: editItem.value.language,
   },
 });
+
+watch(
+  () => props.item,
+  (newValue) => {
+    editItem.value = { ...newValue };
+    resetForm({
+      values: {
+        username: newValue.username,
+        password: '',
+        password_confirm: '',
+        name: newValue.name,
+        dob: newValue.dob ? new Date(newValue.dob) : null,
+        phone: newValue.phone,
+        address: newValue.address,
+        hourly_rate: newValue.hourly_rate,
+        status: newValue.status,
+        language: newValue.language,
+      },
+    });
+  },
+);
 
 const [username, username_attrs] = defineField('username');
 const [password, password_attrs] = defineField('password');
@@ -212,11 +256,11 @@ const closeModal = () => {
 };
 
 const submit = handleSubmit(async (values) => {
+  console.log(values);
   isLoading.value = true;
   try {
     const object = {
       username: values.username,
-      password: values.password,
       name: values.name,
       dob: values.dob ? formatDateString(values.dob) : null,
       phone: values.phone,
@@ -225,7 +269,10 @@ const submit = handleSubmit(async (values) => {
       language: values.language,
       status: values.status,
     };
-    const response = await axios.post('/users', object);
+    if (values.password) {
+      object.password = values.password;
+    }
+    const response = await axios.put(`/users/${editItem.value.id}`, object);
     if (response?.data) {
       emit('submit');
       setTimeout(() => {

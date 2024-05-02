@@ -36,7 +36,9 @@
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalMemberAdd"> Add Member </v-btn>
+          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalMemberAdd">
+            Add Member
+          </v-btn>
         </v-col>
       </v-row>
     </v-sheet>
@@ -57,10 +59,10 @@
               <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
             </template>
             <v-list>
-              <v-list-item link>
+              <v-list-item link @click="openModalMemberDetail(item)">
                 <v-list-item-title>Detail</v-list-item-title>
               </v-list-item>
-              <v-list-item link>
+              <v-list-item link @click="openModalMemberEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="activateMember(item)" v-if="item.status === 2">
@@ -79,6 +81,8 @@
     </v-sheet>
 
     <ModalMemberAdd v-model="isModalMemberAddVisible" @submit="submitModalMemberAdd" @close="closeModalMemberAdd" />
+    <ModalMemberEdit v-model="isModalMemberEditVisible" @submit="submitModalMemberEdit" @close="closeModalMemberEdit" :item="editItem" />
+    <ModalMemberDetail v-model="isModalMemberDetailVisible" @close="closeModalMemberDetail" :item="viewItem" />
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"
@@ -152,6 +156,36 @@ const submitModalMemberAdd = () => {
 
 const closeModalMemberAdd = () => {
   isModalMemberAddVisible.value = false;
+};
+
+const isModalMemberEditVisible = ref(false);
+const editItem = ref(null);
+
+const openModalMemberEdit = (item) => {
+  editItem.value = item;
+  isModalMemberEditVisible.value = true;
+};
+
+const submitModalMemberEdit = () => {
+  isModalMemberEditVisible.value = false;
+  search();
+  showInfo('The selected member has been updated.', null);
+};
+
+const closeModalMemberEdit = () => {
+  isModalMemberEditVisible.value = false;
+};
+
+const isModalMemberDetailVisible = ref(false);
+const viewItem = ref(null);
+
+const openModalMemberDetail = (item) => {
+  viewItem.value = item;
+  isModalMemberDetailVisible.value = true;
+};
+
+const closeModalMemberDetail = () => {
+  isModalMemberDetailVisible.value = false;
 };
 
 const search = async () => {
