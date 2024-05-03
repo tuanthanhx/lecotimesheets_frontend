@@ -1,4 +1,5 @@
 import axios from 'axios';
+import router from '@/router';
 
 axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
 
@@ -49,6 +50,8 @@ axios.interceptors.response.use(
         })
         .catch((refreshError) => {
           console.error('Refresh token request failed:', refreshError);
+          localStorage.removeItem('access_token');
+          router.push('/login');
           return Promise.reject(refreshError);
         });
     }

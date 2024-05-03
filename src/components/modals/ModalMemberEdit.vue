@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import axios from '@/plugins/axios';

@@ -15,7 +15,7 @@
                 append-inner-icon="mdi-magnify"
                 v-model="searchKeyword"
                 placeholder="Search items"
-                @update:modelValue="search"
+                @update:modelValue="() => search()"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
@@ -30,7 +30,7 @@
                 item-value="id"
                 v-model="searchStatus"
                 placeholder="All statuses"
-                @update:modelValue="search"
+                @update:modelValue="() => search()"
               ></v-select>
             </v-col>
           </v-row>
@@ -43,7 +43,18 @@
       </v-row>
     </v-sheet>
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
-      <v-data-table :headers="headers" :items="members" v-model:options="options" :items-per-page="options.itemsPerPage" v-model:page="options.page">
+      <v-data-table-server
+        v-model:items-per-page="tableOptions.itemsPerPage"
+        :headers="tableHeaders"
+        :items="members"
+        :items-length="tableTotalItems"
+        :loading="tableLoading"
+        item-value="name"
+        @update:options="search"
+      >
+        <template v-slot:[`item.name`]="{ item }">
+          <span class="cursor-pointer" @click="openModalMemberDetail(item)">{{ item.name }}</span>
+        </template>
         <template v-slot:[`item.dob`]="{ item }">
           {{ item.dob ? formatDateString(item.dob) : '' }}
         </template>
@@ -77,7 +88,7 @@
             </v-list>
           </v-menu>
         </template>
-      </v-data-table>
+      </v-data-table-server>
     </v-sheet>
 
     <ModalMemberAdd v-model="isModalMemberAddVisible" @submit="submitModalMemberAdd" @close="closeModalMemberAdd" />
@@ -106,15 +117,6 @@ import { useConfirmDialog } from '@/plugins/confirm_dialogs';
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showInfo } = useMessageDialog();
 const { isConfirmDialogVisible, confirmTitle, confirmMessage, confirmButtonText, cancelButtonText, showConfirm, confirm, cancel } = useConfirmDialog();
 
-const headers = ref([
-  { title: 'Created On', value: 'created_at', width: 120 },
-  { title: 'Login', value: 'username', width: 140 },
-  { title: 'Full Name', value: 'name', width: 'auto' },
-  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
-  { title: 'Status', value: 'status', width: 120 },
-  { title: '', value: 'actions', width: 80 },
-]);
-
 const searchKeyword = ref('');
 const searchStatus = ref(null);
 
@@ -130,15 +132,39 @@ const statuses = ref([
 ]);
 
 const members = ref([]);
-const totalItems = ref(0);
-const options = ref({
-  page: 1,
-  itemsPerPage: 25,
-});
 
-const goToLastPage = () => {
-  const lastPage = Math.ceil(totalItems.value / options.value.itemsPerPage);
-  options.value.page = lastPage;
+const tableLoading = ref(true);
+const tableTotalItems = ref(0);
+const tableOptions = ref({
+  page: 1,
+  itemsPerPage: 10,
+});
+const tableHeaders = ref([
+  { title: 'Created On', value: 'created_at', width: 120 },
+  { title: 'Login', value: 'username', width: 140 },
+  { title: 'Full Name', value: 'name', width: 'auto' },
+  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
+  { title: 'Status', value: 'status', width: 120 },
+  { title: '', value: 'actions', width: 80 },
+]);
+
+const search = async (options = tableOptions.value) => {
+  tableLoading.value = true;
+  try {
+    const response = await axios.get(
+      `/users?page=${options.page}&limit=${options.itemsPerPage}&keyword=${searchKeyword.value || ''}&status=${searchStatus.value ?? ''}`,
+    );
+    if (response?.data?.data) {
+      members.value = response.data.data;
+      tableTotalItems.value = response.data.total;
+      tableOptions.value.page = options.page;
+      tableOptions.value.itemsPerPage = options.itemsPerPage;
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    tableLoading.value = false;
+  }
 };
 
 const isModalMemberAddVisible = ref(false);
@@ -150,7 +176,6 @@ const openModalMemberAdd = () => {
 const submitModalMemberAdd = () => {
   isModalMemberAddVisible.value = false;
   search();
-  goToLastPage();
   showInfo('A new member has been added.', null);
 };
 
@@ -186,18 +211,6 @@ const openModalMemberDetail = (item) => {
 
 const closeModalMemberDetail = () => {
   isModalMemberDetailVisible.value = false;
-};
-
-const search = async () => {
-  try {
-    const response = await axios.get(`/users?keyword=${searchKeyword.value || ''}&status=${searchStatus.value ?? ''}`);
-    if (response?.data) {
-      members.value = response.data;
-      totalItems.value = response.data.length;
-    }
-  } catch (error) {
-    console.error(error);
-  }
 };
 
 const activateMember = async (item) => {

@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch } from 'vue';
 import { formatDateString } from '@/plugins/utils';
 
 const emit = defineEmits(['close']);
