@@ -50,6 +50,24 @@
           </v-row>
           <v-row>
             <v-col cols="12">
+              <h3 class="text-subtitle-2 mb-2">D.O.B</h3>
+              <date-picker variant="solo-filled" v-model="dob" v-bind="dob_attrs"></date-picker>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <h3 class="text-subtitle-2 mb-2">Phone</h3>
+              <v-text-field variant="solo-filled" v-model="phone" v-bind="phone_attrs" :error-messages="errors.phone"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <h3 class="text-subtitle-2 mb-2">Address</h3>
+              <v-text-field variant="solo-filled" density="compact" v-model="address" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">Language</h3>
               <v-select
                 style="width: 200px"
@@ -80,9 +98,10 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import axios from '@/plugins/axios';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+import axios from '@/plugins/axios';
+import { formatDateString } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -122,10 +141,16 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
       otherwise: () => yup.string().notRequired(),
     }),
     name: yup.string().required().label('Name'),
+    dob: yup.string().optional().nullable().label('D.O.B'),
+    phone: yup.string().optional().nullable().label('Phone'),
+    address: yup.string().optional().nullable().label('Address'),
     language: yup.string().optional().nullable().label('Language'),
   }),
   initialValues: {
     name: user.value.name,
+    dob: user.value.dob ? new Date(user.value.dob) : null,
+    phone: user.value.phone,
+    address: user.value.address,
     username: user.value.username,
     password: '',
     password_confirm: '',
@@ -142,6 +167,9 @@ watch(
         password: '',
         password_confirm: '',
         name: newValue.name,
+        dob: newValue.dob ? new Date(newValue.dob) : null,
+        phone: newValue.phone,
+        address: newValue.address,
         language: newValue.language,
       },
     });
@@ -152,6 +180,9 @@ const [username, username_attrs] = defineField('username');
 const [password, password_attrs] = defineField('password');
 const [password_confirm, password_confirm_attrs] = defineField('password_confirm');
 const [name, name_attrs] = defineField('name');
+const [dob, dob_attrs] = defineField('dob');
+const [phone, phone_attrs] = defineField('phone');
+const [address, address_attrs] = defineField('address');
 const [language, language_attrs] = defineField('language');
 
 const languages = ref([
@@ -172,6 +203,9 @@ const submit = handleSubmit(async (values) => {
     const object = {
       username: values.username,
       name: values.name,
+      dob: values.dob ? formatDateString(values.dob) : null,
+      phone: values.phone,
+      address: values.address,
       language: values.language,
     };
     if (values.password) {
@@ -206,6 +240,9 @@ const reset = async () => {
           password: '',
           password_confirm: '',
           name: user.value.name,
+          dob: user.value.dob ? formatDateString(user.value.dob) : null,
+          phone: user.value.phone,
+          address: user.value.address,
           language: user.value.language,
         },
         errors: null,

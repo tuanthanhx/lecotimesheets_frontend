@@ -1,185 +1,172 @@
 <template>
   <v-container fluid class="pa-8">
-    <h1 class="text-h5 mb-8">Jobs (Member)</h1>
-    <v-sheet class="mb-8" color="transparent">
+    <h1 class="text-h5 mb-8">Jobs</h1>
+    <v-sheet class="mb-2" color="transparent">
       <v-row>
         <v-col cols="auto">
           <v-row>
             <v-col cols="auto">
-              <v-text-field style="width: 300px" variant="solo" clearable label="Date Range" append-inner-icon="mdi-calendar-month"></v-text-field>
-            </v-col>
-            <v-col cols="auto">
-              <v-select
+              <h3 class="text-subtitle-2 mb-2">Keyword</h3>
+              <v-text-field
                 style="width: 300px"
                 variant="solo"
+                density="compact"
                 clearable
-                label="Jobs"
-                :items="['144 California', '145 Colorado', '146 Florida', '147 Georgia', '148 Texas']"
+                append-inner-icon="mdi-magnify"
+                v-model="searchKeyword"
+                placeholder="Search jobs"
+                @update:modelValue="() => search()"
+              ></v-text-field>
+            </v-col>
+            <!-- TODO: Add this filter later
+            <v-col cols="auto">
+              <h3 class="text-subtitle-2 mb-2">Date range</h3>
+              <v-text-field></v-text-field>
+            </v-col> -->
+            <v-col cols="auto">
+              <h3 class="text-subtitle-2 mb-2">Status</h3>
+              <v-select
+                style="width: 200px"
+                variant="solo"
+                density="compact"
+                clearable
+                :items="statuses"
+                item-title="name"
+                item-value="id"
+                v-model="searchStatus"
+                placeholder="All statuses"
+                @update:modelValue="() => search()"
               ></v-select>
-            </v-col>
-            <v-col cols="auto">
-              <v-select style="width: 200px" variant="solo" clearable label="Member" :items="['John Smith', 'Nancy Anderson']"></v-select>
-            </v-col>
-            <v-col cols="auto">
-              <v-select style="width: 200px" variant="solo" clearable label="Status" :items="['Submitted', 'Approved', 'Paid']"></v-select>
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="56" color="#2B343F"> Add Time </v-btn>
-        </v-col>
       </v-row>
     </v-sheet>
+
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
-      <v-data-table :headers="headers" :items="items" :items-per-page="-1">
-        <template v-slot:[`item.break`]="{ item }">
-          <v-icon v-if="item.break" icon="mdi-check-circle" />
+      <v-data-table-server
+        v-model:items-per-page="tableOptions.itemsPerPage"
+        :headers="tableHeaders"
+        :items="jobs"
+        :items-length="tableTotalItems"
+        :loading="tableLoading"
+        item-value="name"
+        @update:options="search"
+      >
+        <template v-slot:[`item.name`]="{ item }">
+          <span class="cursor-pointer" @click="openModalJobDetail(item)">{{ item.name }}</span>
         </template>
-        <template #bottom></template>
-      </v-data-table>
+        <template v-slot:[`item.dob`]="{ item }">
+          {{ item.dob ? formatDateString(item.dob) : '' }}
+        </template>
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ formatDateString(item.created_at) }}
+        </template>
+        <template v-slot:[`item.status`]="{ item }">
+          {{ item.status === 1 ? 'Open' : 'Close' }}
+        </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
+            </template>
+            <v-list>
+              <v-list-item link @click="openModalJobDetail(item)">
+                <v-list-item-title>Detail</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </template>
+      </v-data-table-server>
     </v-sheet>
+
+    <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
+    <ConfirmDialog
+      v-model="isConfirmDialogVisible"
+      :title="confirmTitle"
+      :message="confirmMessage"
+      :confirm-button-text="confirmButtonText"
+      :cancel-button-text="cancelButtonText"
+      @confirm="confirm"
+      @cancel="cancel"
+    />
   </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const headers = ref([
-  { title: 'Date', value: 'date', width: 140 },
-  { title: 'Job', value: 'job', width: 'auto' },
-  { title: 'Member', value: 'member', width: 140 },
-  { title: 'Time', value: 'time', width: 140 },
-  { title: 'Break', value: 'break', width: 140 },
-  { title: 'Time Worked', value: 'timeworked', width: 140 },
-  { title: 'Status', value: 'status', width: 140 },
-]);
-const items = ref([
+import { ref, onMounted } from 'vue';
+import axios from '@/plugins/axios';
+import { formatDateString } from '@/plugins/utils';
+import { useMessageDialog } from '@/plugins/message_dialogs';
+import { useConfirmDialog } from '@/plugins/confirm_dialogs';
+
+const { isMessageDialogVisible, messageTitle, messageText, messageType, showInfo } = useMessageDialog();
+const { isConfirmDialogVisible, confirmTitle, confirmMessage, confirmButtonText, cancelButtonText, showConfirm, confirm, cancel } = useConfirmDialog();
+
+const searchKeyword = ref('');
+const searchStatus = ref(null);
+
+const statuses = ref([
   {
     id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
+    name: 'Open',
   },
   {
     id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
+    name: 'Close',
   },
 ]);
+
+const jobs = ref([]);
+
+const tableLoading = ref(true);
+const tableTotalItems = ref(0);
+const tableOptions = ref({
+  page: 1,
+  itemsPerPage: 10,
+});
+const tableHeaders = ref([
+  { title: 'Created On', value: 'created_at', width: 120 },
+  { title: 'Job Name', value: 'name', width: 'auto' },
+  { title: 'Status', value: 'status', width: 120 },
+  { title: '', value: 'actions', width: 80 },
+]);
+
+const search = async (options = tableOptions.value) => {
+  tableLoading.value = true;
+  try {
+    const response = await axios.get(
+      `/jobs?page=${options.page}&limit=${options.itemsPerPage}&keyword=${searchKeyword.value || ''}&status=${searchStatus.value ?? ''}`,
+    );
+    if (response?.data?.data) {
+      jobs.value = response.data.data;
+      tableTotalItems.value = response.data.total;
+      tableOptions.value.page = options.page;
+      tableOptions.value.itemsPerPage = options.itemsPerPage;
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    tableLoading.value = false;
+  }
+};
+
+const isModalJobDetailVisible = ref(false);
+const viewItem = ref(null);
+
+const openModalJobDetail = (item) => {
+  viewItem.value = item;
+  isModalJobDetailVisible.value = true;
+  alert('Coming soon');
+};
+
+// const closeModalJobDetail = () => {
+//   isModalJobDetailVisible.value = false;
+// };
+
+onMounted(() => {
+  search();
+});
 </script>
 
-<style lang="scss" scoped>
-.v-text-field .v-input__control .v-input__slot {
-  min-height: auto !important;
-  display: flex !important;
-  align-items: center !important;
-}
-</style>
+<style lang="scss" scoped></style>

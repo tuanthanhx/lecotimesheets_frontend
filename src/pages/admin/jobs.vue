@@ -144,7 +144,6 @@ const tableOptions = ref({
 });
 const tableHeaders = ref([
   { title: 'Created On', value: 'created_at', width: 120 },
-  // { title: 'Login', value: 'username', width: 140 },
   { title: 'Job Name', value: 'name', width: 'auto' },
   { title: 'Revenue', value: 'revenue', width: 120 },
   { title: 'Material Cost', value: 'material_cost', width: 120 },
