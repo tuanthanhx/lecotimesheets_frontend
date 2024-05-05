@@ -81,16 +81,6 @@
     </v-sheet>
 
     <ModalJobDetail v-model="isModalJobDetailVisible" @close="closeModalJobDetail" :item="viewItem" />
-    <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
-    <ConfirmDialog
-      v-model="isConfirmDialogVisible"
-      :title="confirmTitle"
-      :message="confirmMessage"
-      :confirm-button-text="confirmButtonText"
-      :cancel-button-text="cancelButtonText"
-      @confirm="confirm"
-      @cancel="cancel"
-    />
   </v-container>
 </template>
 
@@ -98,11 +88,6 @@
 import { ref, onMounted } from 'vue';
 import axios from '@/plugins/axios';
 import { formatDateString } from '@/plugins/utils';
-import { useMessageDialog } from '@/plugins/message_dialogs';
-import { useConfirmDialog } from '@/plugins/confirm_dialogs';
-
-const { isMessageDialogVisible, messageTitle, messageText, messageType, showInfo } = useMessageDialog();
-const { isConfirmDialogVisible, confirmTitle, confirmMessage, confirmButtonText, cancelButtonText, showConfirm, confirm, cancel } = useConfirmDialog();
 
 const searchKeyword = ref('');
 const searchStatus = ref(null);
