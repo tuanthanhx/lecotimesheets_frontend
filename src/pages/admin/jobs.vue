@@ -97,6 +97,9 @@
       </v-data-table-server>
     </v-sheet>
 
+    <ModalJobAdd v-model="isModalJobAddVisible" @submit="submitModalJobAdd" @close="closeModalJobAdd" />
+    <ModalJobEdit v-model="isModalJobEditVisible" @submit="submitModalJobEdit" @close="closeModalJobEdit" :item="editItem" />
+    <ModalJobDetail v-model="isModalJobDetailVisible" @close="closeModalJobDetail" :item="viewItem" />
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"
@@ -174,18 +177,17 @@ const isModalJobAddVisible = ref(false);
 
 const openModalJobAdd = () => {
   isModalJobAddVisible.value = true;
-  alert('Coming soon');
 };
 
-// const submitModalJobAdd = () => {
-//   isModalJobAddVisible.value = false;
-//   search();
-//   showInfo('A new job has been added.', null);
-// };
+const submitModalJobAdd = () => {
+  isModalJobAddVisible.value = false;
+  search();
+  showInfo('A new job has been added.', null);
+};
 
-// const closeModalJobAdd = () => {
-//   isModalJobAddVisible.value = false;
-// };
+const closeModalJobAdd = () => {
+  isModalJobAddVisible.value = false;
+};
 
 const isModalJobEditVisible = ref(false);
 const editItem = ref(null);
@@ -193,18 +195,17 @@ const editItem = ref(null);
 const openModalJobEdit = (item) => {
   editItem.value = item;
   isModalJobEditVisible.value = true;
-  alert('Coming soon');
 };
 
-// const submitModalJobEdit = () => {
-//   isModalJobEditVisible.value = false;
-//   search();
-//   showInfo('The selected job has been updated.', null);
-// };
+const submitModalJobEdit = () => {
+  isModalJobEditVisible.value = false;
+  search();
+  showInfo('The selected job has been updated.', null);
+};
 
-// const closeModalJobEdit = () => {
-//   isModalJobEditVisible.value = false;
-// };
+const closeModalJobEdit = () => {
+  isModalJobEditVisible.value = false;
+};
 
 const isModalJobDetailVisible = ref(false);
 const viewItem = ref(null);
@@ -212,12 +213,11 @@ const viewItem = ref(null);
 const openModalJobDetail = (item) => {
   viewItem.value = item;
   isModalJobDetailVisible.value = true;
-  alert('Coming soon');
 };
 
-// const closeModalJobDetail = () => {
-//   isModalJobDetailVisible.value = false;
-// };
+const closeModalJobDetail = () => {
+  isModalJobDetailVisible.value = false;
+};
 
 const activateJob = async (item) => {
   try {

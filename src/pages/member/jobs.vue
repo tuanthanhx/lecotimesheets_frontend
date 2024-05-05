@@ -80,6 +80,7 @@
       </v-data-table-server>
     </v-sheet>
 
+    <ModalJobDetail v-model="isModalJobDetailVisible" @close="closeModalJobDetail" :item="viewItem" />
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"
@@ -157,12 +158,11 @@ const viewItem = ref(null);
 const openModalJobDetail = (item) => {
   viewItem.value = item;
   isModalJobDetailVisible.value = true;
-  alert('Coming soon');
 };
 
-// const closeModalJobDetail = () => {
-//   isModalJobDetailVisible.value = false;
-// };
+const closeModalJobDetail = () => {
+  isModalJobDetailVisible.value = false;
+};
 
 onMounted(() => {
   search();

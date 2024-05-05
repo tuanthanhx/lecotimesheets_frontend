@@ -116,7 +116,7 @@
         </v-card-text>
         <v-card-actions class="mt-4 justify-center">
           <v-btn class="text-none mr-4" variant="elevated" width="120" height="40" color="#2B343F" type="submit" :loading="isLoading" :disabled="!meta.valid"
-            >Save</v-btn
+            >Update</v-btn
           >
           <v-btn class="text-none" variant="elevated" width="120" height="40" @click="closeModal">Cancel</v-btn>
         </v-card-actions>
@@ -256,7 +256,6 @@ const closeModal = () => {
 };
 
 const submit = handleSubmit(async (values) => {
-  console.log(values);
   isLoading.value = true;
   try {
     const object = {
