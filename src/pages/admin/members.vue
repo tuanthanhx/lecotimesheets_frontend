@@ -14,7 +14,7 @@
                 clearable
                 append-inner-icon="mdi-magnify"
                 v-model="searchKeyword"
-                placeholder="Search items"
+                placeholder="Search members"
                 @update:modelValue="() => search()"
               ></v-text-field>
             </v-col>
