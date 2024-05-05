@@ -61,9 +61,11 @@ import { ref } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore';
 import axios from '@/plugins/axios';
 
 const router = useRouter();
+const userStore = useUserStore();
 const showPassword = ref(false);
 const isLoading = ref(false);
 const formAlert = ref('');
@@ -88,7 +90,16 @@ const submit = handleSubmit(async (values) => {
     });
     if (response?.data) {
       localStorage.setItem('access_token', response.data.access_token);
-      router.push('/admin/timesheets');
+      userStore.setUser({
+        name: response.data.name,
+        username: response.data.username,
+        isAdmin: response.data.is_admin,
+      });
+      if (response.data.is_admin) {
+        router.push('/admin/timesheets');
+      } else {
+        router.push('/member/timesheets');
+      }
     }
   } catch (error) {
     isLoading.value = false;

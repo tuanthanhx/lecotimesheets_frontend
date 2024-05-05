@@ -3,7 +3,7 @@
     <v-card width="260" height="80" class="d-flex align-center mx-auto mb-8" color="#fff" rounded>
       <v-img width="220" height="66" src="@/assets/img/logo.png" />
     </v-card>
-    <v-list>
+    <v-list v-if="userData?.isAdmin">
       <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link to="/admin/timesheets"></v-list-item>
       <v-list-item title="Jobs" prepend-icon="mdi-folder-text" link to="/admin/jobs"></v-list-item>
       <v-list-item title="Members" prepend-icon="mdi-account-group" link to="/admin/members"></v-list-item>
@@ -19,11 +19,21 @@
       <v-list-item title="Settings" prepend-icon="mdi-cog" link to="/admin/settings"></v-list-item>
       <v-list-item title="Logout" prepend-icon="mdi-logout" link to="/logout"></v-list-item>
     </v-list>
+    <v-list v-else>
+      <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link to="/member/timesheets"></v-list-item>
+      <v-list-item title="Jobs" prepend-icon="mdi-folder-text" link to="/member/jobs"></v-list-item>
+      <v-list-item title="Payroll Reports" prepend-icon="mdi-receipt-text" link to="/member/payroll_reports"></v-list-item>
+      <v-list-item title="Settings" prepend-icon="mdi-cog" link to="/member/settings"></v-list-item>
+      <v-list-item title="Logout" prepend-icon="mdi-logout" link to="/logout"></v-list-item>
+    </v-list>
   </v-navigation-drawer>
 </template>
 
 <script setup>
-//
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore();
+const userData = userStore.userData;
 </script>
 
 <style lang="scss" scoped>
