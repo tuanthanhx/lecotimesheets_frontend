@@ -96,13 +96,13 @@
               <v-list-item link @click="openModalMemberEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="activateMember(item)" v-if="item.status === 2">
-                <v-list-item-title>Activate</v-list-item-title>
+              <v-list-item link @click="approveTimesheet(item)" v-if="item.status === 1">
+                <v-list-item-title>Approve</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="deactivateMember(item)" v-if="item.status === 1">
-                <v-list-item-title>Deactivate</v-list-item-title>
+              <v-list-item link @click="unapproveTimesheet(item)" v-if="item.status === 2">
+                <v-list-item-title>Unapprove</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="deleteMember(item)">
+              <v-list-item link @click="deleteTimesheet(item)">
                 <v-list-item-title>Delete</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -210,6 +210,48 @@ const getFilters = async () => {
     if (listUsers?.data?.data) {
       members.value = sortArray(listUsers.data.data, 'name');
     }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const approveTimesheet = async (item) => {
+  try {
+    await axios.post(`/timesheets/${item.id}/approve`);
+    search();
+    showInfo('The selected timesheet has been approved.', null);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const unapproveTimesheet = async (item) => {
+  try {
+    await axios.post(`/timesheets/${item.id}/unapprove`);
+    search();
+    showInfo('The selected timesheet has been unapproved.', null);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteTimesheet = async (item) => {
+  showConfirm({
+    title: 'Confirm Delete',
+    message: `Are you sure you want to delete this record? \nThis action cannot be undone.`,
+    confirmButtonText: 'Delete',
+    cancelButtonText: 'Cancel',
+    onConfirm: () => {
+      confirmDeleteTimesheet(item);
+    },
+  });
+};
+
+const confirmDeleteTimesheet = async (item) => {
+  try {
+    await axios.delete(`/timesheets/${item.id}`);
+    search();
+    showInfo('The selected record has been deleted.', null);
   } catch (error) {
     console.error(error);
   }
