@@ -1,5 +1,5 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="1000px">
+  <v-dialog persistent v-model="isModalVisible" max-width="640px">
     <v-card class="pa-4">
       <v-card-title>
         <span class="headline">Edit Job</span>

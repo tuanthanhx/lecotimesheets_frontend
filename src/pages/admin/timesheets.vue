@@ -66,12 +66,59 @@
     </v-sheet>
 
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
-      <v-data-table :headers="headers" :items="items" :items-per-page="-1">
+      <v-data-table-server
+        v-model:items-per-page="tableOptions.itemsPerPage"
+        :headers="tableHeaders"
+        :items="timesheets"
+        :items-length="tableTotalItems"
+        :loading="tableLoading"
+        item-value="name"
+        @update:options="search"
+      >
+        <!--
+        <template v-slot:[`item.name`]="{ item }">
+          <span class="cursor-pointer" @click="openModalMemberDetail(item)">{{ item.name }}</span>
+        </template>
+        <template v-slot:[`item.dob`]="{ item }">
+          {{ item.dob ? formatDateString(item.dob) : '' }}
+        </template>
+        -->
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ formatDateString(item.created_at) }}
+        </template>
+        <template v-slot:[`item.status`]="{ item }">
+          {{ item.status === 1 ? 'Confirming' : 'Approved' }}
+        </template>
+        <template v-slot:[`item.time_range`]="{ item }"> todo 1 </template>
         <template v-slot:[`item.break`]="{ item }">
           <v-icon v-if="item.break" icon="mdi-check-circle" />
         </template>
-        <template #bottom></template>
-      </v-data-table>
+        <template v-slot:[`item.time_worked`]="{ item }"> todo 2 </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
+            </template>
+            <v-list>
+              <v-list-item link @click="openModalMemberDetail(item)">
+                <v-list-item-title>Detail</v-list-item-title>
+              </v-list-item>
+              <v-list-item link @click="openModalMemberEdit(item)">
+                <v-list-item-title>Edit</v-list-item-title>
+              </v-list-item>
+              <v-list-item link @click="activateMember(item)" v-if="item.status === 2">
+                <v-list-item-title>Activate</v-list-item-title>
+              </v-list-item>
+              <v-list-item link @click="deactivateMember(item)" v-if="item.status === 1">
+                <v-list-item-title>Deactivate</v-list-item-title>
+              </v-list-item>
+              <v-list-item link @click="deleteMember(item)">
+                <v-list-item-title>Delete</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </template>
+      </v-data-table-server>
     </v-sheet>
 
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
@@ -126,171 +173,49 @@ const members = ref([
 const statuses = ref([
   {
     id: 1,
-    name: 'Approved',
-  },
-  {
-    id: 2,
     name: 'Confirming',
   },
+  {
+    id: 2,
+    name: 'Approved',
+  },
 ]);
 
-const search = () => {
-  console.log('comming soon');
+const timesheets = ref([]);
+
+const tableLoading = ref(true);
+const tableTotalItems = ref(0);
+const tableOptions = ref({
+  page: 1,
+  itemsPerPage: 10,
+});
+const tableHeaders = ref([
+  { title: 'Created On', value: 'created_at', width: 120 },
+  { title: 'Member', value: 'user.name', width: 200 },
+  { title: 'Job', value: 'job.name', width: 'auto' },
+  { title: 'Time', value: 'time_range', width: 120 },
+  { title: 'Break', value: 'break', width: 120 },
+  { title: 'Time Worked', value: 'time_worked', width: 120 },
+  { title: 'Status', value: 'status', width: 120 },
+  { title: '', value: 'actions', width: 80 },
+]);
+
+const search = async (options = tableOptions.value) => {
+  tableLoading.value = true;
+  try {
+    const response = await axios.get(`/timesheets?page=${options.page}&limit=${options.itemsPerPage}&keyword=&job=&user=&status=${searchStatus.value ?? ''}`);
+    if (response?.data?.data) {
+      timesheets.value = response.data.data;
+      tableTotalItems.value = response.data.total;
+      tableOptions.value.page = options.page;
+      tableOptions.value.itemsPerPage = options.itemsPerPage;
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    tableLoading.value = false;
+  }
 };
-
-// try {
-//   axios.post('/auth/me').then((res) => {
-//     if (res?.data) {
-//       console.log(res.data);
-//     }
-//   });
-// } catch (error) {
-//   console.error('An error occurred');
-//   console.error(error);
-// }
-
-// try {
-//   axios.post('/auth/is_login').then((res) => {
-//     if (res?.data) {
-//       console.log(res.data);
-//     }
-//   });
-// } catch (error) {
-//   console.error('An error occurred');
-//   console.error(error);
-// }
-
-const headers = ref([
-  { title: 'Date', value: 'date', width: 140 },
-  { title: 'Job', value: 'job', width: 'auto' },
-  { title: 'Member', value: 'member', width: 140 },
-  { title: 'Time', value: 'time', width: 140 },
-  { title: 'Break', value: 'break', width: 140 },
-  { title: 'Time Worked', value: 'timeworked', width: 140 },
-  { title: 'Status', value: 'status', width: 140 },
-]);
-const items = ref([
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-]);
 
 onMounted(() => {
   search();
