@@ -75,25 +75,15 @@
         item-value="name"
         @update:options="search"
       >
-        <!--
-        <template v-slot:[`item.name`]="{ item }">
-          <span class="cursor-pointer" @click="openModalMemberDetail(item)">{{ item.name }}</span>
-        </template>
-        <template v-slot:[`item.dob`]="{ item }">
-          {{ item.dob ? formatDateString(item.dob) : '' }}
-        </template>
-        -->
-        <template v-slot:[`item.created_at`]="{ item }">
-          {{ formatDateString(item.created_at) }}
+        <template v-slot:[`item.date`]="{ item }">
+          {{ formatDateString(item.date) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
           {{ item.status === 1 ? 'Confirming' : 'Approved' }}
         </template>
-        <template v-slot:[`item.time_range`]="{ item }"> todo 1 </template>
-        <template v-slot:[`item.break`]="{ item }">
-          <v-icon v-if="item.break" icon="mdi-check-circle" />
-        </template>
-        <template v-slot:[`item.time_worked`]="{ item }"> todo 2 </template>
+        <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+        <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
+        <template v-slot:[`item.time_worked`]="{ item }"> {{ totalHours(item.start_time, item.end_time, item.break) }} </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-menu>
             <template v-slot:activator="{ props }">
@@ -137,7 +127,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '@/plugins/axios';
-import { formatDateString } from '@/plugins/utils';
+import { formatDateString, formatTimeString, totalHours, sortArray } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 import { useConfirmDialog } from '@/plugins/confirm_dialogs';
 
@@ -148,16 +138,7 @@ const searchJob = ref(null);
 const searchMember = ref(null);
 const searchStatus = ref(null);
 
-const jobs = ref([
-  {
-    id: 1,
-    name: '100 Lorem Ipsum',
-  },
-  {
-    id: 2,
-    name: '101 Lorem Ipsum',
-  },
-]);
+const jobs = ref([]);
 
 const members = ref([
   {
@@ -190,7 +171,7 @@ const tableOptions = ref({
   itemsPerPage: 10,
 });
 const tableHeaders = ref([
-  { title: 'Created On', value: 'created_at', width: 120 },
+  { title: 'Submitted On', value: 'date', width: 120 },
   { title: 'Member', value: 'user.name', width: 200 },
   { title: 'Job', value: 'job.name', width: 'auto' },
   { title: 'Time', value: 'time_range', width: 120 },
@@ -203,7 +184,9 @@ const tableHeaders = ref([
 const search = async (options = tableOptions.value) => {
   tableLoading.value = true;
   try {
-    const response = await axios.get(`/timesheets?page=${options.page}&limit=${options.itemsPerPage}&keyword=&job=&user=&status=${searchStatus.value ?? ''}`);
+    const response = await axios.get(
+      `/timesheets?page=${options.page}&limit=${options.itemsPerPage}&job=${searchJob.value ?? ''}&user=${searchMember.value ?? ''}&status=${searchStatus.value ?? ''}`,
+    );
     if (response?.data?.data) {
       timesheets.value = response.data.data;
       tableTotalItems.value = response.data.total;
@@ -217,7 +200,23 @@ const search = async (options = tableOptions.value) => {
   }
 };
 
+const getFilters = async () => {
+  try {
+    const listJobs = await axios.get('/jobs?limit=-1');
+    if (listJobs?.data?.data) {
+      jobs.value = sortArray(listJobs.data.data, 'name');
+    }
+    const listUsers = await axios.get('/users?limit=-1');
+    if (listUsers?.data?.data) {
+      members.value = sortArray(listUsers.data.data, 'name');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 onMounted(() => {
+  getFilters();
   search();
 });
 </script>
