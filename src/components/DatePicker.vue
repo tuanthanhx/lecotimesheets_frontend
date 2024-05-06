@@ -11,6 +11,7 @@
         :variant="variant"
         :density="density"
         hide-details
+        :placeholder="placeholder"
       ></v-text-field>
     </template>
     <v-date-picker v-model="selectedDate" hide-actions title="" :color="color">
@@ -23,7 +24,15 @@
 import { ref, computed, watch } from 'vue';
 import { formatDateString } from '@/plugins/utils';
 
-const { label, variant, density, color, modelValue, maxWidth } = defineProps(['label', 'variant', 'density', 'color', 'modelValue', 'maxWidth']);
+const { label, variant, density, color, modelValue, maxWidth, placeholder } = defineProps([
+  'label',
+  'variant',
+  'density',
+  'color',
+  'modelValue',
+  'maxWidth',
+  'placeholder',
+]);
 
 const emit = defineEmits(['update:modelValue']);
 

@@ -34,7 +34,7 @@
                 variant="solo"
                 density="compact"
                 clearable
-                :items="members"
+                :items="users"
                 item-title="name"
                 item-value="id"
                 v-model="searchMember"
@@ -60,7 +60,9 @@
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="null"> Add Time </v-btn>
+          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalTimesheetAdd">
+            Add Time
+          </v-btn>
         </v-col>
       </v-row>
     </v-sheet>
@@ -90,10 +92,10 @@
               <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
             </template>
             <v-list>
-              <v-list-item link @click="openModalMemberDetail(item)">
+              <v-list-item link @click="openModalTimesheetDetail(item)">
                 <v-list-item-title>Detail</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="openModalMemberEdit(item)">
+              <v-list-item link @click="openModalTimesheetEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="approveTimesheet(item)" v-if="item.status === 1">
@@ -111,6 +113,9 @@
       </v-data-table-server>
     </v-sheet>
 
+    <ModalTimesheetAdd v-model="isModalTimesheetAddVisible" @submit="submitModalTimesheetAdd" @close="closeModalTimesheetAdd" :users="users" :jobs="jobs" />
+    <!-- <ModalTimesheetEdit v-model="isModalTimesheetEditVisible" @submit="submitModalTimesheetEdit" @close="closeModalTimesheetEdit" :item="editItem" />
+    <ModalTimesheetDetail v-model="isModalTimesheetDetailVisible" @close="closeModalTimesheetDetail" :item="viewItem" /> -->
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"
@@ -140,7 +145,7 @@ const searchStatus = ref(null);
 
 const jobs = ref([]);
 
-const members = ref([
+const users = ref([
   {
     id: 1,
     name: 'John Smith',
@@ -200,6 +205,22 @@ const search = async (options = tableOptions.value) => {
   }
 };
 
+const isModalTimesheetAddVisible = ref(false);
+
+const openModalTimesheetAdd = () => {
+  isModalTimesheetAddVisible.value = true;
+};
+
+const submitModalTimesheetAdd = () => {
+  isModalTimesheetAddVisible.value = false;
+  search();
+  showInfo('A new timesheet has been added.', null);
+};
+
+const closeModalTimesheetAdd = () => {
+  isModalTimesheetAddVisible.value = false;
+};
+
 const getFilters = async () => {
   try {
     const listJobs = await axios.get('/jobs?limit=-1');
@@ -208,7 +229,7 @@ const getFilters = async () => {
     }
     const listUsers = await axios.get('/users?limit=-1');
     if (listUsers?.data?.data) {
-      members.value = sortArray(listUsers.data.data, 'name');
+      users.value = sortArray(listUsers.data.data, 'name');
     }
   } catch (error) {
     console.error(error);
