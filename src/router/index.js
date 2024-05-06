@@ -17,12 +17,28 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  if (to.path.startsWith('/admin') && to.name === undefined) {
+    next('/admin/timesheets');
+  } else if (to.path.startsWith('/member') && to.name === undefined) {
+    next('/member/timesheets');
+  } else {
+    next();
+  }
+});
+
+router.beforeEach((to, from, next) => {
   if (!to.path.startsWith('/log')) {
     axios
       .post('/auth/is_login')
       .then((response) => {
         if (response.data) {
-          next();
+          if (response.data.group === 2 && to.path.startsWith('/admin')) {
+            next({ name: '/member/timesheets' });
+          } else if (response.data.group === 6 && to.path.startsWith('/member')) {
+            next({ name: '/admin/timesheets' });
+          } else {
+            next();
+          }
         } else {
           next({ name: '/login' });
         }

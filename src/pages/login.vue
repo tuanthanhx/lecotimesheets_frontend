@@ -91,9 +91,8 @@ const submit = handleSubmit(async (values) => {
     if (response?.data) {
       localStorage.setItem('access_token', response.data.access_token);
       userStore.setUser({
-        name: response.data.name,
         username: response.data.username,
-        isAdmin: response.data.is_admin,
+        group: response.data.group,
       });
       if (response.data.is_admin) {
         router.push('/admin/timesheets');

@@ -3,7 +3,7 @@
     <v-card width="260" height="80" class="d-flex align-center mx-auto mb-8" color="#fff" rounded>
       <v-img width="220" height="66" src="@/assets/img/logo.png" />
     </v-card>
-    <v-list v-if="userData?.isAdmin">
+    <v-list v-if="userData?.group === 6">
       <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link to="/admin/timesheets"></v-list-item>
       <v-list-item title="Jobs" prepend-icon="mdi-folder-text" link to="/admin/jobs"></v-list-item>
       <v-list-item title="Members" prepend-icon="mdi-account-group" link to="/admin/members"></v-list-item>
