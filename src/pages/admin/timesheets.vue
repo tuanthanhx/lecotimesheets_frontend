@@ -165,16 +165,7 @@ const searchStatus = ref(null);
 
 const jobs = ref([]);
 
-const users = ref([
-  {
-    id: 1,
-    name: 'John Smith',
-  },
-  {
-    id: 2,
-    name: 'Nancy Anderson',
-  },
-]);
+const users = ref([]);
 
 const statuses = ref([
   {
