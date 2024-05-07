@@ -188,7 +188,7 @@ watch(
       values: {
         user: newValue.user_id,
         job: newValue.job_id,
-        date: newValue.date,
+        date: newValue.date ? new Date(newValue.date) : null,
         start_time: newValue.start_time,
         end_time: newValue.end_time,
         note: newValue.note,
