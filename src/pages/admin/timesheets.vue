@@ -225,11 +225,11 @@ const closeModalTimesheetAdd = () => {
 
 const getFilters = async () => {
   try {
-    const listJobs = await axios.get('/jobs?limit=-1');
+    const listJobs = await axios.get('/jobs?type=select&limit=-1');
     if (listJobs?.data?.data) {
       jobs.value = sortArray(listJobs.data.data, 'name');
     }
-    const listUsers = await axios.get('/users?limit=-1');
+    const listUsers = await axios.get('/users?type=select&limit=-1');
     if (listUsers?.data?.data) {
       users.value = sortArray(listUsers.data.data, 'name');
     }
