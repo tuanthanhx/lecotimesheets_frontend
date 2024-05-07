@@ -116,8 +116,15 @@
     </v-sheet>
 
     <ModalTimesheetAdd v-model="isModalTimesheetAddVisible" @submit="submitModalTimesheetAdd" @close="closeModalTimesheetAdd" :users="users" :jobs="jobs" />
-    <!-- <ModalTimesheetEdit v-model="isModalTimesheetEditVisible" @submit="submitModalTimesheetEdit" @close="closeModalTimesheetEdit" :item="editItem" />
-    <ModalTimesheetDetail v-model="isModalTimesheetDetailVisible" @close="closeModalTimesheetDetail" :item="viewItem" /> -->
+    <ModalTimesheetEdit
+      v-model="isModalTimesheetEditVisible"
+      @submit="submitModalTimesheetEdit"
+      @close="closeModalTimesheetEdit"
+      :item="editItem"
+      :users="users"
+      :jobs="jobs"
+    />
+    <!-- <ModalTimesheetDetail v-model="isModalTimesheetDetailVisible" @close="closeModalTimesheetDetail" :item="viewItem" :users="users" :jobs="jobs" /> -->
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"
@@ -175,7 +182,7 @@ const tableLoading = ref(true);
 const tableTotalItems = ref(0);
 const tableOptions = ref({
   page: 1,
-  itemsPerPage: 10,
+  itemsPerPage: 25,
 });
 const tableHeaders = ref([
   { title: 'Submitted On', value: 'date', width: 120 },
@@ -221,6 +228,36 @@ const submitModalTimesheetAdd = () => {
 
 const closeModalTimesheetAdd = () => {
   isModalTimesheetAddVisible.value = false;
+};
+
+const isModalTimesheetEditVisible = ref(false);
+const editItem = ref(null);
+
+const openModalTimesheetEdit = (item) => {
+  editItem.value = item;
+  isModalTimesheetEditVisible.value = true;
+};
+
+const submitModalTimesheetEdit = () => {
+  isModalTimesheetEditVisible.value = false;
+  search();
+  showInfo('The selected timesheet has been updated.', null);
+};
+
+const closeModalTimesheetEdit = () => {
+  isModalTimesheetEditVisible.value = false;
+};
+
+const isModalTimesheetDetailVisible = ref(false);
+const viewItem = ref(null);
+
+const openModalTimesheetDetail = (item) => {
+  viewItem.value = item;
+  isModalTimesheetDetailVisible.value = true;
+};
+
+const closeModalTimesheetDetail = () => {
+  isModalTimesheetDetailVisible.value = false;
 };
 
 const getFilters = async () => {

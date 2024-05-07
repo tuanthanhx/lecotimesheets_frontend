@@ -2,7 +2,7 @@
   <v-dialog persistent v-model="isModalVisible" max-width="1000px">
     <v-card class="pa-4">
       <v-card-title>
-        <span class="headline">Add Timesheet</span>
+        <span class="headline">Edit Timesheet</span>
       </v-card-title>
       <form @submit.prevent="submit">
         <v-card-text class="pa-4">
@@ -103,7 +103,7 @@
         </v-card-text>
         <v-card-actions class="mt-4 justify-center">
           <v-btn class="text-none mr-4" variant="elevated" width="120" height="40" color="#2B343F" type="submit" :loading="isLoading" :disabled="!meta.valid"
-            >Save</v-btn
+            >Update</v-btn
           >
           <v-btn class="text-none" variant="elevated" width="120" height="40" @click="closeModal">Cancel</v-btn>
         </v-card-actions>
@@ -114,10 +114,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import axios from '@/plugins/axios';
+import { formatDateString } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -125,9 +126,13 @@ const { isMessageDialogVisible, messageTitle, messageText, messageType, showErro
 const emit = defineEmits(['close', 'submit']);
 
 const props = defineProps({
+  item: Object,
   users: Object,
   jobs: Object,
 });
+
+const editItem = ref({});
+editItem.value = { ...props.item };
 
 const isModalVisible = ref(false);
 const isLoading = ref(false);
@@ -160,15 +165,39 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
     start_time: yup.string().required().label('Start Time'),
     end_time: yup.string().required().label('End Time'),
     note: yup.string().optional().label('note'),
-    has_break: yup.boolean().optional().label('Break'),
+    has_break: yup.bool().optional().label('Break'),
     status: yup.number().optional().label('Status'),
   }),
   initialValues: {
-    status: 1,
-    language: 'en',
-    date: new Date(),
+    user: editItem.value.user_id,
+    job: editItem.value.job_id,
+    date: editItem.value.date ? new Date(editItem.value.date) : null,
+    start_time: editItem.value.start_time,
+    end_time: editItem.value.end_time,
+    note: editItem.value.note,
+    has_break: editItem.value.break ? true : false,
+    status: editItem.value.status,
   },
 });
+
+watch(
+  () => props.item,
+  (newValue) => {
+    editItem.value = { ...newValue };
+    resetForm({
+      values: {
+        user: newValue.user_id,
+        job: newValue.job_id,
+        date: newValue.date,
+        start_time: newValue.start_time,
+        end_time: newValue.end_time,
+        note: newValue.note,
+        has_break: newValue.break ? true : false,
+        status: newValue.status,
+      },
+    });
+  },
+);
 
 const [user, user_attrs] = defineField('user');
 const [job, job_attrs] = defineField('job');
@@ -192,14 +221,17 @@ const submit = handleSubmit(async (values) => {
     const object = {
       user_id: values.user,
       job_id: values.job,
-      date: values.date,
+      date: values.date ? formatDateString(values.date) : null,
       start_time: values.start_time,
       end_time: values.end_time,
       break: values.has_break,
       status: values.status,
       note: values.note,
     };
-    const response = await axios.post('/timesheets', object);
+    if (values.password) {
+      object.password = values.password;
+    }
+    const response = await axios.put(`/timesheets/${editItem.value.id}`, object);
     if (response?.data) {
       emit('submit');
       setTimeout(() => {

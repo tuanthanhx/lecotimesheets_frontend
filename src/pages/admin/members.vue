@@ -137,7 +137,7 @@ const tableLoading = ref(true);
 const tableTotalItems = ref(0);
 const tableOptions = ref({
   page: 1,
-  itemsPerPage: 10,
+  itemsPerPage: 25,
 });
 const tableHeaders = ref([
   { title: 'Created On', value: 'created_at', width: 120 },
