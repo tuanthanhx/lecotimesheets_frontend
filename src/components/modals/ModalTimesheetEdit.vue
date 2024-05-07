@@ -7,7 +7,7 @@
       <form @submit.prevent="submit">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
-            <v-row>
+            <v-row v-if="props.role === 'admin'">
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Member</h3>
                 <v-select
@@ -71,7 +71,7 @@
                 <v-checkbox v-model="has_break" v-bind="has_break_attrs"></v-checkbox>
               </v-col>
             </v-row>
-            <v-row>
+            <v-row v-if="props.role === 'admin'">
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
@@ -129,6 +129,7 @@ const props = defineProps({
   item: Object,
   users: Object,
   jobs: Object,
+  role: String,
 });
 
 const editItem = ref({});
@@ -159,24 +160,24 @@ for (let i = 0; i < 24; i++) {
 
 const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
   validationSchema: yup.object().shape({
-    user: yup.number().required().label('Member'),
     job: yup.number().required().label('Job'),
     date: yup.string().required().label('Date'),
     start_time: yup.string().required().label('Start Time'),
     end_time: yup.string().required().label('End Time'),
     note: yup.string().optional().label('note'),
     has_break: yup.bool().optional().label('Break'),
-    status: yup.number().optional().label('Status'),
+    user: yup.number().when('$role', (role, schema) => (role === 'admin' ? schema.required().label('Member') : schema.label('Member'))),
+    status: yup.number().when('$role', (role, schema) => (role === 'admin' ? schema.required().label('Status') : schema.label('Status'))),
   }),
   initialValues: {
-    user: editItem.value.user_id,
     job: editItem.value.job_id,
     date: editItem.value.date ? new Date(editItem.value.date) : null,
     start_time: editItem.value.start_time,
     end_time: editItem.value.end_time,
     note: editItem.value.note,
     has_break: editItem.value.break ? true : false,
-    status: editItem.value.status,
+    user: props.role === 'admin' ? editItem.value.user_id : undefined,
+    status: props.role === 'admin' ? editItem.value.status : undefined,
   },
 });
 
@@ -186,26 +187,26 @@ watch(
     editItem.value = { ...newValue };
     resetForm({
       values: {
-        user: newValue.user_id,
         job: newValue.job_id,
         date: newValue.date ? new Date(newValue.date) : null,
         start_time: newValue.start_time,
         end_time: newValue.end_time,
         note: newValue.note,
         has_break: newValue.break ? true : false,
-        status: newValue.status,
+        user: props.role === 'admin' ? newValue.user_id : undefined,
+        status: props.role === 'admin' ? newValue.status : undefined,
       },
     });
   },
 );
 
 const [user, user_attrs] = defineField('user');
-const [job, job_attrs] = defineField('job');
 const [date, date_attrs] = defineField('date');
 const [start_time, start_time_attrs] = defineField('start_time');
 const [end_time, end_time_attrs] = defineField('end_time');
 const [has_break, has_break_attrs] = defineField('has_break');
 const [note, note_attrs] = defineField('note');
+const [job, job_attrs] = defineField('job');
 const [status, status_attrs] = defineField('status');
 
 const closeModal = () => {
@@ -219,17 +220,16 @@ const submit = handleSubmit(async (values) => {
   isLoading.value = true;
   try {
     const object = {
-      user_id: values.user,
       job_id: values.job,
       date: values.date ? formatDateString(values.date) : null,
       start_time: values.start_time,
       end_time: values.end_time,
       break: values.has_break,
-      status: values.status,
       note: values.note,
     };
-    if (values.password) {
-      object.password = values.password;
+    if (props.role === 'admin') {
+      object.user_id = values.user;
+      object.status = values.status;
     }
     const response = await axios.put(`/timesheets/${editItem.value.id}`, object);
     if (response?.data) {

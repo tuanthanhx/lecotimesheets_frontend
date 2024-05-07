@@ -77,13 +77,16 @@
         item-value="name"
         @update:options="search"
       >
-        <template v-slot:[`item.date`]="{ item }">
-          {{ formatDateString(item.date) }}
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ formatDateString(item.created_at) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
           <template v-if="item.status === 1">Confirming</template>
           <template v-else-if="item.status === 2">Approved</template>
           <template v-else>{{ item.status }}</template>
+        </template>
+        <template v-slot:[`item.date`]="{ item }">
+          {{ formatDateString(item.date) }}
         </template>
         <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
         <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
@@ -115,7 +118,14 @@
       </v-data-table-server>
     </v-sheet>
 
-    <ModalTimesheetAdd v-model="isModalTimesheetAddVisible" @submit="submitModalTimesheetAdd" @close="closeModalTimesheetAdd" :users="users" :jobs="jobs" />
+    <ModalTimesheetAdd
+      v-model="isModalTimesheetAddVisible"
+      @submit="submitModalTimesheetAdd"
+      @close="closeModalTimesheetAdd"
+      :users="users"
+      :jobs="jobs"
+      role="admin"
+    />
     <ModalTimesheetEdit
       v-model="isModalTimesheetEditVisible"
       @submit="submitModalTimesheetEdit"
@@ -123,8 +133,9 @@
       :item="editItem"
       :users="users"
       :jobs="jobs"
+      role="admin"
     />
-    <!-- <ModalTimesheetDetail v-model="isModalTimesheetDetailVisible" @close="closeModalTimesheetDetail" :item="viewItem" :users="users" :jobs="jobs" /> -->
+    <ModalTimesheetDetail v-model="isModalTimesheetDetailVisible" @close="closeModalTimesheetDetail" :item="viewItem" role="admin" />
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"
@@ -185,9 +196,10 @@ const tableOptions = ref({
   itemsPerPage: 25,
 });
 const tableHeaders = ref([
-  { title: 'Submitted On', value: 'date', width: 120 },
+  { title: 'Submitted On', value: 'created_at', width: 120 },
   { title: 'Member', value: 'user.name', width: 200 },
   { title: 'Job', value: 'job.name', width: 'auto' },
+  { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },
   { title: 'Break', value: 'break', width: 120 },
   { title: 'Time Worked', value: 'time_worked', width: 120 },

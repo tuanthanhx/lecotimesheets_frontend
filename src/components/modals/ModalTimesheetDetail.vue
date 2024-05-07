@@ -2,64 +2,51 @@
   <v-dialog persistent v-model="isModalVisible" max-width="1000px">
     <v-card class="pa-4">
       <v-card-title>
-        <span class="headline">{{ viewItem.name }}</span>
+        <span class="headline">{{ viewItem.job.name }}</span>
       </v-card-title>
       <form @submit.prevent="submit">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
-            <v-row>
-              <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">Full Name</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.name" readonly></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">Login</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.username" readonly></v-text-field>
+            <v-row v-if="props.role === 'admin'">
+              <v-col cols="12">
+                <h3 class="text-subtitle-2 mb-2">Member</h3>
+                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.user.name" readonly></v-text-field>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">D.O.B</h3>
-                <v-text-field variant="solo-filled" density="compact" :value="viewItem.dob ? formatDateString(viewItem.dob) : ''" readonly></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">Phone</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.phone" readonly></v-text-field>
+              <v-col cols="12">
+                <h3 class="text-subtitle-2 mb-2">Job</h3>
+                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.job.name" readonly></v-text-field>
               </v-col>
             </v-row>
+
             <v-row>
-              <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">Address</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.address" readonly></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">Language</h3>
-                <v-select
-                  style="width: 200px"
-                  variant="solo-filled"
-                  density="compact"
-                  v-model="viewItem.language"
-                  :items="languages"
-                  item-title="name"
-                  item-value="code"
-                  readonly
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6">
-                <h3 class="text-subtitle-2 mb-2">Hourly Rate</h3>
+              <v-col cols="4">
+                <h3 class="text-subtitle-2 mb-2">Date</h3>
                 <v-text-field
                   variant="solo-filled"
                   density="compact"
-                  prefix="$"
-                  type="number"
-                  step="0.01"
-                  v-model="viewItem.hourly_rate"
+                  :value="viewItem.date ? formatDateString(viewItem.date) : ''"
+                  append-inner-icon="mdi-calendar"
                   readonly
                 ></v-text-field>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="4">
+                <h3 class="text-subtitle-2 mb-2">Time Range</h3>
+                <div class="d-flex justify-center">
+                  <v-text-field style="width: 120px" variant="solo-filled" density="compact" :value="viewItem.start_time" readonly></v-text-field>
+                  <div class="mx-2">-</div>
+                  <v-text-field style="width: 120px" variant="solo-filled" density="compact" :value="viewItem.end_time" readonly></v-text-field>
+                </div>
+              </v-col>
+              <v-col cols="4">
+                <h3 class="text-subtitle-2 mb-2">Break</h3>
+                <v-checkbox v-model="hasBreak" readonly></v-checkbox>
+              </v-col>
+            </v-row>
+
+            <v-row v-if="props.role === 'admin'">
+              <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
                   style="width: 200px"
@@ -71,6 +58,13 @@
                   item-value="id"
                   readonly
                 ></v-select>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12">
+                <h3 class="text-subtitle-2 mb-2">Note</h3>
+                <v-textarea variant="solo-filled" density="compact" v-model="viewItem.note" placeholder="What were you working on?" readonly></v-textarea>
               </v-col>
             </v-row>
           </v-responsive>
@@ -91,6 +85,7 @@ const emit = defineEmits(['close']);
 
 const props = defineProps({
   item: Object,
+  role: String,
 });
 
 const viewItem = ref({});
@@ -101,29 +96,21 @@ const isModalVisible = ref(false);
 const statuses = ref([
   {
     id: 1,
-    name: 'Active',
+    name: 'Confirming',
   },
   {
     id: 2,
-    name: 'Deactivated',
+    name: 'Approved',
   },
 ]);
 
-const languages = ref([
-  {
-    code: 'en',
-    name: 'English',
-  },
-  {
-    code: 'vi',
-    name: 'Vietnamese',
-  },
-]);
+const hasBreak = ref(false);
 
 watch(
   () => props.item,
   (newValue) => {
     viewItem.value = { ...newValue };
+    hasBreak.value = viewItem.value?.break ? true : false;
   },
 );
 

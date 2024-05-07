@@ -20,7 +20,13 @@
             <v-row>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">D.O.B</h3>
-                <v-text-field variant="solo-filled" density="compact" :value="viewItem.dob ? formatDateString(viewItem.dob) : ''" readonly></v-text-field>
+                <v-text-field
+                  variant="solo-filled"
+                  density="compact"
+                  :value="viewItem.dob ? formatDateString(viewItem.dob) : ''"
+                  append-inner-icon="mdi-calendar"
+                  readonly
+                ></v-text-field>
               </v-col>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Phone</h3>
