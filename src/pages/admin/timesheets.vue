@@ -81,7 +81,9 @@
           {{ formatDateString(item.date) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          {{ item.status === 1 ? 'Confirming' : 'Approved' }}
+          <template v-if="item.status === 1">Confirming</template>
+          <template v-else-if="item.status === 2">Approved</template>
+          <template v-else>{{ item.status }}</template>
         </template>
         <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
         <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
@@ -190,7 +192,7 @@ const search = async (options = tableOptions.value) => {
   tableLoading.value = true;
   try {
     const response = await axios.get(
-      `/timesheets?page=${options.page}&limit=${options.itemsPerPage}&job=${searchJob.value ?? ''}&user=${searchMember.value ?? ''}&status=${searchStatus.value ?? ''}`,
+      `/timesheets?type=unpaid&page=${options.page}&limit=${options.itemsPerPage}&job=${searchJob.value ?? ''}&user=${searchMember.value ?? ''}&status=${searchStatus.value ?? ''}`,
     );
     if (response?.data?.data) {
       timesheets.value = response.data.data;
