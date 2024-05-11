@@ -13,15 +13,32 @@ export function formatTimeString(timeString) {
   const [hours, minutes] = timeString.split(':');
   return `${hours}:${minutes}`;
 }
+
+export function formatCurrencyString(amount) {
+  return new Intl.NumberFormat('en-NZ', {
+    style: 'currency',
+    currency: 'NZD',
+    minimumFractionDigits: 2,
+  }).format(amount);
+}
+
+export function formatHourString(count) {
+  const hours = Math.floor(count);
+  const minutes = Math.round((count - hours) * 60);
+  return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+}
+
 export function totalHours(start, end, hasBreak) {
   const startTime = dayjs(`2024-01-01T${start}`);
   const endTime = dayjs(`2024-01-01T${end}`);
   const duration = endTime.diff(startTime, 'hour', true);
   const breakTime = hasBreak ? 0.5 : 0;
   const totalHoursWorked = duration - breakTime;
-  const hours = Math.floor(totalHoursWorked);
-  const minutes = Math.round((totalHoursWorked - hours) * 60);
-  return `${hours}h${minutes.toString().padStart(2, '0')}m`;
+  const totalHoursText = formatHourString(totalHoursWorked);
+  return {
+    count: totalHoursWorked,
+    text: totalHoursText,
+  };
 }
 
 export function sortArray(array, propertyName, order = 'asc') {

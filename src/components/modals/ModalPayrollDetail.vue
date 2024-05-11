@@ -2,9 +2,18 @@
   <v-dialog v-model="isModalVisible" max-width="1200px">
     <v-card class="pa-4">
       <v-card-text class="pa-0">
-        <v-data-table :headers="headers" :items="items" :items-per-page="-1">
-          <template v-slot:[`item.break`]="{ item }">
-            <v-icon v-if="item.break" icon="mdi-check-circle" />
+        {{ props.item }}
+        <v-data-table :headers="tableHeaders" :items="viewItem" :items-per-page="-1">
+          <template v-slot:[`item.created_at`]="{ item }">
+            {{ formatDateString(item.created_at) }}
+          </template>
+          <template v-slot:[`item.date`]="{ item }">
+            {{ formatDateString(item.date) }}
+          </template>
+          <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+          <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
+          <template v-slot:[`item.amount`]="{ item }">
+            {{ formatCurrencyString(item.amount) }}
           </template>
           <template #bottom></template>
         </v-data-table>
@@ -17,148 +26,48 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const emit = defineEmits(['closeModal']);
+import { ref, watch } from 'vue';
+import { formatDateString, formatTimeString, formatCurrencyString, totalHours } from '@/plugins/utils';
+
+const emit = defineEmits(['close']);
+
+const props = defineProps({
+  timesheets: Object,
+});
+
+const viewItem = ref([]);
+viewItem.value = props.timesheets?.length ? [...props.timesheets] : [];
 
 const isModalVisible = ref(false);
 
-defineProps({
-  selectedDessert: null,
-});
+watch(
+  () => props.timesheets,
+  (newValue) => {
+    viewItem.value = [...newValue];
+    if (viewItem.value.length) {
+      viewItem.value = viewItem.value.map((item) => {
+        const total = totalHours(item.start_time, item.end_time, item.break);
+        return {
+          ...item,
+          time_worked: total,
+          amount: total?.count * item.hourly_rate,
+        };
+      });
+    }
+  },
+);
 
 const closeModal = () => {
-  emit('closeModal');
+  emit('close');
 };
 
-const headers = ref([
-  { title: 'Date', value: 'date', width: 140, summable: false },
-  { title: 'Job', value: 'job', width: 'auto', summable: false },
-  { title: 'Time', value: 'time', width: 140, summable: false },
-  { title: 'Break', value: 'break', width: 140, summable: false },
-  { title: 'Time Worked', value: 'timeworked', width: 140, summable: true },
-  { title: 'Hourly Rate', value: 'rate', width: 140, summable: false },
-  { title: 'Wage', value: 'wage', width: 140, summable: true },
-]);
-const items = ref([
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 1,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    job: '100 Loxodonta Africana',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: 200,
-    rate: 20,
-    wage: 200,
-  },
+const tableHeaders = ref([
+  { title: 'Job', value: 'job.name', width: 'auto' },
+  { title: 'Date', value: 'date', width: 120 },
+  { title: 'Time', value: 'time_range', width: 120 },
+  { title: 'Break', value: 'break', width: 120 },
+  { title: 'Time Worked', value: 'time_worked.text', width: 130 },
+  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
+  { title: 'Wage', value: 'amount', width: 120 },
 ]);
 </script>

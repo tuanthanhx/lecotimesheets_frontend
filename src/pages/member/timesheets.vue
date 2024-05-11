@@ -68,7 +68,6 @@
         </template>
         <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
         <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
-        <template v-slot:[`item.time_worked`]="{ item }"> {{ totalHours(item.start_time, item.end_time, item.break) }} </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-menu>
             <template v-slot:activator="{ props }">
@@ -153,7 +152,7 @@ const tableHeaders = ref([
   { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },
   { title: 'Break', value: 'break', width: 120 },
-  { title: 'Time Worked', value: 'time_worked', width: 120 },
+  { title: 'Time Worked', value: 'totalHours.text', width: 120 },
   { title: 'Status', value: 'status', width: 120 },
   { title: '', value: 'actions', width: 80 },
 ]);
@@ -169,6 +168,15 @@ const search = async (options = tableOptions.value) => {
       tableTotalItems.value = response.data.total;
       tableOptions.value.page = options.page;
       tableOptions.value.itemsPerPage = options.itemsPerPage;
+      if (timesheets.value.length) {
+        timesheets.value = timesheets.value.map((item) => {
+          const total = totalHours(item.start_time, item.end_time, item.break);
+          return {
+            ...item,
+            totalHours: total,
+          };
+        });
+      }
     }
   } catch (error) {
     console.error(error);
