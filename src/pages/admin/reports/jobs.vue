@@ -8,7 +8,10 @@
       clearable
       label="Select Job"
       v-model="selectedJob"
-      :items="['144 California', '145 Colorado', '146 Florida', '147 Georgia', '148 Texas']"
+      :items="jobs"
+      item-title="name"
+      :item-value="(item) => item"
+      @update:modelValue="() => fetchTimesheets()"
     ></v-select>
 
     <template v-if="!selectedJob">
@@ -31,140 +34,137 @@
       </v-sheet> -->
 
       <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
-        <v-data-table :headers="headers" :items="items" :items-per-page="-1">
-          <template v-slot:[`item.break`]="{ item }">
-            <v-icon v-if="item.break" icon="mdi-check-circle" />
+        <v-data-table-server
+          v-model:items-per-page="tableOptions.itemsPerPage"
+          :headers="tableHeaders"
+          :items="timesheets"
+          :items-length="tableTotalItems"
+          :loading="tableLoading"
+          item-value="name"
+          @update:options="fetchTimesheets"
+        >
+          <template v-slot:[`item.created_at`]="{ item }">
+            {{ formatDateString(item.created_at) }}
           </template>
-          <template #bottom></template>
-        </v-data-table>
+          <template v-slot:[`item.status`]="{ item }">
+            <template v-if="item.status === 1">Confirming</template>
+            <template v-else-if="item.status === 2">Approved</template>
+            <template v-else-if="item.status === 3">Paid</template>
+            <template v-else>{{ item.status }}</template>
+          </template>
+          <template v-slot:[`item.date`]="{ item }">
+            {{ formatDateString(item.date) }}
+          </template>
+          <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+          <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
+          <template v-slot:[`item.amount`]="{ item }">
+            {{ formatCurrencyString(item.amount) }}
+          </template>
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-menu>
+              <template v-slot:activator="{ props }">
+                <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
+              </template>
+              <v-list>
+                <v-list-item link @click="openModalTimesheetDetail(item)">
+                  <v-list-item-title>Detail</v-list-item-title>
+                </v-list-item>
+                <v-list-item link @click="openModalTimesheetEdit(item)">
+                  <v-list-item-title>Edit</v-list-item-title>
+                </v-list-item>
+                <v-list-item link @click="approveTimesheet(item)" v-if="item.status === 1">
+                  <v-list-item-title>Approve</v-list-item-title>
+                </v-list-item>
+                <v-list-item link @click="unapproveTimesheet(item)" v-if="item.status === 2">
+                  <v-list-item-title>Unapprove</v-list-item-title>
+                </v-list-item>
+                <v-list-item link @click="deleteTimesheet(item)">
+                  <v-list-item-title>Delete</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </template>
+        </v-data-table-server>
       </v-sheet>
     </template>
   </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from '@/plugins/axios';
+import { formatDateString, formatTimeString, formatCurrencyString, sortArray, totalHours } from '@/plugins/utils';
+
+const jobs = ref([]);
 const selectedJob = ref(null);
 
-const headers = ref([
-  { title: 'Date', value: 'date', width: 140 },
-  { title: 'Member', value: 'member', width: 'auto' },
-  { title: 'Time', value: 'time', width: 140 },
-  { title: 'Break', value: 'break', width: 140 },
-  { title: 'Time Worked', value: 'timeworked', width: 140 },
-  { title: 'Status', value: 'status', width: 140 },
+const fetchJobs = async () => {
+  try {
+    const listJobs = await axios.get('/jobs?type=select&limit=-1');
+    if (listJobs?.data?.data) {
+      jobs.value = sortArray(listJobs.data.data, 'name');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const timesheets = ref([]);
+
+const tableLoading = ref(true);
+const tableTotalItems = ref(0);
+const tableOptions = ref({
+  page: 1,
+  itemsPerPage: 25,
+});
+
+const tableHeaders = ref([
+  { title: 'Submitted On', value: 'created_at', width: 120 },
+  { title: 'Member', value: 'user.name', width: 200 },
+  { title: 'Date', value: 'date', width: 120 },
+  { title: 'Time', value: 'time_range', width: 120 },
+  { title: 'Break', value: 'break', width: 120 },
+  { title: 'Time Worked', value: 'time_worked.text', width: 120 },
+  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
+  { title: 'Amount', value: 'amount', width: 120 },
+  { title: 'Status', value: 'status', width: 120 },
 ]);
 
-const items = ref([
-  {
-    id: 1,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 2,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 4,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 5,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 6,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 7,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 8,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 9,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 10,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 11,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: false,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-  {
-    id: 12,
-    date: '05-03-2024',
-    member: 'John Smith',
-    time: '08:00 - 16:00',
-    break: true,
-    timeworked: '9h30m',
-    status: 'Approved',
-  },
-]);
+const fetchTimesheets = async (options = tableOptions.value) => {
+  if (!selectedJob.value) {
+    timesheets.value = [];
+    return;
+  }
+
+  tableLoading.value = true;
+  try {
+    const response = await axios.get(`/timesheets?type=report&page=${options.page}&limit=${options.itemsPerPage}&user=${selectedJob.value?.id ?? ''}`);
+    if (response?.data?.data) {
+      timesheets.value = response.data.data;
+      tableTotalItems.value = response.data.total;
+      tableOptions.value.page = options.page;
+      tableOptions.value.itemsPerPage = options.itemsPerPage;
+      if (timesheets.value.length) {
+        timesheets.value = timesheets.value.map((item) => {
+          const total = totalHours(item.start_time, item.end_time, item.break);
+          return {
+            ...item,
+            time_worked: total,
+            amount: total?.count * item.hourly_rate,
+          };
+        });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    tableLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchJobs();
+});
 </script>
 
 <style lang="scss" scoped></style>

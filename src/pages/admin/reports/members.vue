@@ -93,7 +93,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '@/plugins/axios';
-import { formatDateString, formatTimeString, formatHourString, formatCurrencyString, sortArray, totalHours } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, sortArray, totalHours } from '@/plugins/utils';
 
 const users = ref([]);
 const selectedUser = ref(null);
