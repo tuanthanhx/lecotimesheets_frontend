@@ -12,6 +12,9 @@
           </template>
           <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
           <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
+          <template v-slot:[`item.time_worked`]="{ item }">
+            {{ formatHourString(item.time_worked) }}
+          </template>
           <template v-slot:[`item.amount`]="{ item }">
             {{ formatCurrencyString(item.amount) }}
           </template>
@@ -27,7 +30,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { formatDateString, formatTimeString, formatCurrencyString, totalHours } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, formatHourString } from '@/plugins/utils';
 
 const emit = defineEmits(['close']);
 
@@ -44,16 +47,6 @@ watch(
   () => props.timesheets,
   (newValue) => {
     viewItem.value = [...newValue];
-    if (viewItem.value.length) {
-      viewItem.value = viewItem.value.map((item) => {
-        const total = totalHours(item.start_time, item.end_time, item.break);
-        return {
-          ...item,
-          time_worked: total,
-          amount: total?.count * item.hourly_rate,
-        };
-      });
-    }
   },
 );
 
@@ -66,7 +59,7 @@ const tableHeaders = ref([
   { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },
   { title: 'Break', value: 'break', width: 120 },
-  { title: 'Time Worked', value: 'time_worked.text', width: 130 },
+  { title: 'Time Worked', value: 'time_worked', width: 130 },
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
   { title: 'Amount', value: 'amount', width: 120 },
 ]);

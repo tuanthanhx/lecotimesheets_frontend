@@ -46,6 +46,9 @@
             {{ formatDateString(item.date) }}
           </template>
           <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+          <template v-slot:[`item.time_worked`]="{ item }">
+            {{ formatHourString(item.time_worked) }}
+          </template>
           <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
           <template v-slot:[`item.amount`]="{ item }">
             {{ formatCurrencyString(item.amount) }}
@@ -71,7 +74,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '@/plugins/axios';
-import { formatDateString, formatTimeString, formatCurrencyString, totalHours, sortArray } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, sortArray } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 import { useConfirmDialog } from '@/plugins/confirm_dialogs';
 
@@ -106,17 +109,7 @@ const estimate = async () => {
     const response = await axios.get(`/timesheets?type=approved&limit=-1&user=${selectedUser.value?.id}`);
     if (response?.data?.data) {
       timesheets.value = response.data.data;
-      if (timesheets.value.length) {
-        timesheets.value = timesheets.value.map((item) => {
-          const total = totalHours(item.start_time, item.end_time, item.break);
-          return {
-            ...item,
-            time_worked: total,
-            amount: total?.count * item.hourly_rate,
-          };
-        });
-      }
-      totalTimeWorked.value = timesheets.value.reduce((total, item) => total + item.time_worked?.count, 0);
+      totalTimeWorked.value = timesheets.value.reduce((total, item) => total + item.time_worked, 0);
       totalAmount.value = timesheets.value.reduce((total, item) => total + item.amount, 0);
     }
   } catch (error) {
@@ -131,7 +124,7 @@ const tableHeaders = ref([
   { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },
   { title: 'Break', value: 'break', width: 120 },
-  { title: 'Time Worked', value: 'time_worked.text', width: 120 },
+  { title: 'Time Worked', value: 'time_worked', width: 120 },
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
   { title: 'Amount', value: 'amount', width: 120 },
 ]);

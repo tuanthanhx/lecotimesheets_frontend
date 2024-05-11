@@ -164,7 +164,7 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
     date: yup.string().required().label('Date'),
     start_time: yup.string().required().label('Start Time'),
     end_time: yup.string().required().label('End Time'),
-    note: yup.string().optional().label('note'),
+    note: yup.string().optional().nullable().label('note'),
     has_break: yup.bool().optional().label('Break'),
     user: yup.number().when('$role', (role, schema) => (role === 'admin' ? schema.required().label('Member') : schema.label('Member'))),
     status: yup.number().when('$role', (role, schema) => (role === 'admin' ? schema.required().label('Status') : schema.label('Status'))),
