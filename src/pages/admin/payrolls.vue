@@ -37,7 +37,6 @@
     </template>
 
     <template v-else>
-      <h2 class="text-h6 mb-4">{{ selectedUser?.name }}</h2>
       <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
         <v-data-table :headers="tableHeaders" :items="timesheets" :items-per-page="-1">
           <template v-slot:[`item.created_at`]="{ item }">
@@ -97,6 +96,12 @@ const fetchUsers = async () => {
 };
 
 const estimate = async () => {
+  if (!selectedUser.value) {
+    timesheets.value = [];
+    totalTimeWorked.value = 0;
+    totalAmount.value = 0;
+    return;
+  }
   try {
     const response = await axios.get(`/timesheets?type=approved&limit=-1&user=${selectedUser.value?.id}`);
     if (response?.data?.data) {
@@ -128,7 +133,7 @@ const tableHeaders = ref([
   { title: 'Break', value: 'break', width: 120 },
   { title: 'Time Worked', value: 'time_worked.text', width: 120 },
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
-  { title: 'Wage', value: 'amount', width: 120 },
+  { title: 'Amount', value: 'amount', width: 120 },
 ]);
 
 const payWages = async (item) => {

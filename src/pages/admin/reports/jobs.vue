@@ -23,15 +23,13 @@
     </template>
 
     <template v-else>
-      <h2 class="text-h6 mb-4">{{ selectedJob }}</h2>
-      <v-sheet class="pa-8 mb-4" color="#ffffff" border="sm" rounded="lg">
+      <!-- <v-sheet class="pa-8 mb-4" color="#ffffff" border="sm" rounded="lg">
         Revenue: $50,000<br />
         Material Costs: $10,000<br />
         Labor Costs: $20,000 (Paid: $15,000, Unpaid: $5,000)<br />
         Profit: $20,000
-      </v-sheet>
+      </v-sheet> -->
 
-      <h2 class="text-h6 mb-4">Timesheets</h2>
       <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
         <v-data-table :headers="headers" :items="items" :items-per-page="-1">
           <template v-slot:[`item.break`]="{ item }">

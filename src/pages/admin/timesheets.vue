@@ -197,7 +197,7 @@ const tableHeaders = ref([
   { title: 'Break', value: 'break', width: 120 },
   { title: 'Time Worked', value: 'time_worked.text', width: 120 },
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
-  { title: 'Wage', value: 'amount', width: 120 },
+  { title: 'Amount', value: 'amount', width: 120 },
   { title: 'Status', value: 'status', width: 120 },
   { title: '', value: 'actions', width: 80 },
 ]);

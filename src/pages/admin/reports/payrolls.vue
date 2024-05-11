@@ -26,7 +26,6 @@
     </template>
 
     <template v-else>
-      <h2 class="text-h6 mb-4">{{ selectedUser?.name }}</h2>
       <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
         <v-data-table :headers="tableHeaders" :items="payrolls" :items-per-page="25">
           <template v-slot:[`item.created_at`]="{ item }">
@@ -70,6 +69,10 @@ const fetchUsers = async () => {
 };
 
 const fetchPayrolls = async () => {
+  if (!selectedUser.value) {
+    payrolls.value = [];
+    return;
+  }
   try {
     const response = await axios.get(`/payrolls?user=${selectedUser.value?.id}`);
     if (response?.data?.data) {
