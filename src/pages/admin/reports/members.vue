@@ -140,14 +140,14 @@ const fetchTimesheets = async (options = tableOptions.value) => {
   tableLoading.value = true;
   try {
     const response = await axios.get(`/timesheets?type=report&page=${options.page}&limit=${options.itemsPerPage}&user=${selectedUser.value?.id ?? ''}`);
-    const responseUnpaid = await axios.get(`/timesheets/unpaid?user=${selectedUser.value?.id ?? ''}`);
+    const responseAmount = await axios.get(`/timesheets/amount?user=${selectedUser.value?.id ?? ''}`);
     if (response?.data?.data) {
       timesheets.value = response.data.data;
       tableTotalItems.value = response.data.total;
       tableOptions.value.page = options.page;
       tableOptions.value.itemsPerPage = options.itemsPerPage;
     }
-    unpaidAmount.value = responseUnpaid?.data?.totalUnpaidAmount;
+    unpaidAmount.value = responseAmount?.data?.unpaidAmount;
   } catch (error) {
     console.error(error);
   } finally {

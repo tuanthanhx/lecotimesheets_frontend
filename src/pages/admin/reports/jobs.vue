@@ -24,7 +24,10 @@
     </v-sheet>
 
     <v-sheet v-show="selectedJob" class="pa-8 mb-4" color="#ffffff" border="sm" rounded="lg">
-      <pre> Unpaid: {{ formatCurrencyString(unpaidAmount) }} </pre>
+      <pre> revenue: {{ formatCurrencyString(job.revenue) }} </pre>
+      <pre> material_cost: {{ formatCurrencyString(job.material_cost) }} </pre>
+      <pre> labour_cost: {{ formatCurrencyString(totalAmount) }}, unpaid: {{ formatCurrencyString(unpaidAmount) }} </pre>
+      <pre> profit: {{ formatCurrencyString(job.revenue - job.material_cost - totalAmount) }} </pre>
       <!-- Revenue: $50,000<br />
         Material Costs: $10,000<br />
         Labor Costs: $20,000 (Paid: $15,000, Unpaid: $5,000)<br />
@@ -95,8 +98,10 @@ import { ref, onMounted } from 'vue';
 import axios from '@/plugins/axios';
 import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, sortArray } from '@/plugins/utils';
 
+const job = ref({});
 const jobs = ref([]);
 const selectedJob = ref(null);
+const totalAmount = ref(0);
 const unpaidAmount = ref(0);
 
 const fetchJobs = async () => {
@@ -140,14 +145,19 @@ const fetchTimesheets = async (options = tableOptions.value) => {
   tableLoading.value = true;
   try {
     const response = await axios.get(`/timesheets?type=report&page=${options.page}&limit=${options.itemsPerPage}&job=${selectedJob.value?.id ?? ''}`);
-    const responseUnpaid = await axios.get(`/timesheets/unpaid?job=${selectedJob.value?.id ?? ''}`);
+    const responseAmount = await axios.get(`/timesheets/amount?job=${selectedJob.value?.id ?? ''}`);
+    const responseJob = await axios.get(`/jobs/${selectedJob.value?.id}`);
     if (response?.data?.data) {
       timesheets.value = response.data.data;
       tableTotalItems.value = response.data.total;
       tableOptions.value.page = options.page;
       tableOptions.value.itemsPerPage = options.itemsPerPage;
     }
-    unpaidAmount.value = responseUnpaid?.data?.totalUnpaidAmount;
+    totalAmount.value = responseAmount?.data?.totalAmount;
+    unpaidAmount.value = responseAmount?.data?.unpaidAmount;
+    if (responseJob?.data) {
+      job.value = responseJob.data;
+    }
   } catch (error) {
     console.error(error);
   } finally {

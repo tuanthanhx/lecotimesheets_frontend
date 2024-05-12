@@ -3,69 +3,66 @@
     <h1 class="text-h5 mb-8">Payroll Reports</h1>
 
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
-      <v-data-table :headers="headers" :items="items" :items-per-page="25">
-        <template v-slot:[`item.break`]="{ item }">
-          <v-icon v-if="item.break" icon="mdi-check-circle" />
+      <v-data-table :headers="tableHeaders" :items="payrolls" :items-per-page="25">
+        <template v-slot:[`item.created_at`]="{ item }">
+          {{ formatDateString(item.created_at) }}
+        </template>
+        <template v-slot:[`item.amount`]="{ item }">
+          {{ formatCurrencyString(item.amount) }}
+        </template>
+        <template v-slot:[`item.time_worked`]="{ item }">
+          {{ formatHourString(item.time_worked) }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-btn class="text-none" @click="openModalPayrollDetail(item)" color="#2B343F" height="32">Detail</v-btn>
+          <v-btn class="text-none" @click="openModalPayrollDetail(item)" color="#2B343F" height="32">Timesheets</v-btn>
         </template>
       </v-data-table>
     </v-sheet>
 
-    <ModalPayrollDetail v-model="isModalPayrollDetailVisible" @closeModal="closeModalPayrollDetail" />
+    <ModalPayrollDetail v-model="isModalPayrollDetailVisible" @close="closeModalPayrollDetail" :timesheets="viewItem" />
   </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from '@/plugins/axios';
+import { formatDateString, formatHourString, formatCurrencyString } from '@/plugins/utils';
 
-const selectedMember = ref(null);
+const payrolls = ref([]);
 
-const headers = ref([
-  { title: 'Pay Date', value: 'date', width: 140 },
-  { title: 'Paid Amount', value: 'amount', width: 'auto' },
+const fetchPayrolls = async () => {
+  try {
+    const response = await axios.get(`/payrolls`);
+    if (response?.data?.data) {
+      payrolls.value = response.data.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const tableHeaders = ref([
+  { title: 'Pay Date', value: 'created_at', width: 140 },
+  { title: 'Paid Amount', value: 'amount', width: 200 },
+  { title: 'Time Worked', value: 'time_worked', width: 'auto' },
   { title: '', value: 'actions', width: 140 },
 ]);
 
-const items = ref([
-  {
-    id: 1,
-    date: '05-03-2024',
-    amount: 200,
-  },
-  {
-    id: 2,
-    date: '06-03-2024',
-    amount: 300,
-  },
-  {
-    id: 3,
-    date: '07-03-2024',
-    amount: 400,
-  },
-  {
-    id: 4,
-    date: '08-03-2024',
-    amount: 500,
-  },
-  {
-    id: 5,
-    date: '09-03-2024',
-    amount: 600,
-  },
-]);
-
 const isModalPayrollDetailVisible = ref(false);
+const viewItem = ref(null);
 
 const openModalPayrollDetail = (item) => {
-  console.log(item);
+  viewItem.value = item.timesheets;
   isModalPayrollDetailVisible.value = true;
 };
 
 const closeModalPayrollDetail = () => {
   isModalPayrollDetailVisible.value = false;
 };
+
+onMounted(() => {
+  fetchPayrolls();
+});
 </script>
 
 <style lang="scss" scoped></style>
