@@ -18,8 +18,8 @@
       </v-col>
       <v-col cols="auto" class="d-flex ml-auto" v-if="selectedUser">
         <div class="mt-2 mr-4 text-right">
-          <pre> totalTimeWorked: {{ totalTimeWorked }} </pre>
-          <pre> totalAmount: {{ totalAmount }} </pre>
+          <pre> totalTimeWorked: {{ formatHourString(totalTimeWorked) }} </pre>
+          <pre> totalAmount: {{ formatCurrencyString(totalAmount) }} </pre>
         </div>
         <v-btn class="text-none" prepend-icon="mdi-currency-usd" width="160" height="56" color="#2B343F" @click="payWages"> Pay now </v-btn>
       </v-col>

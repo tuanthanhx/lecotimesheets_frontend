@@ -216,16 +216,6 @@ const search = async (options = tableOptions.value) => {
       tableTotalItems.value = response.data.total;
       tableOptions.value.page = options.page;
       tableOptions.value.itemsPerPage = options.itemsPerPage;
-      // if (timesheets.value.length) {
-      //   timesheets.value = timesheets.value.map((item) => {
-      //     const total = totalHours(item.start_time, item.end_time, item.break);
-      //     return {
-      //       ...item,
-      //       time_worked: total,
-      //       amount: total?.count * item.hourly_rate,
-      //     };
-      //   });
-      // }
     }
   } catch (error) {
     console.error(error);

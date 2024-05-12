@@ -19,13 +19,13 @@
                 <v-textarea variant="solo-filled" density="compact" v-model="viewItem.detail" readonly></v-textarea>
               </v-col>
             </v-row>
-            <v-row v-if="userData?.isAdmin">
+            <v-row v-if="userData?.group === 6">
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Revenue</h3>
                 <v-text-field variant="solo-filled" density="compact" prefix="$" type="number" step="0.01" v-model="viewItem.revenue" readonly></v-text-field>
               </v-col>
             </v-row>
-            <v-row v-if="userData?.isAdmin">
+            <v-row v-if="userData?.group === 6">
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Material Cost</h3>
                 <v-text-field
