@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import axios from '@/plugins/axios';
 import { formatDateString } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
@@ -255,9 +255,6 @@ const confirmDeleteMember = async (item) => {
   }
 };
 
-onMounted(() => {
-  search();
-});
 </script>
 
 <style lang="scss" scoped></style>

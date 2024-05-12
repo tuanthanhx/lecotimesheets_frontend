@@ -85,7 +85,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import axios from '@/plugins/axios';
 import { formatDateString } from '@/plugins/utils';
 
@@ -148,10 +148,6 @@ const openModalJobDetail = (item) => {
 const closeModalJobDetail = () => {
   isModalJobDetailVisible.value = false;
 };
-
-onMounted(() => {
-  search();
-});
 </script>
 
 <style lang="scss" scoped></style>

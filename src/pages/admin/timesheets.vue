@@ -329,7 +329,6 @@ const confirmDeleteTimesheet = async (item) => {
 
 onMounted(() => {
   getFilters();
-  search();
 });
 </script>
 
