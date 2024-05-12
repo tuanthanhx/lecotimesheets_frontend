@@ -145,7 +145,7 @@ const tableHeaders = ref([
   { title: 'Full Name', value: 'name', width: 'auto' },
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
   { title: 'Status', value: 'status', width: 120 },
-  { title: '', value: 'actions', width: 80 },
+  { title: 'Action', value: 'actions', width: 80 },
 ]);
 
 const search = async (options = tableOptions.value) => {

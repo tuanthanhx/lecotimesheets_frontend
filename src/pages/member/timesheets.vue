@@ -59,7 +59,7 @@
           {{ formatDateString(item.created_at) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <template v-if="item.status === 1">Confirming</template>
+          <template v-if="item.status === 1">Pending</template>
           <template v-else-if="item.status === 2">Approved</template>
           <template v-else>{{ item.status }}</template>
         </template>
@@ -136,7 +136,7 @@ const jobs = ref([]);
 const statuses = ref([
   {
     id: 1,
-    name: 'Confirming',
+    name: 'Pending',
   },
   {
     id: 2,
@@ -153,7 +153,7 @@ const tableOptions = ref({
   itemsPerPage: 25,
 });
 const tableHeaders = ref([
-  { title: 'Submitted On', value: 'created_at', width: 120 },
+  { title: 'Create Date', value: 'created_at', width: 120 },
   { title: 'Job', value: 'job.name', width: 'auto' },
   { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },
@@ -162,7 +162,7 @@ const tableHeaders = ref([
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
   { title: 'Amount', value: 'amount', width: 120 },
   { title: 'Status', value: 'status', width: 120 },
-  { title: '', value: 'actions', width: 80 },
+  { title: 'Action', value: 'actions', width: 80 },
 ]);
 
 const search = async (options = tableOptions.value) => {

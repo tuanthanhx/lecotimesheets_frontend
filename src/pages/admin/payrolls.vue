@@ -118,7 +118,7 @@ const estimate = async () => {
 };
 
 const tableHeaders = ref([
-  { title: 'Submitted On', value: 'created_at', width: 120 },
+  { title: 'Create Date', value: 'created_at', width: 120 },
   { title: 'Member', value: 'user.name', width: 200 },
   { title: 'Job', value: 'job.name', width: 'auto' },
   { title: 'Date', value: 'date', width: 120 },

@@ -48,7 +48,7 @@
           {{ formatDateString(item.created_at) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <template v-if="item.status === 1">Confirming</template>
+          <template v-if="item.status === 1">Pending</template>
           <template v-else-if="item.status === 2">Approved</template>
           <template v-else-if="item.status === 3">Paid</template>
           <template v-else>{{ item.status }}</template>
@@ -125,7 +125,7 @@ const tableOptions = ref({
 });
 
 const tableHeaders = ref([
-  { title: 'Submitted On', value: 'created_at', width: 120 },
+  { title: 'Create Date', value: 'created_at', width: 120 },
   { title: 'Member', value: 'user.name', width: 200 },
   { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },

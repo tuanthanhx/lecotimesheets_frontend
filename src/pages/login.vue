@@ -94,7 +94,7 @@ const submit = handleSubmit(async (values) => {
         username: response.data.username,
         group: response.data.group,
       });
-      if (response.data.is_admin) {
+      if (response.data.group === 6) {
         router.push('/admin/timesheets');
       } else {
         router.push('/member/timesheets');

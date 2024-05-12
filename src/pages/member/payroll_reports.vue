@@ -45,7 +45,7 @@ const tableHeaders = ref([
   { title: 'Pay Date', value: 'created_at', width: 140 },
   { title: 'Paid Amount', value: 'amount', width: 200 },
   { title: 'Time Worked', value: 'time_worked', width: 'auto' },
-  { title: '', value: 'actions', width: 140 },
+  { title: 'Action', value: 'actions', width: 140 },
 ]);
 
 const isModalPayrollDetailVisible = ref(false);

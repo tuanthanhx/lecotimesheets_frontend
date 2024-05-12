@@ -136,7 +136,7 @@ const isLoading = ref(false);
 const statuses = ref([
   {
     id: 1,
-    name: 'Confirming',
+    name: 'Pending',
   },
   {
     id: 2,

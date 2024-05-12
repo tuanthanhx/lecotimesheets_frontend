@@ -78,11 +78,15 @@
         @update:options="search"
       >
         <template v-slot:[`item.created_at`]="{ item }">
-          {{ formatDateString(item.created_at) }}
+          <a class="text-decoration-none" href="#" @click.prevent="openModalTimesheetDetail(item)">{{ formatDateString(item.created_at) }}</a>
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <template v-if="item.status === 1">Confirming</template>
-          <template v-else-if="item.status === 2">Approved</template>
+          <template v-if="item.status === 1"
+            ><v-chip color="blue" variant="flat"> <v-icon icon="mdi-text-box" start></v-icon>Pending</v-chip></template
+          >
+          <template v-else-if="item.status === 2"
+            ><v-chip color="green" variant="flat"> <v-icon icon="mdi-text-box-check" start></v-icon>Approved</v-chip></template
+          >
           <template v-else>{{ item.status }}</template>
         </template>
         <template v-slot:[`item.date`]="{ item }">
@@ -175,7 +179,7 @@ const users = ref([]);
 const statuses = ref([
   {
     id: 1,
-    name: 'Confirming',
+    name: 'Pending',
   },
   {
     id: 2,
@@ -192,7 +196,7 @@ const tableOptions = ref({
   itemsPerPage: 25,
 });
 const tableHeaders = ref([
-  { title: 'Submitted On', value: 'created_at', width: 120 },
+  { title: 'Create Date', value: 'created_at', width: 120 },
   { title: 'Member', value: 'user.name', width: 200 },
   { title: 'Job', value: 'job.name', width: 'auto' },
   { title: 'Date', value: 'date', width: 120 },
@@ -202,7 +206,7 @@ const tableHeaders = ref([
   { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
   { title: 'Amount', value: 'amount', width: 120 },
   { title: 'Status', value: 'status', width: 120 },
-  { title: '', value: 'actions', width: 80 },
+  { title: 'Action', value: 'actions', width: 80 },
 ]);
 
 const search = async (options = tableOptions.value) => {

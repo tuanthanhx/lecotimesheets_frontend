@@ -115,7 +115,7 @@ const tableHeaders = ref([
   { title: 'Created On', value: 'created_at', width: 120 },
   { title: 'Job Name', value: 'name', width: 'auto' },
   { title: 'Status', value: 'status', width: 120 },
-  { title: '', value: 'actions', width: 80 },
+  { title: 'Action', value: 'actions', width: 80 },
 ]);
 
 const search = async (options = tableOptions.value) => {
