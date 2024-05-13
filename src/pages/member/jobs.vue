@@ -43,7 +43,7 @@
       </v-row>
     </v-sheet>
 
-    <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-data-table-server
         v-model:items-per-page="tableOptions.itemsPerPage"
         :headers="tableHeaders"
@@ -51,6 +51,7 @@
         :items-length="tableTotalItems"
         :loading="tableLoading"
         item-value="name"
+        :hover="true"
         @update:options="search"
       >
         <template v-slot:[`item.name`]="{ item }">

@@ -4,29 +4,29 @@
 
     <v-row>
       <v-col cols="auto">
+        <h3 class="text-subtitle-2 mb-2">Select Member</h3>
         <v-select
           style="width: 300px"
           variant="solo"
+          density="compact"
           clearable
-          label="Select Member"
           v-model="selectedUser"
           :items="users"
           item-title="name"
           :item-value="(item) => item"
+          placeholder="Select a member"
           @update:modelValue="() => estimate()"
         ></v-select>
       </v-col>
-      <v-col cols="auto" class="d-flex ml-auto" v-if="selectedUser">
-        <div class="mt-2 mr-4 text-right">
-          <pre> totalTimeWorked: {{ formatHourString(totalTimeWorked) }} </pre>
-          <pre> totalAmount: {{ formatCurrencyString(totalAmount) }} </pre>
-        </div>
-        <v-btn class="text-none" prepend-icon="mdi-currency-usd" width="160" height="56" color="#2B343F" @click="payWages"> Pay now </v-btn>
+      <v-col cols="auto" class="ml-auto" v-if="selectedUser && timesheets.length">
+        <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-currency-usd" width="160" height="40" color="#2B343F" @click="payWages">
+          Pay now
+        </v-btn>
       </v-col>
     </v-row>
 
     <template v-if="!selectedUser">
-      <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg">
+      <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
         <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
           <v-card-text class="text-center">
             <v-icon icon="mdi-text-search" size="64" color="rgba(0,0,0,.3)"></v-icon>
@@ -37,7 +37,7 @@
     </template>
 
     <template v-else>
-      <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
+      <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
         <v-data-table :headers="tableHeaders" :items="timesheets" :items-per-page="-1">
           <template v-slot:[`item.created_at`]="{ item }">
             {{ formatDateString(item.created_at) }}
@@ -53,7 +53,20 @@
           <template v-slot:[`item.amount`]="{ item }">
             {{ formatCurrencyString(item.amount) }}
           </template>
-          <template #bottom></template>
+          <!-- <template #bottom></template> -->
+          <template v-slot:[`body.append`]>
+            <tr class="font-weight-bold">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>{{ formatHourString(totalTimeWorked) }}</td>
+              <td></td>
+              <td>{{ formatCurrencyString(totalAmount) }}</td>
+            </tr>
+          </template>
         </v-data-table>
       </v-sheet>
     </template>
@@ -119,7 +132,7 @@ const estimate = async () => {
 
 const tableHeaders = ref([
   { title: 'Create Date', value: 'created_at', width: 120 },
-  { title: 'Member', value: 'user.name', width: 200 },
+  { title: 'Member', value: 'user.name', width: 150 },
   { title: 'Job', value: 'job.name', width: 'auto' },
   { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },

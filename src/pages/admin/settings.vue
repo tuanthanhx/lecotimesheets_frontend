@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Settings</h1>
-    <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-responsive max-width="900">
         <form @submit.prevent="submit">
           <v-row>

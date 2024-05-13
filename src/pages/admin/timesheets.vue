@@ -1,73 +1,64 @@
 <template>
   <v-container fluid class="pa-8">
-    <h1 class="text-h5 mb-8">Timesheets</h1>
+    <v-row>
+      <v-col cols="auto">
+        <h1 class="text-h5 mb-8">Timesheets</h1>
+      </v-col>
+      <v-col cols="auto" class="ml-auto">
+        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalTimesheetAdd"> Add Time </v-btn>
+      </v-col>
+    </v-row>
     <v-sheet class="mb-2" color="transparent">
       <v-row>
         <v-col cols="auto">
-          <v-row>
-            <!--
-            // TODO : Add Date Range later
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Date Range</h3>
-              <p>UPDATING</p>
-            </v-col> -->
-
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Job</h3>
-              <v-select
-                style="width: 200px"
-                variant="solo"
-                density="compact"
-                clearable
-                :items="jobs"
-                item-title="name"
-                item-value="id"
-                v-model="searchJob"
-                placeholder="All jobs"
-                @update:modelValue="() => search()"
-              ></v-select>
-            </v-col>
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Member</h3>
-              <v-select
-                style="width: 200px"
-                variant="solo"
-                density="compact"
-                clearable
-                :items="users"
-                item-title="name"
-                item-value="id"
-                v-model="searchMember"
-                placeholder="All members"
-                @update:modelValue="() => search()"
-              ></v-select>
-            </v-col>
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Status</h3>
-              <v-select
-                style="width: 200px"
-                variant="solo"
-                density="compact"
-                clearable
-                :items="statuses"
-                item-title="name"
-                item-value="id"
-                v-model="searchStatus"
-                placeholder="All statuses"
-                @update:modelValue="() => search()"
-              ></v-select>
-            </v-col>
-          </v-row>
+          <h3 class="text-subtitle-2 mb-2">Job</h3>
+          <v-select
+            style="width: 200px"
+            variant="solo"
+            density="compact"
+            clearable
+            :items="jobs"
+            item-title="name"
+            item-value="id"
+            v-model="searchJob"
+            placeholder="All jobs"
+            @update:modelValue="() => search()"
+          ></v-select>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalTimesheetAdd">
-            Add Time
-          </v-btn>
+        <v-col cols="auto">
+          <h3 class="text-subtitle-2 mb-2">Member</h3>
+          <v-select
+            style="width: 200px"
+            variant="solo"
+            density="compact"
+            clearable
+            :items="users"
+            item-title="name"
+            item-value="id"
+            v-model="searchMember"
+            placeholder="All members"
+            @update:modelValue="() => search()"
+          ></v-select>
+        </v-col>
+        <v-col cols="auto">
+          <h3 class="text-subtitle-2 mb-2">Status</h3>
+          <v-select
+            style="width: 200px"
+            variant="solo"
+            density="compact"
+            clearable
+            :items="statuses"
+            item-title="name"
+            item-value="id"
+            v-model="searchStatus"
+            placeholder="All statuses"
+            @update:modelValue="() => search()"
+          ></v-select>
         </v-col>
       </v-row>
     </v-sheet>
 
-    <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-data-table-server
         v-model:items-per-page="tableOptions.itemsPerPage"
         :headers="tableHeaders"
@@ -75,6 +66,7 @@
         :items-length="tableTotalItems"
         :loading="tableLoading"
         item-value="name"
+        :hover="true"
         @update:options="search"
       >
         <template v-slot:[`item.created_at`]="{ item }">

@@ -1,54 +1,47 @@
 <template>
   <v-container fluid class="pa-8">
-    <h1 class="text-h5 mb-8">Jobs</h1>
+    <v-row>
+      <v-col cols="auto">
+        <h1 class="text-h5 mb-8">Job</h1>
+      </v-col>
+      <v-col cols="auto" class="ml-auto">
+        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalJobAdd"> Add Job </v-btn>
+      </v-col>
+    </v-row>
     <v-sheet class="mb-2" color="transparent">
       <v-row>
         <v-col cols="auto">
-          <v-row>
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Keyword</h3>
-              <v-text-field
-                style="width: 300px"
-                variant="solo"
-                density="compact"
-                clearable
-                append-inner-icon="mdi-magnify"
-                v-model="searchKeyword"
-                placeholder="Search jobs"
-                @update:modelValue="() => search()"
-              ></v-text-field>
-            </v-col>
-            <!-- TODO: Add this filter later
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Date range</h3>
-              <v-text-field></v-text-field>
-            </v-col> -->
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Status</h3>
-              <v-select
-                style="width: 200px"
-                variant="solo"
-                density="compact"
-                clearable
-                :items="statuses"
-                item-title="name"
-                item-value="id"
-                v-model="searchStatus"
-                placeholder="All statuses"
-                @update:modelValue="() => search()"
-              ></v-select>
-            </v-col>
-          </v-row>
+          <h3 class="text-subtitle-2 mb-2">Keyword</h3>
+          <v-text-field
+            style="width: 300px"
+            variant="solo"
+            density="compact"
+            clearable
+            append-inner-icon="mdi-magnify"
+            v-model="searchKeyword"
+            placeholder="Search jobs"
+            @update:modelValue="() => search()"
+          ></v-text-field>
         </v-col>
-        <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalJobAdd">
-            Add Job
-          </v-btn>
+        <v-col cols="auto">
+          <h3 class="text-subtitle-2 mb-2">Status</h3>
+          <v-select
+            style="width: 200px"
+            variant="solo"
+            density="compact"
+            clearable
+            :items="statuses"
+            item-title="name"
+            item-value="id"
+            v-model="searchStatus"
+            placeholder="All statuses"
+            @update:modelValue="() => search()"
+          ></v-select>
         </v-col>
       </v-row>
     </v-sheet>
 
-    <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-data-table-server
         v-model:items-per-page="tableOptions.itemsPerPage"
         :headers="tableHeaders"
@@ -56,6 +49,7 @@
         :items-length="tableTotalItems"
         :loading="tableLoading"
         item-value="name"
+        :hover="true"
         @update:options="search"
       >
         <template v-slot:[`item.name`]="{ item }">

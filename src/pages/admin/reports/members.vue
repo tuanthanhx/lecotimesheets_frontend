@@ -21,7 +21,7 @@
       </v-col>
     </v-row>
 
-    <v-sheet v-show="!selectedUser" class="pa-8" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet v-show="!selectedUser" class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
         <v-card-text class="text-center">
           <v-icon icon="mdi-text-search" size="64" color="rgba(0,0,0,.3)"></v-icon>
@@ -30,7 +30,7 @@
       </v-card>
     </v-sheet>
 
-    <v-sheet v-show="selectedUser" class="pa-4" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet v-show="selectedUser" class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-data-table-server
         v-model:items-per-page="tableOptions.itemsPerPage"
         :headers="tableHeaders"
@@ -38,6 +38,7 @@
         :items-length="tableTotalItems"
         :loading="tableLoading"
         item-value="name"
+        :hover="true"
         @update:options="fetchTimesheets"
       >
         <template v-slot:[`item.created_at`]="{ item }">
@@ -120,7 +121,7 @@ const tableOptions = ref({
 
 const tableHeaders = ref([
   { title: 'Create Date', value: 'created_at', width: 120 },
-  { title: 'Member', value: 'user.name', width: 200 },
+  { title: 'Member', value: 'user.name', width: 150 },
   { title: 'Job', value: 'job.name', width: 'auto' },
   { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },

@@ -3,7 +3,7 @@
     <v-card class="pa-4">
       <v-card-text class="pa-0">
         {{ props.item }}
-        <v-data-table :headers="tableHeaders" :items="viewItem" :items-per-page="-1">
+        <v-data-table :headers="tableHeaders" :items="viewItem" :items-per-page="-1" :hover="true">
           <template v-slot:[`item.created_at`]="{ item }">
             {{ formatDateString(item.created_at) }}
           </template>

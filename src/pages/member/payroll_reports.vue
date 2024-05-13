@@ -2,8 +2,8 @@
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Payroll Reports</h1>
 
-    <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg">
-      <v-data-table :headers="tableHeaders" :items="payrolls" :items-per-page="25">
+    <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
+      <v-data-table :headers="tableHeaders" :items="payrolls" :items-per-page="25" :hover="true">
         <template v-slot:[`item.created_at`]="{ item }">
           {{ formatDateString(item.created_at) }}
         </template>

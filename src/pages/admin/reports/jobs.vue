@@ -14,7 +14,7 @@
       @update:modelValue="() => fetchTimesheets()"
     ></v-select>
 
-    <v-sheet v-show="!selectedJob" class="pa-8" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet v-show="!selectedJob" class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
         <v-card-text class="text-center">
           <v-icon icon="mdi-text-search" size="64" color="rgba(0,0,0,.3)"></v-icon>
@@ -23,7 +23,7 @@
       </v-card>
     </v-sheet>
 
-    <v-sheet v-show="selectedJob" class="pa-8 mb-4" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet v-show="selectedJob" class="pa-8 mb-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <pre> revenue: {{ formatCurrencyString(job.revenue) }} </pre>
       <pre> material_cost: {{ formatCurrencyString(job.material_cost) }} </pre>
       <pre> labour_cost: {{ formatCurrencyString(totalAmount) }}, unpaid: {{ formatCurrencyString(unpaidAmount) }} </pre>
@@ -34,7 +34,7 @@
         Profit: $20,000 -->
     </v-sheet>
 
-    <v-sheet v-show="selectedJob" class="pa-4" color="#ffffff" border="sm" rounded="lg">
+    <v-sheet v-show="selectedJob" class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-data-table-server
         v-model:items-per-page="tableOptions.itemsPerPage"
         :headers="tableHeaders"
@@ -42,6 +42,7 @@
         :items-length="tableTotalItems"
         :loading="tableLoading"
         item-value="name"
+        :hover="true"
         @update:options="fetchTimesheets"
       >
         <template v-slot:[`item.created_at`]="{ item }">
@@ -126,7 +127,7 @@ const tableOptions = ref({
 
 const tableHeaders = ref([
   { title: 'Create Date', value: 'created_at', width: 120 },
-  { title: 'Member', value: 'user.name', width: 200 },
+  { title: 'Member', value: 'user.name', width: 150 },
   { title: 'Date', value: 'date', width: 120 },
   { title: 'Time', value: 'time_range', width: 120 },
   { title: 'Break', value: 'break', width: 120 },
