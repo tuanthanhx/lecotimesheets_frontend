@@ -89,7 +89,7 @@ const statuses = ref([
   },
   {
     id: 2,
-    name: 'Close',
+    name: 'Closed',
   },
 ]);
 
