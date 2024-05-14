@@ -1,8 +1,9 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="1000px">
+  <v-dialog persistent v-model="isModalVisible" max-width="700px">
     <v-card class="pa-4">
-      <v-card-title>
-        <span class="headline">Edit Timesheet</span>
+      <v-card-title class="d-flex justify-space-between align-center mb-4">
+        <div class="text-h5">Edit Timesheet</div>
+        <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
       <form @submit.prevent="submit">
         <v-card-text class="pa-4">
@@ -11,7 +12,7 @@
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Member</h3>
                 <v-select
-                  variant="solo-filled"
+                  variant="outlined"
                   density="compact"
                   v-model="user"
                   v-bind="user_attrs"
@@ -26,7 +27,7 @@
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Job</h3>
                 <v-select
-                  variant="solo-filled"
+                  variant="outlined"
                   density="compact"
                   v-model="job"
                   v-bind="job_attrs"
@@ -38,37 +39,45 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="4">
+              <v-col cols="auto">
                 <h3 class="text-subtitle-2 mb-2">Date</h3>
-                <date-picker variant="solo-filled" density="compact" v-model="date" v-bind="date_attrs" placeholder="Select date"></date-picker>
+                <date-picker variant="outlined" density="compact" v-model="date" v-bind="date_attrs" placeholder="Select date"></date-picker>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="auto">
                 <h3 class="text-subtitle-2 mb-2">Time Range</h3>
                 <div class="d-flex justify-center">
                   <v-select
-                    variant="solo-filled"
-                    style="width: 120px"
+                    variant="outlined"
+                    style="width: 125px"
                     density="compact"
                     v-model="start_time"
                     v-bind="start_time_attrs"
                     :items="startTimeItems"
+                    hide-details
                     placeholder="Start time"
                   ></v-select>
-                  <div class="mx-2">-</div>
+                  <div class="mx-4" style="margin-top: 12px">-</div>
                   <v-select
-                    variant="solo-filled"
-                    style="width: 120px"
+                    variant="outlined"
+                    style="width: 125px"
                     density="compact"
                     v-model="end_time"
                     v-bind="end_time_attrs"
                     :items="endTimeItems"
+                    hide-details
                     placeholder="End time"
                   ></v-select>
                 </div>
+                <div class="d-flex" style="position: relative; top: 10px" v-if="start_time && end_time">
+                  <template v-if="errors.end_time">
+                    <span class="text-red">{{ errors.end_time }}</span>
+                  </template>
+                  <template v-else>Total time worked is {{ totalHours(start_time, end_time, has_break)?.text }}</template>
+                </div>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="auto">
                 <h3 class="text-subtitle-2 mb-2">Break</h3>
-                <v-checkbox v-model="has_break" v-bind="has_break_attrs"></v-checkbox>
+                <v-checkbox style="margin-top: -8px" v-model="has_break" v-bind="has_break_attrs" hide-details></v-checkbox>
               </v-col>
             </v-row>
             <v-row v-if="props.role === 'admin'">
@@ -76,7 +85,7 @@
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
                   style="width: 200px"
-                  variant="solo-filled"
+                  variant="outlined"
                   density="compact"
                   v-model="status"
                   v-bind="status_attrs"
@@ -90,11 +99,12 @@
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Note</h3>
                 <v-textarea
-                  variant="solo-filled"
+                  variant="outlined"
                   density="compact"
                   v-model="note"
                   v-bind="note_attrs"
                   :error-messages="errors.note"
+                  hide-details
                   placeholder="What were you working on?"
                 ></v-textarea>
               </v-col>
@@ -117,8 +127,9 @@
 import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+import dayjs from 'dayjs';
 import axios from '@/plugins/axios';
-import { formatDateString } from '@/plugins/utils';
+import { formatDateString, totalHours } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -163,7 +174,14 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
     job: yup.number().required().label('Job'),
     date: yup.string().required().label('Date'),
     start_time: yup.string().required().label('Start Time'),
-    end_time: yup.string().required().label('End Time'),
+    end_time: yup
+      .string()
+      .required()
+      .label('End Time')
+      .test('is-greater-than-start-time', 'End Time must be greater than Start Time', function (value) {
+        const { start_time } = this.parent;
+        return dayjs(`2024-01-01T${value}`).isAfter(dayjs(`2024-01-01T${start_time}`));
+      }),
     note: yup.string().optional().nullable().label('note'),
     has_break: yup.bool().optional().label('Break'),
     user: yup.number().when('$role', (role, schema) => (role === 'admin' ? schema.required().label('Member') : schema.label('Member'))),

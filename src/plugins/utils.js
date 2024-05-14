@@ -29,6 +29,9 @@ export function formatHourString(count) {
 }
 
 export function totalHours(start, end, hasBreak) {
+  if (!start || !end) {
+    return null;
+  }
   const startTime = dayjs(`2024-01-01T${start}`);
   const endTime = dayjs(`2024-01-01T${end}`);
   const duration = endTime.diff(startTime, 'hour', true);

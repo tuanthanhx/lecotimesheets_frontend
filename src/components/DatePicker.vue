@@ -2,7 +2,7 @@
   <v-menu v-model="isMenuOpen" :close-on-content-click="false">
     <template v-slot:activator="{ props }">
       <v-text-field
-        :style="{ maxWidth: maxWidth ?? 'none' }"
+        :style="`min-width: 200px; max-width: ${maxWidth ?? 'none'}`"
         :label="label"
         :model-value="formattedDate"
         readonly
@@ -14,7 +14,7 @@
         :placeholder="placeholder"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="selectedDate" hide-actions title="" :color="color">
+    <v-date-picker v-model="selectedDate" :max="today" hide-actions title="" :color="color">
       <template v-slot:header></template>
     </v-date-picker>
   </v-menu>
@@ -23,6 +23,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { formatDateString } from '@/plugins/utils';
+import dayjs from 'dayjs';
 
 const { label, variant, density, color, modelValue, maxWidth, placeholder } = defineProps([
   'label',
@@ -38,6 +39,7 @@ const emit = defineEmits(['update:modelValue']);
 
 const isMenuOpen = ref(false);
 const selectedDate = ref(modelValue);
+const today = dayjs().format('YYYY-MM-DD');
 
 const formattedDate = computed(() => {
   if (selectedDate.value) {

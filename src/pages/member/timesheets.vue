@@ -60,9 +60,15 @@
           {{ formatDateString(item.created_at) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <template v-if="item.status === 1">Pending</template>
-          <template v-else-if="item.status === 2">Approved</template>
-          <template v-else>{{ item.status }}</template>
+          <template v-if="item.status === 1">
+            <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">Pending</v-chip>
+          </template>
+          <template v-else-if="item.status === 2">
+            <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-checkbox-marked-circle">Approved</v-chip>
+          </template>
+          <template v-else-if="item.status === 3">
+            <v-chip min-width="100" size="small" color="#e91e63" variant="flat" prepend-icon="mdi-currency-usd">Paid</v-chip>
+          </template>
         </template>
         <template v-slot:[`item.date`]="{ item }">
           {{ formatDateString(item.date) }}
@@ -71,7 +77,10 @@
         <template v-slot:[`item.time_worked`]="{ item }">
           {{ formatHourString(item.time_worked) }}
         </template>
-        <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
+        <template v-slot:[`item.break`]="{ item }">
+          <v-icon v-if="item.break" icon="mdi-check-circle" />
+          <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
+        </template>
         <template v-slot:[`item.amount`]="{ item }">
           {{ formatCurrencyString(item.amount) }}
         </template>
@@ -153,17 +162,17 @@ const tableOptions = ref({
   page: 1,
   itemsPerPage: 25,
 });
+
 const tableHeaders = ref([
-  { title: 'Create Date', value: 'created_at', width: 120 },
-  { title: 'Job', value: 'job.name', width: 'auto' },
-  { title: 'Date', value: 'date', width: 120 },
-  { title: 'Time', value: 'time_range', width: 120 },
-  { title: 'Break', value: 'break', width: 120 },
-  { title: 'Time Worked', value: 'time_worked', width: 120 },
-  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
-  { title: 'Amount', value: 'amount', width: 120 },
-  { title: 'Status', value: 'status', width: 120 },
-  { title: 'Action', value: 'actions', width: 80 },
+  { title: 'Job', value: 'job.name', width: '100%', minWidth: 200 },
+  { title: 'Date', value: 'date', minWidth: 110 },
+  { title: 'Time', value: 'time_range', minWidth: 120 },
+  { title: 'Break', value: 'break' },
+  { title: 'Duration', value: 'time_worked' },
+  { title: 'Rate', value: 'hourly_rate', align: 'end' },
+  { title: 'Amount', value: 'amount', align: 'end' },
+  { title: 'Status', value: 'status' },
+  { title: '', value: 'actions' },
 ]);
 
 const search = async (options = tableOptions.value) => {
@@ -233,9 +242,16 @@ const closeModalTimesheetDetail = () => {
 
 const getFilters = async () => {
   try {
-    const listJobs = await axios.get('/jobs?type=select&limit=-1');
-    if (listJobs?.data?.data) {
-      jobs.value = sortArray(listJobs.data.data, 'name');
+    const jobsResponse = await axios.get('/jobs?type=select&limit=-1');
+    if (jobsResponse?.data?.data) {
+      const jobsObject = jobsResponse?.data?.data.map((job) => {
+        if (job.status !== 1) {
+          job.name = `${job.name} (Closed)`;
+        }
+        return job;
+      });
+
+      jobs.value = sortArray(jobsObject, 'name');
     }
   } catch (error) {
     console.error(error);

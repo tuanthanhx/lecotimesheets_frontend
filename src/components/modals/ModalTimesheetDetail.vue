@@ -1,8 +1,9 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="1000px">
+  <v-dialog persistent v-model="isModalVisible" max-width="700px">
     <v-card class="pa-4">
-      <v-card-title>
-        <span class="headline">{{ viewItem.job.name }}</span>
+      <v-card-title class="d-flex justify-space-between align-center mb-4">
+        <div class="text-h5">Timesheet Details</div>
+        <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
       <form @submit.prevent="submit">
         <v-card-text class="pa-4">
@@ -10,61 +11,52 @@
             <v-row v-if="props.role === 'admin'">
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Member</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.user.name" readonly></v-text-field>
+                {{ viewItem.user?.name }}
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Job</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.job.name" readonly></v-text-field>
+                {{ viewItem.job?.name }}
               </v-col>
             </v-row>
-
             <v-row>
-              <v-col cols="4">
+              <v-col cols="auto">
                 <h3 class="text-subtitle-2 mb-2">Date</h3>
-                <v-text-field
-                  variant="solo-filled"
-                  density="compact"
-                  :value="viewItem.date ? formatDateString(viewItem.date) : ''"
-                  append-inner-icon="mdi-calendar"
-                  readonly
-                ></v-text-field>
+                {{ viewItem.date ? formatDateString(viewItem.date) : '' }}
               </v-col>
-              <v-col cols="4">
+              <v-col cols="auto" class="ml-16">
                 <h3 class="text-subtitle-2 mb-2">Time Range</h3>
-                <div class="d-flex justify-center">
-                  <v-text-field style="width: 120px" variant="solo-filled" density="compact" :value="viewItem.start_time" readonly></v-text-field>
-                  <div class="mx-2">-</div>
-                  <v-text-field style="width: 120px" variant="solo-filled" density="compact" :value="viewItem.end_time" readonly></v-text-field>
-                </div>
+                {{ viewItem.start_time }} - {{ viewItem.end_time }}
               </v-col>
-              <v-col cols="4">
+              <v-col cols="auto" class="ml-16">
                 <h3 class="text-subtitle-2 mb-2">Break</h3>
-                <v-checkbox v-model="hasBreak" readonly></v-checkbox>
+                <v-icon v-if="viewItem.break" icon="mdi-check-circle" />
+                <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
+              </v-col>
+              <v-col cols="auto" class="ml-16">
+                <h3 class="text-subtitle-2 mb-2">Duration</h3>
+                {{ totalHours(viewItem.start_time, viewItem.end_time, viewItem.break)?.text }}
               </v-col>
             </v-row>
-
             <v-row v-if="props.role === 'admin'">
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
-                <v-select
-                  style="width: 200px"
-                  variant="solo-filled"
-                  density="compact"
-                  v-model="viewItem.status"
-                  :items="statuses"
-                  item-title="name"
-                  item-value="id"
-                  readonly
-                ></v-select>
+                <template v-if="viewItem.status === 1">
+                  <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">Pending</v-chip>
+                </template>
+                <template v-else-if="viewItem.status === 2">
+                  <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-checkbox-marked-circle">Approved</v-chip>
+                </template>
+                <template v-else-if="viewItem.status === 3">
+                  <v-chip min-width="100" size="small" color="#e91e63" variant="flat" prepend-icon="mdi-currency-usd">Paid</v-chip>
+                </template>
               </v-col>
             </v-row>
-
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Note</h3>
-                <v-textarea variant="solo-filled" density="compact" v-model="viewItem.note" placeholder="What were you working on?" readonly></v-textarea>
+                {{ viewItem.note }}
               </v-col>
             </v-row>
           </v-responsive>
@@ -79,7 +71,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { formatDateString } from '@/plugins/utils';
+import { formatDateString, totalHours } from '@/plugins/utils';
 
 const emit = defineEmits(['close']);
 
@@ -93,24 +85,10 @@ viewItem.value = { ...props.item };
 
 const isModalVisible = ref(false);
 
-const statuses = ref([
-  {
-    id: 1,
-    name: 'Pending',
-  },
-  {
-    id: 2,
-    name: 'Approved',
-  },
-]);
-
-const hasBreak = ref(false);
-
 watch(
   () => props.item,
   (newValue) => {
     viewItem.value = { ...newValue };
-    hasBreak.value = viewItem.value?.break ? true : false;
   },
 );
 
