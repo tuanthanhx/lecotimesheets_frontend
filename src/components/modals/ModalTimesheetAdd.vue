@@ -69,7 +69,7 @@
                     placeholder="End time"
                   ></v-select>
                 </div>
-                <div class="d-flex" style="position: relative; top: 10px" v-if="start_time && end_time">
+                <div class="d-flex" style="position: absolute; margin-top: 10px" v-if="start_time && end_time">
                   <template v-if="errors.end_time">{{ errors.end_time }}</template>
                   <template v-else>Total time worked is {{ totalHours(start_time, end_time, has_break)?.text }}</template>
                 </div>

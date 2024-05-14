@@ -68,7 +68,7 @@
                     placeholder="End time"
                   ></v-select>
                 </div>
-                <div class="d-flex" style="position: relative; top: 10px" v-if="start_time && end_time">
+                <div class="d-flex" style="position: absolute; margin-top: 10px" v-if="start_time && end_time">
                   <template v-if="errors.end_time">
                     <span class="text-red">{{ errors.end_time }}</span>
                   </template>
