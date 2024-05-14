@@ -18,11 +18,6 @@
                 @update:modelValue="() => search()"
               ></v-text-field>
             </v-col>
-            <!-- TODO: Add this filter later
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Date range</h3>
-              <v-text-field></v-text-field>
-            </v-col> -->
             <v-col cols="auto">
               <h3 class="text-subtitle-2 mb-2">Status</h3>
               <v-select
@@ -64,7 +59,12 @@
           {{ formatDateString(item.created_at) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          {{ item.status === 1 ? 'Open' : 'Close' }}
+          <template v-if="item.status === 1">
+            <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-folder-open">Open</v-chip>
+          </template>
+          <template v-else>
+            <v-chip min-width="100" size="small" color="#606060" variant="flat" prepend-icon="mdi-folder-lock">Closed</v-chip>
+          </template>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-menu>
@@ -112,11 +112,12 @@ const tableOptions = ref({
   page: 1,
   itemsPerPage: 25,
 });
+
 const tableHeaders = ref([
-  { title: 'Created On', value: 'created_at', width: 120 },
-  { title: 'Job Name', value: 'name', width: 'auto' },
-  { title: 'Status', value: 'status', width: 120 },
-  { title: 'Action', value: 'actions', width: 80 },
+  { title: 'Created On', value: 'created_at', minWidth: 120 },
+  { title: 'Job Name', value: 'name', width: '100%', minWidth: 200 },
+  { title: 'Status', value: 'status' },
+  { title: '', value: 'actions' },
 ]);
 
 const search = async (options = tableOptions.value) => {

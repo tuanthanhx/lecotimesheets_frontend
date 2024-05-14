@@ -59,7 +59,7 @@
         </template>
         <template v-slot:[`item.status`]="{ item }">
           <template v-if="item.status === 1">
-            <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">Pending</v-chip>
+            <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">In review</v-chip>
           </template>
           <template v-else-if="item.status === 2">
             <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-checkbox-marked-circle">Approved</v-chip>

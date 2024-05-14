@@ -42,10 +42,11 @@ const fetchPayrolls = async () => {
 };
 
 const tableHeaders = ref([
-  { title: 'Pay Date', value: 'created_at', width: 140 },
-  { title: 'Paid Amount', value: 'amount', width: 200 },
-  { title: 'Time Worked', value: 'time_worked', width: 'auto' },
-  { title: 'Action', value: 'actions', width: 140 },
+  { title: 'Pay Date', value: 'created_at', minWidth: 140 },
+  { title: 'Duration', value: 'time_worked', minWidth: 110 },
+  { title: 'Amount', value: 'amount', minWidth: 110, align: 'end' },
+  { title: '', value: '', width: '100%' },
+  { title: '', value: 'actions' },
 ]);
 
 const isModalPayrollDetailVisible = ref(false);

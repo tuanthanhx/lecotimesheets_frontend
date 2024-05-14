@@ -39,11 +39,11 @@
                 {{ totalHours(viewItem.start_time, viewItem.end_time, viewItem.break)?.text }}
               </v-col>
             </v-row>
-            <v-row v-if="props.role === 'admin'">
+            <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <template v-if="viewItem.status === 1">
-                  <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">Pending</v-chip>
+                  <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">In review</v-chip>
                 </template>
                 <template v-else-if="viewItem.status === 2">
                   <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-checkbox-marked-circle">Approved</v-chip>
