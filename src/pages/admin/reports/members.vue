@@ -2,19 +2,23 @@
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Member Reports</h1>
 
-    <h3 class="text-subtitle-2 mb-2">Select Member</h3>
-    <v-select
-      style="width: 300px"
-      variant="solo"
-      density="compact"
-      clearable
-      v-model="selectedUser"
-      :items="users"
-      item-title="name"
-      :item-value="(item) => item"
-      placeholder="Select a member"
-      @update:modelValue="() => fetchTimesheets()"
-    ></v-select>
+    <v-row>
+      <v-col cols="auto">
+        <h3 class="text-subtitle-2 mb-2">Select Member</h3>
+        <v-select
+          style="width: 300px"
+          variant="solo"
+          density="compact"
+          clearable
+          v-model="selectedUser"
+          :items="users"
+          item-title="name"
+          :item-value="(item) => item"
+          placeholder="Select a member"
+          @update:modelValue="() => fetchTimesheets()"
+        ></v-select>
+      </v-col>
+    </v-row>
 
     <v-sheet v-show="!selectedUser" class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
@@ -67,7 +71,22 @@
       </v-data-table-server>
     </v-sheet>
 
-    <pre v-if="selectedUser"> Unpaid: {{ formatCurrencyString(unpaidAmount) }} </pre>
+    <v-sheet v-show="selectedUser && timesheets && totalAmount" class="pa-8 mt-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
+      <v-row class="mb-2">
+        <v-col cols="auto" class="mr-16">
+          <h3 class="text-subtitle-2 mb-2" style="color: #888">Total Amount</h3>
+          <span class="text-h5">{{ formatCurrencyString(totalAmount) }}</span>
+        </v-col>
+        <v-col cols="auto" class="mr-16">
+          <h3 class="text-subtitle-2 mb-2" style="color: #888">Paid</h3>
+          <span class="text-h5">{{ formatCurrencyString(paidAmount) }}</span>
+        </v-col>
+        <v-col cols="auto">
+          <h3 class="text-subtitle-2 mb-2" style="color: #888">Unpaid</h3>
+          <span class="text-h5">{{ formatCurrencyString(unpaidAmount) }}</span>
+        </v-col>
+      </v-row>
+    </v-sheet>
   </v-container>
 </template>
 
@@ -78,6 +97,8 @@ import { formatDateString, formatTimeString, formatCurrencyString, formatHourStr
 
 const users = ref([]);
 const selectedUser = ref(null);
+const totalAmount = ref(0);
+const paidAmount = ref(0);
 const unpaidAmount = ref(0);
 
 const fetchUsers = async () => {
@@ -109,7 +130,7 @@ const tableHeaders = ref([
   { title: 'Duration', value: 'time_worked' },
   { title: 'Rate', value: 'hourly_rate', align: 'end' },
   { title: 'Amount', value: 'amount', align: 'end' },
-  { title: 'Status', value: 'status' }
+  { title: 'Status', value: 'status' },
 ]);
 
 const fetchTimesheets = async (options = tableOptions.value) => {
@@ -128,6 +149,8 @@ const fetchTimesheets = async (options = tableOptions.value) => {
       tableOptions.value.page = options.page;
       tableOptions.value.itemsPerPage = options.itemsPerPage;
     }
+    totalAmount.value = responseAmount?.data?.totalAmount;
+    paidAmount.value = responseAmount?.data?.paidAmount;
     unpaidAmount.value = responseAmount?.data?.unpaidAmount;
   } catch (error) {
     console.error(error);

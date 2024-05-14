@@ -2,19 +2,23 @@
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Job Reports</h1>
 
-    <h3 class="text-subtitle-2 mb-2">Select Job</h3>
-    <v-select
-      style="width: 300px"
-      variant="solo"
-      density="compact"
-      clearable
-      v-model="selectedJob"
-      :items="jobs"
-      item-title="name"
-      :item-value="(item) => item"
-      placeholder="Select a job"
-      @update:modelValue="() => fetchTimesheets()"
-    ></v-select>
+    <v-row class="mb-0">
+      <v-col cols="auto">
+        <h3 class="text-subtitle-2 mb-2">Select Job</h3>
+        <v-select
+          style="width: 300px"
+          variant="solo"
+          density="compact"
+          clearable
+          v-model="selectedJob"
+          :items="jobs"
+          item-title="name"
+          :item-value="(item) => item"
+          placeholder="Select a job"
+          @update:modelValue="() => fetchTimesheets()"
+        ></v-select>
+      </v-col>
+    </v-row>
 
     <v-sheet v-show="!selectedJob" class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
@@ -23,17 +27,6 @@
           <p class="mt-4">Select a job to analyze data</p>
         </v-card-text>
       </v-card>
-    </v-sheet>
-
-    <v-sheet v-show="selectedJob" class="pa-8 mb-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
-      <pre> revenue: {{ formatCurrencyString(job.revenue) }} </pre>
-      <pre> material_cost: {{ formatCurrencyString(job.material_cost) }} </pre>
-      <pre> labour_cost: {{ formatCurrencyString(totalAmount) }}, unpaid: {{ formatCurrencyString(unpaidAmount) }} </pre>
-      <pre> profit: {{ formatCurrencyString(job.revenue - job.material_cost - totalAmount) }} </pre>
-      <!-- Revenue: $50,000<br />
-        Material Costs: $10,000<br />
-        Labor Costs: $20,000 (Paid: $15,000, Unpaid: $5,000)<br />
-        Profit: $20,000 -->
     </v-sheet>
 
     <v-sheet v-show="selectedJob" class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
@@ -77,18 +70,65 @@
         </template>
       </v-data-table-server>
     </v-sheet>
+
+    <v-sheet v-show="selectedJob && job.revenue" class="pa-8 mt-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
+      <v-row>
+        <v-col cols="6">
+          <v-row class="mb-2">
+            <v-col cols="auto">
+              <h3 class="text-subtitle-2 mb-2" style="color: #888">Revenue</h3>
+              <span class="text-h5">{{ formatCurrencyString(job.revenue) }}</span>
+            </v-col>
+          </v-row>
+          <v-row class="mb-2">
+            <v-col cols="auto">
+              <h3 class="text-subtitle-2 mb-2" style="color: #888">Material Cost</h3>
+              <span class="text-h5">{{ formatCurrencyString(job.material_cost) }}</span>
+            </v-col>
+          </v-row>
+          <v-row class="mb-2">
+            <v-col cols="auto" class="mr-16">
+              <h3 class="text-subtitle-2 mb-2" style="color: #888">Labour Cost</h3>
+              <span class="text-h5">{{ formatCurrencyString(totalAmount) }}</span>
+            </v-col>
+            <v-col cols="auto" class="mr-16">
+              <h3 class="text-subtitle-2 mb-2" style="color: #888">Paid</h3>
+              <span class="text-h5">{{ formatCurrencyString(paidAmount) }}</span>
+            </v-col>
+            <v-col cols="auto">
+              <h3 class="text-subtitle-2 mb-2" style="color: #888">Unpaid</h3>
+              <span class="text-h5">{{ formatCurrencyString(unpaidAmount) }}</span>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="auto">
+              <h3 class="text-subtitle-2 mb-2" style="color: #888">Profit</h3>
+              <span class="text-h5">{{ formatCurrencyString(job.revenue - job.material_cost - totalAmount) }}</span>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col cols="6">
+          <Doughnut :data="chartData" :options="chartOptions" />
+        </v-col>
+      </v-row>
+    </v-sheet>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from '@/plugins/axios';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'vue-chartjs';
 import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, sortArray } from '@/plugins/utils';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const job = ref({});
 const jobs = ref([]);
 const selectedJob = ref(null);
 const totalAmount = ref(0);
+const paidAmount = ref(0);
 const unpaidAmount = ref(0);
 
 const fetchJobs = async () => {
@@ -140,6 +180,7 @@ const fetchTimesheets = async (options = tableOptions.value) => {
       tableOptions.value.itemsPerPage = options.itemsPerPage;
     }
     totalAmount.value = responseAmount?.data?.totalAmount;
+    paidAmount.value = responseAmount?.data?.paidAmount;
     unpaidAmount.value = responseAmount?.data?.unpaidAmount;
     if (responseJob?.data) {
       job.value = responseJob.data;
@@ -150,6 +191,46 @@ const fetchTimesheets = async (options = tableOptions.value) => {
     tableLoading.value = false;
   }
 };
+
+const chartData = computed(() => ({
+  labels: ['Material Cost', 'Labour Cost (Paid)', 'Labour Cost (Unpaid)', 'Profit'],
+  datasets: [
+    {
+      backgroundColor: ['#66BB6A', '#FFA726', '#FF7043', '#42A5F5'],
+      data: [job.value.material_cost, paidAmount.value, unpaidAmount.value, job.value.revenue - job.value.material_cost - totalAmount.value],
+    },
+  ],
+}));
+
+ChartJS.register({
+  id: 'centerText',
+  beforeInit: (chart) => {
+    const originalFit = chart.legend.fit;
+    chart.legend.fit = function fit() {
+      originalFit.bind(chart.legend)();
+      this.height += 20;
+    };
+  },
+});
+
+const chartOptions = ref({
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true,
+    },
+  },
+  animation: {
+    duration: 0,
+  },
+  layout: {
+    padding: {
+      top: 0,
+      bottom: 0,
+    },
+  },
+});
 
 onMounted(() => {
   fetchJobs();
