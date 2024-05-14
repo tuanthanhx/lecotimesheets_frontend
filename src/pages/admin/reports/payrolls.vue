@@ -38,7 +38,7 @@
             {{ formatHourString(item.time_worked) }}
           </template>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-btn class="text-none" @click="openModalPayrollDetail(item)" color="#2B343F" height="32">Timesheets</v-btn>
+            <v-btn class="text-none" @click="openModalPayrollDetail(item)" color="#2b343f" height="32">Timesheets</v-btn>
           </template>
         </v-data-table>
       </v-sheet>

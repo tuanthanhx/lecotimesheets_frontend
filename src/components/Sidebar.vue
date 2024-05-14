@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer permanent class="py-6" width="300" color="#2B343F">
+  <v-navigation-drawer permanent class="py-6" width="300" color="#2b343f">
     <v-card width="260" height="80" class="d-flex align-center mx-auto mb-8" color="#fff" rounded>
       <v-img width="220" height="66" src="@/assets/img/logo.png" />
     </v-card>

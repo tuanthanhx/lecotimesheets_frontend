@@ -5,7 +5,7 @@
         <h1 class="text-h5 mb-8">Members</h1>
       </v-col>
       <v-col cols="auto" class="ml-auto">
-        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="40" color="#2B343F" @click="openModalMemberAdd"> Add Member </v-btn>
+        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="40" color="#2b343f" @click="openModalMemberAdd"> Add Member </v-btn>
       </v-col>
     </v-row>
     <v-sheet class="mb-2" color="transparent">

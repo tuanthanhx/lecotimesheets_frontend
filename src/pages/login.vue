@@ -41,7 +41,7 @@
                   block
                   width="160"
                   height="56"
-                  color="#2B343F"
+                  color="#2b343f"
                   :loading="isLoading"
                   :disabled="!meta.valid"
                   >Login</v-btn

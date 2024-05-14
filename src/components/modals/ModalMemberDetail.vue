@@ -82,7 +82,7 @@
           </v-responsive>
         </v-card-text>
         <v-card-actions class="mt-4 justify-center">
-          <v-btn class="text-none mr-4" variant="elevated" width="120" height="40" color="#2B343F" @click="closeModal">Close</v-btn>
+          <v-btn class="text-none mr-4" variant="elevated" width="120" height="40" color="#2b343f" @click="closeModal">Close</v-btn>
         </v-card-actions>
       </form>
     </v-card>

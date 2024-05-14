@@ -19,7 +19,7 @@
         ></v-select>
       </v-col>
       <v-col cols="auto" class="ml-auto" v-if="selectedUser && timesheets.length">
-        <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-currency-usd" width="160" height="40" color="#2B343F" @click="payWages">
+        <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-currency-usd" width="160" height="40" color="#2b343f" @click="payWages">
           Pay now
         </v-btn>
       </v-col>

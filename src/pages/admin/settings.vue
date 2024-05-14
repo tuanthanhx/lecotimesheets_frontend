@@ -64,7 +64,7 @@
           </v-row>
           <v-row>
             <v-col cols="auto">
-              <v-btn class="text-none" width="160" height="56" color="#2B343F" type="submit" :loading="isLoading" :disabled="!meta.valid"> Save </v-btn>
+              <v-btn class="text-none" width="160" height="56" color="#2b343f" type="submit" :loading="isLoading" :disabled="!meta.valid"> Save </v-btn>
             </v-col>
             <v-col cols="auto">
               <v-btn class="text-none" width="160" height="56" @click.prevent="reset"> Cancel </v-btn>
