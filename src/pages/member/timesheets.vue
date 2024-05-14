@@ -38,7 +38,7 @@
           </v-row>
         </v-col>
         <v-col cols="auto" class="ml-auto">
-          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="40" color="#2b343f" @click="openModalTimesheetAdd">
+          <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-plus" width="160" height="50" color="#2b343f" @click="openModalTimesheetAdd">
             Add Time
           </v-btn>
         </v-col>

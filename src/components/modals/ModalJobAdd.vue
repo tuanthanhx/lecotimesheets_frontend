@@ -1,8 +1,9 @@
 <template>
   <v-dialog persistent v-model="isModalVisible" max-width="640px">
     <v-card class="pa-4">
-      <v-card-title>
-        <span class="headline">Add Job</span>
+      <v-card-title class="d-flex justify-space-between align-center mb-4">
+        <div class="text-h5">Add Job</div>
+        <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
       <form @submit.prevent="submit">
         <v-card-text class="pa-4">
@@ -10,20 +11,21 @@
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Name <span class="text-red">*</span></h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
+                <v-text-field variant="outlined" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Detail</h3>
-                <v-textarea variant="solo-filled" density="compact" v-model="detail" v-bind="detail_attrs" :error-messages="errors.detail"></v-textarea>
+                <v-textarea variant="outlined" density="compact" v-model="detail" v-bind="detail_attrs" :error-messages="errors.detail"></v-textarea>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Revenue</h3>
                 <v-text-field
-                  variant="solo-filled"
+                  style="width: 200px"
+                  variant="outlined"
                   density="compact"
                   prefix="$"
                   type="number"
@@ -38,7 +40,8 @@
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Material Cost</h3>
                 <v-text-field
-                  variant="solo-filled"
+                  style="width: 200px"
+                  variant="outlined"
                   density="compact"
                   prefix="$"
                   type="number"
@@ -54,7 +57,7 @@
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
                   style="width: 200px"
-                  variant="solo-filled"
+                  variant="outlined"
                   density="compact"
                   v-model="status"
                   v-bind="status_attrs"
@@ -106,15 +109,17 @@ const statuses = ref([
 const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
   validationSchema: yup.object().shape({
     name: yup.string().required().label('Name'),
-    detail: yup.string().optional().label('Detail'),
+    detail: yup.string().optional().nullable().label('Detail'),
     revenue: yup
       .number()
       .transform((value) => (isNaN(value) ? 0 : value))
       .optional()
+      .nullable()
       .label('Revenue'),
     material_cost: yup
       .number()
       .optional()
+      .nullable()
       .transform((value) => (isNaN(value) ? 0 : value))
       .label('Material Cost'),
     status: yup.number().optional().label('Status'),

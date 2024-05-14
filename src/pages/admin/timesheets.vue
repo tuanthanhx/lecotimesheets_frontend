@@ -5,7 +5,7 @@
         <h1 class="text-h5 mb-8">Timesheets</h1>
       </v-col>
       <v-col cols="auto" class="ml-auto">
-        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="40" color="#2b343f" @click="openModalTimesheetAdd"> Add Time </v-btn>
+        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="50" color="#2b343f" @click="openModalTimesheetAdd"> Add Time </v-btn>
       </v-col>
     </v-row>
     <v-sheet class="mb-2" color="transparent">
@@ -69,8 +69,22 @@
         :hover="true"
         @update:options="search"
       >
-        <template v-slot:[`item.created_at`]="{ item }">
-          <a class="text-decoration-none" href="#" @click.prevent="openModalTimesheetDetail(item)">{{ formatDateString(item.created_at) }}</a>
+        <template v-slot:[`item.date`]="{ item }">
+          {{ formatDateString(item.date) }}
+        </template>
+        <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+        <template v-slot:[`item.break`]="{ item }">
+          <v-icon v-if="item.break" icon="mdi-check-circle" />
+          <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
+        </template>
+        <template v-slot:[`item.time_worked`]="{ item }">
+          {{ formatHourString(item.time_worked) }}
+        </template>
+        <template v-slot:[`item.hourly_rate`]="{ item }">
+          {{ formatCurrencyString(item.hourly_rate) }}
+        </template>
+        <template v-slot:[`item.amount`]="{ item }">
+          {{ formatCurrencyString(item.amount) }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
           <template v-if="item.status === 1">
@@ -83,20 +97,6 @@
             <v-chip min-width="100" size="small" color="#e91e63" variant="flat" prepend-icon="mdi-currency-usd">Paid</v-chip>
           </template>
         </template>
-        <template v-slot:[`item.date`]="{ item }">
-          {{ formatDateString(item.date) }}
-        </template>
-        <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
-        <template v-slot:[`item.time_worked`]="{ item }">
-          {{ formatHourString(item.time_worked) }}
-        </template>
-        <template v-slot:[`item.break`]="{ item }">
-          <v-icon v-if="item.break" icon="mdi-check-circle" />
-          <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
-        </template>
-        <template v-slot:[`item.amount`]="{ item }">
-          {{ formatCurrencyString(item.amount) }}
-        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-menu>
             <template v-slot:activator="{ props }">
@@ -104,7 +104,7 @@
             </template>
             <v-list>
               <v-list-item link @click="openModalTimesheetDetail(item)">
-                <v-list-item-title>Detail</v-list-item-title>
+                <v-list-item-title>View Details</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="openModalTimesheetEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
@@ -194,7 +194,7 @@ const tableOptions = ref({
 });
 
 const tableHeaders = ref([
-  { title: 'Member', value: 'user.name', minWidth: 150, nowrap: true },
+  { title: 'Member', value: 'user.name', minWidth: 150 },
   { title: 'Job', value: 'job.name', width: '100%', minWidth: 200 },
   { title: 'Date', value: 'date', minWidth: 110 },
   { title: 'Time', value: 'time_range', minWidth: 120 },

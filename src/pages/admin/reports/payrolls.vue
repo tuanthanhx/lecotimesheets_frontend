@@ -2,15 +2,17 @@
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Payroll Reports</h1>
 
+    <h3 class="text-subtitle-2 mb-2">Select Member</h3>
     <v-select
       style="width: 300px"
       variant="solo"
+      density="compact"
       clearable
-      label="Select Member"
       v-model="selectedUser"
       :items="users"
       item-title="name"
       :item-value="(item) => item"
+      placeholder="Select a member"
       @update:modelValue="() => fetchPayrolls()"
     ></v-select>
 
@@ -38,7 +40,7 @@
             {{ formatHourString(item.time_worked) }}
           </template>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-btn class="text-none" @click="openModalPayrollDetail(item)" color="#2b343f" height="32">Timesheets</v-btn>
+            <v-btn class="text-none" @click="openModalPayrollDetail(item)" color="#2b343f" height="32">Details</v-btn>
           </template>
         </v-data-table>
       </v-sheet>
@@ -84,10 +86,11 @@ const fetchPayrolls = async () => {
 };
 
 const tableHeaders = ref([
-  { title: 'Pay Date', value: 'created_at', width: 140 },
-  { title: 'Paid Amount', value: 'amount', width: 200 },
-  { title: 'Time Worked', value: 'time_worked', width: 'auto' },
-  { title: 'Action', value: 'actions', width: 140 },
+  { title: 'Pay Date', value: 'created_at', minWidth: 140 },
+  { title: 'Duration', value: 'time_worked', minWidth: 110 },
+  { title: 'Amount', value: 'amount', minWidth: 110, align: 'end' },
+  { title: '', value: '', width: '100%' },
+  { title: '', value: 'actions' },
 ]);
 
 const isModalPayrollDetailVisible = ref(false);

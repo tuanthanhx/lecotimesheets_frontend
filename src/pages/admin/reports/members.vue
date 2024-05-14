@@ -2,24 +2,19 @@
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Member Reports</h1>
 
-    <v-row>
-      <v-col cols="auto">
-        <v-select
-          style="width: 300px"
-          variant="solo"
-          clearable
-          label="Select Member"
-          v-model="selectedUser"
-          :items="users"
-          item-title="name"
-          :item-value="(item) => item"
-          @update:modelValue="() => fetchTimesheets()"
-        ></v-select>
-      </v-col>
-      <v-col cols="auto" class="ml-auto">
-        <pre v-if="selectedUser"> Unpaid: {{ formatCurrencyString(unpaidAmount) }} </pre>
-      </v-col>
-    </v-row>
+    <h3 class="text-subtitle-2 mb-2">Select Member</h3>
+    <v-select
+      style="width: 300px"
+      variant="solo"
+      density="compact"
+      clearable
+      v-model="selectedUser"
+      :items="users"
+      item-title="name"
+      :item-value="(item) => item"
+      placeholder="Select a member"
+      @update:modelValue="() => fetchTimesheets()"
+    ></v-select>
 
     <v-sheet v-show="!selectedUser" class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-card class="d-flex flex-nowrap justify-center align-center" min-height="260" elevation="0">
@@ -41,52 +36,38 @@
         :hover="true"
         @update:options="fetchTimesheets"
       >
-        <template v-slot:[`item.created_at`]="{ item }">
-          {{ formatDateString(item.created_at) }}
-        </template>
-        <template v-slot:[`item.status`]="{ item }">
-          <template v-if="item.status === 1">Pending</template>
-          <template v-else-if="item.status === 2">Approved</template>
-          <template v-else-if="item.status === 3">Paid</template>
-          <template v-else>{{ item.status }}</template>
-        </template>
         <template v-slot:[`item.date`]="{ item }">
           {{ formatDateString(item.date) }}
         </template>
         <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+        <template v-slot:[`item.break`]="{ item }">
+          <v-icon v-if="item.break" icon="mdi-check-circle" />
+          <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
+        </template>
         <template v-slot:[`item.time_worked`]="{ item }">
           {{ formatHourString(item.time_worked) }}
         </template>
-        <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
+        <template v-slot:[`item.hourly_rate`]="{ item }">
+          {{ formatCurrencyString(item.hourly_rate) }}
+        </template>
         <template v-slot:[`item.amount`]="{ item }">
           {{ formatCurrencyString(item.amount) }}
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
-          <v-menu>
-            <template v-slot:activator="{ props }">
-              <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
-            </template>
-            <v-list>
-              <v-list-item link @click="openModalTimesheetDetail(item)">
-                <v-list-item-title>Detail</v-list-item-title>
-              </v-list-item>
-              <v-list-item link @click="openModalTimesheetEdit(item)">
-                <v-list-item-title>Edit</v-list-item-title>
-              </v-list-item>
-              <v-list-item link @click="approveTimesheet(item)" v-if="item.status === 1">
-                <v-list-item-title>Approve</v-list-item-title>
-              </v-list-item>
-              <v-list-item link @click="unapproveTimesheet(item)" v-if="item.status === 2">
-                <v-list-item-title>Unapprove</v-list-item-title>
-              </v-list-item>
-              <v-list-item link @click="deleteTimesheet(item)">
-                <v-list-item-title>Delete</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+        <template v-slot:[`item.status`]="{ item }">
+          <template v-if="item.status === 1">
+            <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">Pending</v-chip>
+          </template>
+          <template v-else-if="item.status === 2">
+            <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-checkbox-marked-circle">Approved</v-chip>
+          </template>
+          <template v-else-if="item.status === 3">
+            <v-chip min-width="100" size="small" color="#e91e63" variant="flat" prepend-icon="mdi-currency-usd">Paid</v-chip>
+          </template>
         </template>
       </v-data-table-server>
     </v-sheet>
+
+    <pre v-if="selectedUser"> Unpaid: {{ formatCurrencyString(unpaidAmount) }} </pre>
   </v-container>
 </template>
 
@@ -120,16 +101,15 @@ const tableOptions = ref({
 });
 
 const tableHeaders = ref([
-  { title: 'Create Date', value: 'created_at', width: 120 },
-  { title: 'Member', value: 'user.name', width: 150 },
-  { title: 'Job', value: 'job.name', width: 'auto' },
-  { title: 'Date', value: 'date', width: 120 },
-  { title: 'Time', value: 'time_range', width: 120 },
-  { title: 'Break', value: 'break', width: 120 },
-  { title: 'Time Worked', value: 'time_worked', width: 120 },
-  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
-  { title: 'Amount', value: 'amount', width: 120 },
-  { title: 'Status', value: 'status', width: 120 },
+  { title: 'Member', value: 'user.name', minWidth: 150 },
+  { title: 'Job', value: 'job.name', width: '100%', minWidth: 200 },
+  { title: 'Date', value: 'date', minWidth: 110 },
+  { title: 'Time', value: 'time_range', minWidth: 120 },
+  { title: 'Break', value: 'break' },
+  { title: 'Duration', value: 'time_worked' },
+  { title: 'Rate', value: 'hourly_rate', align: 'end' },
+  { title: 'Amount', value: 'amount', align: 'end' },
+  { title: 'Status', value: 'status' }
 ]);
 
 const fetchTimesheets = async (options = tableOptions.value) => {

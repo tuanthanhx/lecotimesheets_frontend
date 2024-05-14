@@ -1,8 +1,9 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="1000px">
+  <v-dialog persistent v-model="isModalVisible" max-width="700px">
     <v-card class="pa-4">
-      <v-card-title>
-        <span class="headline">{{ viewItem.name }}</span>
+      <v-card-title class="d-flex justify-space-between align-center mb-4">
+        <div class="text-h5">Member Details</div>
+        <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
       <form @submit.prevent="submit">
         <v-card-text class="pa-4">
@@ -10,73 +11,47 @@
             <v-row>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Full Name</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.name" readonly></v-text-field>
+                {{ viewItem.name }}
               </v-col>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Login</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.username" readonly></v-text-field>
+                {{ viewItem.username }}
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">D.O.B</h3>
-                <v-text-field
-                  variant="solo-filled"
-                  density="compact"
-                  :value="viewItem.dob ? formatDateString(viewItem.dob) : ''"
-                  append-inner-icon="mdi-calendar"
-                  readonly
-                ></v-text-field>
+                <template v-if="viewItem.dob">{{ formatDateString(viewItem.dob) }}</template>
               </v-col>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Phone</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.phone" readonly></v-text-field>
+                {{ viewItem.phone }}
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Address</h3>
-                <v-text-field variant="solo-filled" density="compact" v-model="viewItem.address" readonly></v-text-field>
+                {{ viewItem.address }}
               </v-col>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Language</h3>
-                <v-select
-                  style="width: 200px"
-                  variant="solo-filled"
-                  density="compact"
-                  v-model="viewItem.language"
-                  :items="languages"
-                  item-title="name"
-                  item-value="code"
-                  readonly
-                ></v-select>
+                <template v-if="viewItem.language === 'en'">English</template>
+                <template v-else>Vietnamese</template>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Hourly Rate</h3>
-                <v-text-field
-                  variant="solo-filled"
-                  density="compact"
-                  prefix="$"
-                  type="number"
-                  step="0.01"
-                  v-model="viewItem.hourly_rate"
-                  readonly
-                ></v-text-field>
+                {{ formatCurrencyString(viewItem.hourly_rate) }}
               </v-col>
               <v-col cols="6">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
-                <v-select
-                  style="width: 200px"
-                  variant="solo-filled"
-                  density="compact"
-                  v-model="viewItem.status"
-                  :items="statuses"
-                  item-title="name"
-                  item-value="id"
-                  readonly
-                ></v-select>
+                <template v-if="viewItem.status === 1">
+                  <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-account-check">Active</v-chip>
+                </template>
+                <template v-else>
+                  <v-chip min-width="100" size="small" color="#606060" variant="flat" prepend-icon="mdi-account-off">Deactivated</v-chip>
+                </template>
               </v-col>
             </v-row>
           </v-responsive>
@@ -91,7 +66,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { formatDateString } from '@/plugins/utils';
+import { formatDateString, formatCurrencyString } from '@/plugins/utils';
 
 const emit = defineEmits(['close']);
 
@@ -103,28 +78,6 @@ const viewItem = ref({});
 viewItem.value = { ...props.item };
 
 const isModalVisible = ref(false);
-
-const statuses = ref([
-  {
-    id: 1,
-    name: 'Active',
-  },
-  {
-    id: 2,
-    name: 'Deactivated',
-  },
-]);
-
-const languages = ref([
-  {
-    code: 'en',
-    name: 'English',
-  },
-  {
-    code: 'vi',
-    name: 'Vietnamese',
-  },
-]);
 
 watch(
   () => props.item,

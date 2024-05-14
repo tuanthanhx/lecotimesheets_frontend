@@ -185,7 +185,7 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
         const { start_time } = this.parent;
         return dayjs(`2024-01-01T${value}`).isAfter(dayjs(`2024-01-01T${start_time}`));
       }),
-    note: yup.string().optional().label('note'),
+    note: yup.string().optional().nullable().label('note'),
     has_break: yup.boolean().optional().label('Break'),
     user: yup.number().when('$role', (role, schema) => (role === 'admin' ? schema.required().label('Member') : schema.label('Member'))),
     status: yup.number().when('$role', (role, schema) => (role === 'admin' ? schema.required().label('Status') : schema.label('Status'))),

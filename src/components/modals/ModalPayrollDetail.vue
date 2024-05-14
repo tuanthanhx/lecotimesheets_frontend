@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isModalVisible" max-width="1200px">
+  <v-dialog v-model="isModalVisible" max-width="960px">
     <v-card class="pa-4">
       <v-card-text class="pa-0">
         {{ props.item }}
@@ -11,9 +11,15 @@
             {{ formatDateString(item.date) }}
           </template>
           <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
-          <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
+          <template v-slot:[`item.break`]="{ item }">
+            <v-icon v-if="item.break" icon="mdi-check-circle" />
+            <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
+          </template>
           <template v-slot:[`item.time_worked`]="{ item }">
             {{ formatHourString(item.time_worked) }}
+          </template>
+          <template v-slot:[`item.hourly_rate`]="{ item }">
+            {{ formatCurrencyString(item.hourly_rate) }}
           </template>
           <template v-slot:[`item.amount`]="{ item }">
             {{ formatCurrencyString(item.amount) }}
@@ -55,12 +61,12 @@ const closeModal = () => {
 };
 
 const tableHeaders = ref([
-  { title: 'Job', value: 'job.name', width: 'auto' },
-  { title: 'Date', value: 'date', width: 120 },
-  { title: 'Time', value: 'time_range', width: 120 },
-  { title: 'Break', value: 'break', width: 120 },
-  { title: 'Time Worked', value: 'time_worked', width: 130 },
-  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
-  { title: 'Amount', value: 'amount', width: 120 },
+  { title: 'Job', value: 'job.name', width: '100%', minWidth: 200 },
+  { title: 'Date', value: 'date', minWidth: 110 },
+  { title: 'Time', value: 'time_range', minWidth: 120 },
+  { title: 'Break', value: 'break' },
+  { title: 'Duration', value: 'time_worked' },
+  { title: 'Rate', value: 'hourly_rate', align: 'end' },
+  { title: 'Amount', value: 'amount', align: 'end' },
 ]);
 </script>

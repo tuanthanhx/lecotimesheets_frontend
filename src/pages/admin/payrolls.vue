@@ -46,27 +46,31 @@
             {{ formatDateString(item.date) }}
           </template>
           <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+          <template v-slot:[`item.break`]="{ item }">
+            <v-icon v-if="item.break" icon="mdi-check-circle" />
+            <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
+          </template>
           <template v-slot:[`item.time_worked`]="{ item }">
             {{ formatHourString(item.time_worked) }}
           </template>
-          <template v-slot:[`item.break`]="{ item }"><v-icon v-if="item.break" icon="mdi-check-circle" /></template>
+          <template v-slot:[`item.hourly_rate`]="{ item }">
+            {{ formatCurrencyString(item.hourly_rate) }}
+          </template>
           <template v-slot:[`item.amount`]="{ item }">
             {{ formatCurrencyString(item.amount) }}
           </template>
-          <!-- <template #bottom></template> -->
           <template v-slot:[`body.append`]>
             <tr class="font-weight-bold">
               <td></td>
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
               <td>{{ formatHourString(totalTimeWorked) }}</td>
               <td></td>
-              <td>{{ formatCurrencyString(totalAmount) }}</td>
+              <td class="text-right">{{ formatCurrencyString(totalAmount) }}</td>
             </tr>
           </template>
+          <template #bottom></template>
         </v-data-table>
       </v-sheet>
     </template>
@@ -131,15 +135,13 @@ const estimate = async () => {
 };
 
 const tableHeaders = ref([
-  { title: 'Create Date', value: 'created_at', width: 120 },
-  { title: 'Member', value: 'user.name', width: 150 },
-  { title: 'Job', value: 'job.name', width: 'auto' },
-  { title: 'Date', value: 'date', width: 120 },
-  { title: 'Time', value: 'time_range', width: 120 },
-  { title: 'Break', value: 'break', width: 120 },
-  { title: 'Time Worked', value: 'time_worked', width: 120 },
-  { title: 'Hourly Rate', value: 'hourly_rate', width: 120 },
-  { title: 'Amount', value: 'amount', width: 120 },
+  { title: 'Job', value: 'job.name', width: '100%', minWidth: 200 },
+  { title: 'Date', value: 'date', minWidth: 110 },
+  { title: 'Time', value: 'time_range', minWidth: 120 },
+  { title: 'Break', value: 'break' },
+  { title: 'Duration', value: 'time_worked', minWidth: 120 },
+  { title: 'Rate', value: 'hourly_rate', align: 'end' },
+  { title: 'Amount', value: 'amount', minWidth: 120, align: 'end' },
 ]);
 
 const payWages = async (item) => {

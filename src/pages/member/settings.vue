@@ -2,25 +2,34 @@
   <v-container fluid class="pa-8">
     <h1 class="text-h5 mb-8">Settings</h1>
     <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
-      <v-responsive max-width="900">
+      <v-responsive max-width="600">
         <form @submit.prevent="submit">
           <v-row>
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">Full Name <span class="text-red">*</span></h3>
-              <v-text-field variant="solo-filled" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
+              <v-text-field variant="outlined" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">Login <span class="text-red">*</span></h3>
-              <v-text-field variant="solo-filled" readonly disabled v-model="username" v-bind="username_attrs" :error-messages="errors.username"></v-text-field>
+              <v-text-field
+                variant="outlined"
+                density="compact"
+                readonly
+                disabled
+                v-model="username"
+                v-bind="username_attrs"
+                :error-messages="errors.username"
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">New Password</h3>
               <v-text-field
-                variant="solo-filled"
+                variant="outlined"
+                density="compact"
                 autocomplete="new-password"
                 v-model="password"
                 v-bind="password_attrs"
@@ -36,7 +45,8 @@
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">Confirm Password <span v-if="password" class="text-red">*</span></h3>
               <v-text-field
-                variant="solo-filled"
+                variant="outlined"
+                density="compact"
                 autocomplete="new-password"
                 v-model="password_confirm"
                 v-bind="password_confirm_attrs"
@@ -51,19 +61,19 @@
           <v-row>
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">D.O.B</h3>
-              <date-picker variant="solo-filled" v-model="dob" v-bind="dob_attrs"></date-picker>
+              <date-picker variant="outlined" density="compact" v-model="dob" v-bind="dob_attrs"></date-picker>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">Phone</h3>
-              <v-text-field variant="solo-filled" v-model="phone" v-bind="phone_attrs" :error-messages="errors.phone"></v-text-field>
+              <v-text-field variant="outlined" density="compact" v-model="phone" v-bind="phone_attrs" :error-messages="errors.phone"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">Address</h3>
-              <v-text-field variant="solo-filled" density="compact" v-model="address" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
+              <v-text-field variant="outlined" density="compact" v-model="address" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -71,7 +81,8 @@
               <h3 class="text-subtitle-2 mb-2">Language</h3>
               <v-select
                 style="width: 200px"
-                variant="solo-filled"
+                variant="outlined"
+                density="compact"
                 v-model="language"
                 v-bind="language_attrs"
                 :items="languages"
@@ -82,10 +93,10 @@
           </v-row>
           <v-row>
             <v-col cols="auto">
-              <v-btn class="text-none" width="160" height="56" color="#2b343f" type="submit" :loading="isLoading" :disabled="!meta.valid"> Save </v-btn>
+              <v-btn class="text-none" width="120" height="40" color="#2b343f" type="submit" :loading="isLoading" :disabled="!meta.valid"> Save </v-btn>
             </v-col>
             <v-col cols="auto">
-              <v-btn class="text-none" width="160" height="56" @click.prevent="reset"> Cancel </v-btn>
+              <v-btn class="text-none" width="120" height="40" @click.prevent="reset"> Cancel </v-btn>
             </v-col>
           </v-row>
         </form>

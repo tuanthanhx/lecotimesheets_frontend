@@ -5,7 +5,7 @@
         <h1 class="text-h5 mb-8">Job</h1>
       </v-col>
       <v-col cols="auto" class="ml-auto">
-        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="40" color="#2b343f" @click="openModalJobAdd"> Add Job </v-btn>
+        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="50" color="#2b343f" @click="openModalJobAdd"> Add Job </v-btn>
       </v-col>
     </v-row>
     <v-sheet class="mb-2" color="transparent">
@@ -52,17 +52,25 @@
         :hover="true"
         @update:options="search"
       >
-        <template v-slot:[`item.name`]="{ item }">
-          <span class="cursor-pointer" @click="openModalJobDetail(item)">{{ item.name }}</span>
-        </template>
-        <template v-slot:[`item.dob`]="{ item }">
-          {{ item.dob ? formatDateString(item.dob) : '' }}
-        </template>
         <template v-slot:[`item.created_at`]="{ item }">
           {{ formatDateString(item.created_at) }}
         </template>
+        <template v-slot:[`item.name`]="{ item }">
+          <span class="cursor-pointer" @click="openModalJobDetail(item)">{{ item.name }}</span>
+        </template>
+        <template v-slot:[`item.revenue`]="{ item }">
+          {{ formatCurrencyString(item.revenue) }}
+        </template>
+        <template v-slot:[`item.material_cost`]="{ item }">
+          {{ formatCurrencyString(item.material_cost) }}
+        </template>
         <template v-slot:[`item.status`]="{ item }">
-          {{ item.status === 1 ? 'Open' : 'Close' }}
+          <template v-if="item.status === 1">
+            <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-folder-open">Open</v-chip>
+          </template>
+          <template v-else>
+            <v-chip min-width="100" size="small" color="#606060" variant="flat" prepend-icon="mdi-folder-lock">Closed</v-chip>
+          </template>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-menu>
@@ -71,7 +79,7 @@
             </template>
             <v-list>
               <v-list-item link @click="openModalJobDetail(item)">
-                <v-list-item-title>Detail</v-list-item-title>
+                <v-list-item-title>View Details</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="openModalJobEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
@@ -80,7 +88,7 @@
                 <v-list-item-title>Change status to "Open"</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="deactivateJob(item)" v-if="item.status === 1">
-                <v-list-item-title>Change status to "Close"</v-list-item-title>
+                <v-list-item-title>Change status to "Closed"</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="deleteJob(item)">
                 <v-list-item-title>Delete</v-list-item-title>
@@ -110,7 +118,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from '@/plugins/axios';
-import { formatDateString } from '@/plugins/utils';
+import { formatDateString, formatCurrencyString } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 import { useConfirmDialog } from '@/plugins/confirm_dialogs';
 
@@ -139,13 +147,14 @@ const tableOptions = ref({
   page: 1,
   itemsPerPage: 25,
 });
+
 const tableHeaders = ref([
-  { title: 'Created On', value: 'created_at', width: 120 },
-  { title: 'Job Name', value: 'name', width: 'auto' },
-  { title: 'Revenue', value: 'revenue', width: 120 },
-  { title: 'Material Cost', value: 'material_cost', width: 120 },
-  { title: 'Status', value: 'status', width: 120 },
-  { title: 'Action', value: 'actions', width: 80 },
+  { title: 'Created On', value: 'created_at', minWidth: 120 },
+  { title: 'Job Name', value: 'name', width: '100%', minWidth: 200 },
+  { title: 'Revenue', value: 'revenue', align: 'end' },
+  { title: 'Material', value: 'material_cost', align: 'end' },
+  { title: 'Status', value: 'status' },
+  { title: '', value: 'actions' },
 ]);
 
 const search = async (options = tableOptions.value) => {
