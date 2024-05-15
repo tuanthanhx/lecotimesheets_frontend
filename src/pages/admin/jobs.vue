@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-8">
+  <v-container fluid class="pa-4 pa-sm-8">
     <v-row>
       <v-col cols="auto">
         <h1 class="text-h5 mb-8">Job</h1>
@@ -8,9 +8,9 @@
         <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="50" color="#2b343f" @click="openModalJobAdd"> Add Job </v-btn>
       </v-col>
     </v-row>
-    <v-sheet class="mb-2" color="transparent">
+    <v-sheet class="mb-8 section-filters" color="transparent">
       <v-row>
-        <v-col cols="auto">
+        <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Keyword</h3>
           <v-text-field
             style="width: 300px"
@@ -20,10 +20,11 @@
             append-inner-icon="mdi-magnify"
             v-model="searchKeyword"
             placeholder="Search jobs"
+            hide-details
             @update:modelValue="() => search()"
           ></v-text-field>
         </v-col>
-        <v-col cols="auto">
+        <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Status</h3>
           <v-select
             style="width: 200px"
@@ -35,6 +36,7 @@
             item-value="id"
             v-model="searchStatus"
             placeholder="All statuses"
+            hide-details
             @update:modelValue="() => search()"
           ></v-select>
         </v-col>

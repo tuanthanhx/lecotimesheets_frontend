@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-8">
+  <v-container fluid class="pa-4 pa-sm-8">
     <h1 class="text-h5 mb-8">Jobs</h1>
     <v-sheet class="mb-2" color="transparent">
       <v-row>

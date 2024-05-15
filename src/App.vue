@@ -24,4 +24,10 @@ const shouldShowSidebar = computed(() => route.name?.startsWith('/admin') || rou
 .v-main {
   transition: none;
 }
+
+@media (max-width: 1279px) {
+  .v-main {
+    padding: 0 !important;
+  }
+}
 </style>

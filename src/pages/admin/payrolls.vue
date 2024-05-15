@@ -1,9 +1,9 @@
 <template>
-  <v-container fluid class="pa-8">
+  <v-container fluid class="pa-4 pa-sm-8">
     <h1 class="text-h5 mb-8">Payrolls</h1>
 
-    <v-row>
-      <v-col cols="auto">
+    <v-row class="mb-4 section-filters">
+      <v-col cols="12" sm="auto">
         <h3 class="text-subtitle-2 mb-2">Select Member</h3>
         <v-select
           style="width: 300px"
@@ -15,13 +15,12 @@
           item-title="name"
           :item-value="(item) => item"
           placeholder="Select a member"
+          hide-details
           @update:modelValue="() => estimate()"
         ></v-select>
       </v-col>
       <v-col cols="auto" class="ml-auto" v-if="selectedUser && timesheets.length">
-        <v-btn class="text-none" style="margin-top: 30px" prepend-icon="mdi-currency-usd" width="160" height="40" color="#2b343f" @click="payWages">
-          Pay now
-        </v-btn>
+        <v-btn class="button-pay text-none" prepend-icon="mdi-currency-usd" width="160" height="40" color="#2b343f" @click="payWages"> Pay now </v-btn>
       </v-col>
     </v-row>
 

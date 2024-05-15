@@ -1,20 +1,25 @@
 <template>
-  <v-container fluid class="pa-8">
+  <v-container fluid class="pa-4 pa-sm-8">
     <h1 class="text-h5 mb-8">Payroll Reports</h1>
 
-    <h3 class="text-subtitle-2 mb-2">Select Member</h3>
-    <v-select
-      style="width: 300px"
-      variant="solo"
-      density="compact"
-      clearable
-      v-model="selectedUser"
-      :items="users"
-      item-title="name"
-      :item-value="(item) => item"
-      placeholder="Select a member"
-      @update:modelValue="() => fetchPayrolls()"
-    ></v-select>
+    <v-row class="mb-4 section-filters">
+      <v-col cols="12" sm="auto">
+        <h3 class="text-subtitle-2 mb-2">Select Member</h3>
+        <v-select
+          style="width: 300px"
+          variant="solo"
+          density="compact"
+          clearable
+          v-model="selectedUser"
+          :items="users"
+          item-title="name"
+          :item-value="(item) => item"
+          placeholder="Select a member"
+          hide-details
+          @update:modelValue="() => fetchPayrolls()"
+        ></v-select>
+      </v-col>
+    </v-row>
 
     <template v-if="!selectedUser">
       <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">

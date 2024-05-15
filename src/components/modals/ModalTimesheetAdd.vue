@@ -1,11 +1,11 @@
 <template>
   <v-dialog persistent v-model="isModalVisible" max-width="700px">
-    <v-card class="pa-4">
+    <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Add Timesheet</div>
         <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
-      <form @submit.prevent="submit">
+      <form @submit.prevent="submit" class="form-dialog">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
             <v-row v-if="props.role === 'admin'">
@@ -39,12 +39,12 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="auto">
+              <v-col cols="12" sm="auto">
                 <h3 class="text-subtitle-2 mb-2">Date</h3>
                 <date-picker variant="outlined" density="compact" v-model="date" v-bind="date_attrs" placeholder="Select date"></date-picker>
                 <span v-if="errors.date">{{ errors.date }}</span>
               </v-col>
-              <v-col cols="auto">
+              <v-col cols="12" sm="auto">
                 <h3 class="text-subtitle-2 mb-2">Time Range</h3>
                 <div class="d-flex justify-center">
                   <v-select
@@ -70,11 +70,13 @@
                   ></v-select>
                 </div>
                 <div class="d-flex" style="position: absolute; margin-top: 10px" v-if="start_time && end_time">
-                  <template v-if="errors.end_time">{{ errors.end_time }}</template>
+                  <template v-if="errors.end_time">
+                    <span class="text-error">{{ errors.end_time }}</span>
+                  </template>
                   <template v-else>Total time worked is {{ totalHours(start_time, end_time, has_break)?.text }}</template>
                 </div>
               </v-col>
-              <v-col cols="auto">
+              <v-col cols="12" sm="auto" class="mt-4 mt-sm-0">
                 <h3 class="text-subtitle-2 mb-2">Break</h3>
                 <v-checkbox style="margin-top: -8px" v-model="has_break" v-bind="has_break_attrs" hide-details></v-checkbox>
               </v-col>

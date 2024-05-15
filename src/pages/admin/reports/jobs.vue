@@ -1,9 +1,9 @@
 <template>
-  <v-container fluid class="pa-8">
+  <v-container fluid class="pa-4 pa-sm-8">
     <h1 class="text-h5 mb-8">Job Reports</h1>
 
-    <v-row class="mb-0">
-      <v-col cols="auto">
+    <v-row class="mb-4 section-filters">
+      <v-col cols="12" sm="auto">
         <h3 class="text-subtitle-2 mb-2">Select Job</h3>
         <v-select
           style="width: 300px"
@@ -15,6 +15,7 @@
           item-title="name"
           :item-value="(item) => item"
           placeholder="Select a job"
+          hide-details
           @update:modelValue="() => fetchTimesheets()"
         ></v-select>
       </v-col>
@@ -73,7 +74,10 @@
 
     <v-sheet v-show="selectedJob && job.revenue" class="pa-8 mt-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12" md="6" order-md="last">
+          <Doughnut :data="chartData" :options="chartOptions" />
+        </v-col>
+        <v-col cols="12" md="6">
           <v-row class="mb-2">
             <v-col cols="auto">
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Revenue</h3>
@@ -87,15 +91,15 @@
             </v-col>
           </v-row>
           <v-row class="mb-2">
-            <v-col cols="auto" class="mr-16">
+            <v-col cols="12" md="auto">
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Labour Cost</h3>
               <span class="text-h5">{{ formatCurrencyString(totalAmount) }}</span>
             </v-col>
-            <v-col cols="auto" class="mr-16">
+            <v-col cols="12" md="auto" class="ml-16">
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Paid</h3>
               <span class="text-h5">{{ formatCurrencyString(paidAmount) }}</span>
             </v-col>
-            <v-col cols="auto">
+            <v-col cols="12" md="auto" class="ml-16">
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Unpaid</h3>
               <span class="text-h5">{{ formatCurrencyString(unpaidAmount) }}</span>
             </v-col>
@@ -106,9 +110,6 @@
               <span class="text-h5">{{ formatCurrencyString(job.revenue - job.material_cost - totalAmount) }}</span>
             </v-col>
           </v-row>
-        </v-col>
-        <v-col cols="6">
-          <Doughnut :data="chartData" :options="chartOptions" />
         </v-col>
       </v-row>
     </v-sheet>

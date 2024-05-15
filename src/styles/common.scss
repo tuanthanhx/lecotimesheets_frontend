@@ -1,0 +1,39 @@
+// COMMON
+
+@media only screen and (max-width: 599px) {
+  .v-dialog > .v-overlay__content {
+    width: calc(100% - 32px) !important;
+  }
+
+  .section-filters .v-input {
+    width: 100% !important;
+  }
+}
+
+// PAGE REPORTS
+
+.button-pay {
+  @media only screen and (min-width: 600px) {
+    margin-top: 30px;
+  }
+
+  @media only screen and (max-width: 599px) {
+    margin-top: 0;
+  }
+}
+
+// PAGE SETTINGS
+
+.form-settings .v-input {
+  @media only screen and (max-width: 599px) {
+    width: 100% !important;
+  }
+}
+
+// MODALS
+
+.form-dialog .v-input {
+  @media only screen and (max-width: 599px) {
+    width: 100% !important;
+  }
+}

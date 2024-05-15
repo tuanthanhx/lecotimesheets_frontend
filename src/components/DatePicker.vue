@@ -10,7 +10,7 @@
         append-inner-icon="mdi-calendar"
         :variant="variant"
         :density="density"
-        hide-details
+        :hide-details="hideDetails"
         :placeholder="placeholder"
       ></v-text-field>
     </template>
@@ -25,7 +25,7 @@ import { ref, computed, watch } from 'vue';
 import { formatDateString } from '@/plugins/utils';
 import dayjs from 'dayjs';
 
-const { label, variant, density, color, modelValue, maxWidth, placeholder } = defineProps([
+const { label, variant, density, color, modelValue, maxWidth, placeholder, hideDetails } = defineProps([
   'label',
   'variant',
   'density',
@@ -33,6 +33,7 @@ const { label, variant, density, color, modelValue, maxWidth, placeholder } = de
   'modelValue',
   'maxWidth',
   'placeholder',
+  'hideDetails',
 ]);
 
 const emit = defineEmits(['update:modelValue']);

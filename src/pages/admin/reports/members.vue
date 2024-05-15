@@ -1,9 +1,9 @@
 <template>
-  <v-container fluid class="pa-8">
+  <v-container fluid class="pa-4 pa-sm-8">
     <h1 class="text-h5 mb-8">Member Reports</h1>
 
-    <v-row>
-      <v-col cols="auto">
+    <v-row class="mb-4 section-filters">
+      <v-col cols="12" sm="auto">
         <h3 class="text-subtitle-2 mb-2">Select Member</h3>
         <v-select
           style="width: 300px"
@@ -15,6 +15,7 @@
           item-title="name"
           :item-value="(item) => item"
           placeholder="Select a member"
+          hide-details
           @update:modelValue="() => fetchTimesheets()"
         ></v-select>
       </v-col>
@@ -73,15 +74,15 @@
 
     <v-sheet v-show="selectedUser && timesheets && totalAmount" class="pa-8 mt-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-row class="mb-2">
-        <v-col cols="auto" class="mr-16">
+        <v-col cols="12" md="auto" class="mr-md-16">
           <h3 class="text-subtitle-2 mb-2" style="color: #888">Total Amount</h3>
           <span class="text-h5">{{ formatCurrencyString(totalAmount) }}</span>
         </v-col>
-        <v-col cols="auto" class="mr-16">
+        <v-col cols="12" md="auto" class="mr-md-16">
           <h3 class="text-subtitle-2 mb-2" style="color: #888">Paid</h3>
           <span class="text-h5">{{ formatCurrencyString(paidAmount) }}</span>
         </v-col>
-        <v-col cols="auto">
+        <v-col cols="12" md="auto">
           <h3 class="text-subtitle-2 mb-2" style="color: #888">Unpaid</h3>
           <span class="text-h5">{{ formatCurrencyString(unpaidAmount) }}</span>
         </v-col>

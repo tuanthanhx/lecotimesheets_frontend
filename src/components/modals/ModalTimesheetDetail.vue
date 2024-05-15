@@ -1,6 +1,6 @@
 <template>
   <v-dialog persistent v-model="isModalVisible" max-width="700px">
-    <v-card class="pa-4">
+    <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Timesheet Details</div>
         <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
@@ -21,20 +21,20 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="auto">
+              <v-col cols="12" sm="auto">
                 <h3 class="text-subtitle-2 mb-2">Date</h3>
                 {{ viewItem.date ? formatDateString(viewItem.date) : '' }}
               </v-col>
-              <v-col cols="auto" class="ml-16">
+              <v-col cols="12" sm="auto" class="ml-sm-16">
                 <h3 class="text-subtitle-2 mb-2">Time Range</h3>
                 {{ viewItem.start_time }} - {{ viewItem.end_time }}
               </v-col>
-              <v-col cols="auto" class="ml-16">
+              <v-col cols="12" sm="auto" class="ml-sm-16">
                 <h3 class="text-subtitle-2 mb-2">Break</h3>
                 <v-icon v-if="viewItem.break" icon="mdi-check-circle" />
                 <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
               </v-col>
-              <v-col cols="auto" class="ml-16">
+              <v-col cols="12" sm="auto" class="ml-sm-16">
                 <h3 class="text-subtitle-2 mb-2">Duration</h3>
                 {{ totalHours(viewItem.start_time, viewItem.end_time, viewItem.break)?.text }}
               </v-col>

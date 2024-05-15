@@ -1,11 +1,11 @@
 <template>
   <v-dialog persistent v-model="isModalVisible" max-width="640px">
-    <v-card class="pa-4">
+    <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Job Details</div>
         <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
-      <form @submit.prevent="submit">
+      <form @submit.prevent="submit" class="form-dialog">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
             <v-row>

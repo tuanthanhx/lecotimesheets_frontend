@@ -1,25 +1,25 @@
 <template>
   <v-dialog persistent v-model="isModalVisible" max-width="700px">
-    <v-card class="pa-4">
+    <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Edit Member</div>
         <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
-      <form @submit.prevent="submit">
+      <form @submit.prevent="submit" class="form-dialog">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Full Name <span class="text-red">*</span></h3>
                 <v-text-field variant="outlined" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Login <span class="text-red">*</span></h3>
                 <v-text-field variant="outlined" density="compact" v-model="username" v-bind="username_attrs" :error-messages="errors.username"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">New Password</h3>
                 <v-text-field
                   variant="outlined"
@@ -34,7 +34,7 @@
                   @click:append-inner="showPassword = !showPassword"
                 ></v-text-field>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Confirm Password <span v-if="password" class="text-red">*</span></h3>
                 <v-text-field
                   variant="outlined"
@@ -51,21 +51,21 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">D.O.B</h3>
                 <date-picker variant="outlined" density="compact" v-model="dob" v-bind="dob_attrs"></date-picker>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Phone</h3>
                 <v-text-field variant="outlined" density="compact" v-model="phone" v-bind="phone_attrs" :error-messages="errors.phone"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Address</h3>
                 <v-text-field variant="outlined" density="compact" v-model="address" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Language</h3>
                 <v-select
                   style="width: 200px"
@@ -80,7 +80,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Hourly Rate <span class="text-red">*</span></h3>
                 <v-text-field
                   variant="outlined"
@@ -93,7 +93,7 @@
                   :error-messages="errors.hourly_rate"
                 ></v-text-field>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
                   style="width: 200px"
