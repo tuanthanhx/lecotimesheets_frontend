@@ -17,17 +17,13 @@ const shouldShowSidebar = computed(() => route.name?.startsWith('/admin') || rou
 </script>
 
 <style lang="scss" scoped>
-.v-application {
-  background: #f6f6f6 !important;
-}
-
 .v-main {
   transition: none;
 }
 
 @media (max-width: 1279px) {
   .v-main {
-    padding: 0 !important;
+    padding-left: 0 !important;
   }
 }
 </style>

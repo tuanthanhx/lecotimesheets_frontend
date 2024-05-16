@@ -2,7 +2,7 @@
   <v-container fluid class="pa-4 pa-sm-8">
     <v-row>
       <v-col cols="auto">
-        <h1 class="text-h5 mb-8">Timesheets</h1>
+        <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Timesheets</h1>
       </v-col>
       <v-col cols="auto" class="ml-auto">
         <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="50" color="#2b343f" @click="openModalTimesheetAdd"> Add Time </v-btn>

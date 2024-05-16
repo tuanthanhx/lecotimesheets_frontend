@@ -1,5 +1,22 @@
 // COMMON
 
+body,
+.v-application {
+  background: #f6f6f6 !important;
+}
+
+@media (max-width: 1279px) {
+  .v-application__wrap {
+    min-height: 0 !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .v-navigation-drawer {
+    transition: none !important;
+  }
+}
+
 @media only screen and (max-width: 599px) {
   .v-dialog > .v-overlay__content {
     width: calc(100% - 32px) !important;

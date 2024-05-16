@@ -1,8 +1,12 @@
 <template>
   <v-container fluid class="pa-4 pa-sm-8">
-    <h1 class="text-h5 mb-8">Settings</h1>
-    <v-sheet class="pa-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
-      <v-responsive max-width="600">
+    <v-row>
+      <v-col cols="auto">
+        <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Settings</h1>
+      </v-col>
+    </v-row>
+    <v-sheet class="pa-4 pa-sm-8 form-settings" color="#ffffff" border="sm" rounded="lg" elevation="2">
+      <v-responsive class="py-2 pb-sm-0" max-width="600">
         <form @submit.prevent="submit">
           <v-row>
             <v-col cols="12">

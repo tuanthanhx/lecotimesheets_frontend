@@ -1,39 +1,41 @@
 <template>
   <v-container fluid class="pa-4 pa-sm-8">
-    <h1 class="text-h5 mb-8">Jobs</h1>
-    <v-sheet class="mb-2" color="transparent">
+    <v-row>
+      <v-col cols="auto">
+        <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Jobs</h1>
+      </v-col>
+    </v-row>
+    <v-sheet class="mb-8 section-filters" color="transparent">
       <v-row>
-        <v-col cols="auto">
-          <v-row>
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Keyword</h3>
-              <v-text-field
-                style="width: 300px"
-                variant="solo"
-                density="compact"
-                clearable
-                append-inner-icon="mdi-magnify"
-                v-model="searchKeyword"
-                placeholder="Search jobs"
-                @update:modelValue="() => search()"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="auto">
-              <h3 class="text-subtitle-2 mb-2">Status</h3>
-              <v-select
-                style="width: 200px"
-                variant="solo"
-                density="compact"
-                clearable
-                :items="statuses"
-                item-title="name"
-                item-value="id"
-                v-model="searchStatus"
-                placeholder="All statuses"
-                @update:modelValue="() => search()"
-              ></v-select>
-            </v-col>
-          </v-row>
+        <v-col cols="12" sm="auto">
+          <h3 class="text-subtitle-2 mb-2">Keyword</h3>
+          <v-text-field
+            style="width: 300px"
+            variant="solo"
+            density="compact"
+            clearable
+            append-inner-icon="mdi-magnify"
+            v-model="searchKeyword"
+            placeholder="Search jobs"
+            hide-details
+            @update:modelValue="() => search()"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="auto">
+          <h3 class="text-subtitle-2 mb-2">Status</h3>
+          <v-select
+            style="width: 200px"
+            variant="solo"
+            density="compact"
+            clearable
+            :items="statuses"
+            item-title="name"
+            item-value="id"
+            v-model="searchStatus"
+            placeholder="All statuses"
+            hide-details
+            @update:modelValue="() => search()"
+          ></v-select>
         </v-col>
       </v-row>
     </v-sheet>

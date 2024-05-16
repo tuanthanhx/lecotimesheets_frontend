@@ -2,7 +2,7 @@
   "name": "leco_timesheets_frontend",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 192.168.1.8",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint --fix --ext .js,.vue src",

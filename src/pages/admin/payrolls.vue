@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-4 pa-sm-8">
-    <h1 class="text-h5 mb-8">Payrolls</h1>
+    <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Payrolls</h1>
 
     <v-row class="mb-4 section-filters">
       <v-col cols="12" sm="auto">

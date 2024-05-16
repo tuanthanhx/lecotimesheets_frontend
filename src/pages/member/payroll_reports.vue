@@ -1,6 +1,10 @@
 <template>
   <v-container fluid class="pa-4 pa-sm-8">
-    <h1 class="text-h5 mb-8">Payroll Reports</h1>
+    <v-row>
+      <v-col cols="auto">
+        <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Payroll Reports</h1>
+      </v-col>
+    </v-row>
 
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-data-table :headers="tableHeaders" :items="payrolls" :items-per-page="25" :hover="true">
