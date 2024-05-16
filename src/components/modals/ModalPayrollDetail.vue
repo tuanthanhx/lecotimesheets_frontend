@@ -27,7 +27,7 @@
           <template #bottom></template>
         </v-data-table>
       </v-card-text>
-      <v-card-actions class="mt-4 justify-center">
+      <v-card-actions class="px-4 mt-4 justify-sm-center">
         <v-btn class="text-none" variant="elevated" width="120" height="40" color="#2b343f" @click="closeModal">Close</v-btn>
       </v-card-actions>
     </v-card>

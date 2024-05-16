@@ -37,7 +37,7 @@
         :items="timesheets"
         :items-length="tableTotalItems"
         :loading="tableLoading"
-        item-value="name"
+        item-value="id"
         :hover="true"
         @update:options="fetchTimesheets"
       >

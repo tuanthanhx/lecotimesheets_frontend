@@ -6,3 +6,4 @@
 4. Phần quyền API (approve, unapprove, delete,...)
 5. Date của timesheet khi thêm mới bị sai
 6. Hide row SUM của table khi empty
+7. Set viewport iPad to show PC View

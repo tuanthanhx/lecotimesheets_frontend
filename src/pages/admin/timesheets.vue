@@ -68,8 +68,9 @@
         :items="timesheets"
         :items-length="tableTotalItems"
         :loading="tableLoading"
-        item-value="name"
+        item-value="id"
         :hover="true"
+        :mobile="true"
         @update:options="search"
       >
         <template v-slot:[`item.date`]="{ item }">

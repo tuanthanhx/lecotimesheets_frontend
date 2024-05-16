@@ -67,7 +67,7 @@
             </v-row>
           </v-responsive>
         </v-card-text>
-        <v-card-actions class="mt-4 justify-center">
+        <v-card-actions class="px-4 mt-4 justify-sm-center">
           <v-btn class="text-none mr-4" variant="elevated" width="120" height="40" color="#2b343f" type="submit" :loading="isLoading" :disabled="!meta.valid"
             >Update</v-btn
           >
@@ -177,6 +177,7 @@ const submit = handleSubmit(async (values) => {
       material_cost: values.material_cost,
       status: values.status,
     };
+    console.log(object);
     const response = await axios.put(`/jobs/${editItem.value.id}`, object);
     if (response?.data) {
       emit('submit');

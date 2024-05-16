@@ -69,7 +69,7 @@
             </v-row>
           </v-responsive>
         </v-card-text>
-        <v-card-actions class="mt-4 justify-center">
+        <v-card-actions class="px-4 mt-4 justify-sm-center">
           <v-btn class="text-none mr-4" variant="elevated" width="120" height="40" color="#2b343f" type="submit" :loading="isLoading" :disabled="!meta.valid"
             >Save</v-btn
           >
@@ -109,7 +109,7 @@ const statuses = ref([
 const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
   validationSchema: yup.object().shape({
     name: yup.string().required().label('Name'),
-    detail: yup.string().optional().nullable().label('Detail'),
+    detail: yup.string().optional().label('Detail'),
     revenue: yup
       .number()
       .transform((value) => (isNaN(value) ? 0 : value))
@@ -147,11 +147,12 @@ const submit = handleSubmit(async (values) => {
   try {
     const object = {
       name: values.name,
-      detail: values.detail,
+      detail: values.detail || null,
       revenue: values.revenue,
       material_cost: values.material_cost,
       status: values.status,
     };
+    console.log(object);
     const response = await axios.post('/jobs', object);
     if (response?.data) {
       emit('submit');
