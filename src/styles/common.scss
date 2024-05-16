@@ -6,7 +6,7 @@ body,
 }
 
 @media (max-width: 1279px) {
-  .v-application__wrap {
+  .v-main > .v-application > .v-application__wrap {
     min-height: 0 !important;
   }
 }

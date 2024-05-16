@@ -12,40 +12,43 @@
       <v-img width="220" height="auto" aspect-ratio="220/66" src="@/assets/img/logo.png" />
     </v-card>
     <v-list v-if="userData?.group === 6">
-      <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link to="/admin/timesheets"></v-list-item>
-      <v-list-item title="Jobs" prepend-icon="mdi-folder-text" link to="/admin/jobs"></v-list-item>
-      <v-list-item title="Members" prepend-icon="mdi-account-group" link to="/admin/members"></v-list-item>
+      <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link @click="navigate('/admin/timesheets')"></v-list-item>
+      <v-list-item title="Jobs" prepend-icon="mdi-folder-text" link @click="navigate('/admin/jobs')"></v-list-item>
+      <v-list-item title="Members" prepend-icon="mdi-account-group" link @click="navigate('/admin/members')"></v-list-item>
       <v-list-group value="Reports">
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" prepend-icon="mdi-file-chart" title="Reports"></v-list-item>
         </template>
-        <v-list-item title="Job Reports" prepend-icon="mdi-file-document-outline" link to="/admin/reports/jobs"></v-list-item>
-        <v-list-item title="Member Reports" prepend-icon="mdi-file-table-outline" link to="/admin/reports/members"></v-list-item>
-        <v-list-item title="Payroll Reports" prepend-icon="mdi-file-send-outline" link to="/admin/reports/payrolls"></v-list-item>
+        <v-list-item title="Job Reports" prepend-icon="mdi-file-document-outline" link @click="navigate('/admin/reports/jobs')"></v-list-item>
+        <v-list-item title="Member Reports" prepend-icon="mdi-file-table-outline" link @click="navigate('/admin/reports/members')"></v-list-item>
+        <v-list-item title="Payroll Reports" prepend-icon="mdi-file-send-outline" link @click="navigate('/admin/reports/payrolls')"></v-list-item>
       </v-list-group>
-      <v-list-item title="Payrolls" prepend-icon="mdi-receipt-text" link to="/admin/payrolls"></v-list-item>
-      <v-list-item title="Settings" prepend-icon="mdi-cog" link to="/admin/settings"></v-list-item>
-      <v-list-item title="Logout" prepend-icon="mdi-logout" link to="/logout"></v-list-item>
+      <v-list-item title="Payrolls" prepend-icon="mdi-receipt-text" link @click="navigate('/admin/payrolls')"></v-list-item>
+      <v-list-item title="Settings" prepend-icon="mdi-cog" link @click="navigate('/admin/settings')"></v-list-item>
+      <v-list-item title="Logout" prepend-icon="mdi-logout" link @click="navigate('/logout')"></v-list-item>
     </v-list>
     <v-list v-else>
-      <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link to="/member/timesheets"></v-list-item>
-      <v-list-item title="Jobs" prepend-icon="mdi-folder-text" link to="/member/jobs"></v-list-item>
-      <v-list-item title="Payroll Reports" prepend-icon="mdi-receipt-text" link to="/member/payroll_reports"></v-list-item>
-      <v-list-item title="Settings" prepend-icon="mdi-cog" link to="/member/settings"></v-list-item>
-      <v-list-item title="Logout" prepend-icon="mdi-logout" link to="/logout"></v-list-item>
+      <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link @click="navigate('/member/timesheets')"></v-list-item>
+      <v-list-item title="Jobs" prepend-icon="mdi-folder-text" link @click="navigate('/member/jobs')"></v-list-item>
+      <v-list-item title="Payroll Reports" prepend-icon="mdi-receipt-text" link @click="navigate('/member/payroll_reports')"></v-list-item>
+      <v-list-item title="Settings" prepend-icon="mdi-cog" link @click="navigate('/member/settings')"></v-list-item>
+      <v-list-item title="Logout" prepend-icon="mdi-logout" link @click="navigate('/logout')"></v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
 import { useUserStore } from '@/stores/userStore';
 
-const { mdAndDown } = useDisplay();
+const router = useRouter();
 
 const userStore = useUserStore();
 const userData = userStore.userData;
+
+const { mdAndDown } = useDisplay();
 
 const showAppBar = ref(false);
 const showMenu = ref(false);
@@ -59,6 +62,13 @@ onMounted(() => {
   showAppBar.value = mdAndDown.value;
   showMenu.value = !mdAndDown.value;
 });
+
+const navigate = (link) => {
+  if (mdAndDown.value && showMenu.value) {
+    showMenu.value = false;
+  }
+  router.push(link);
+}
 </script>
 
 <style lang="scss" scoped>

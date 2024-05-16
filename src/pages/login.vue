@@ -1,21 +1,22 @@
 <template>
   <v-container fluid class="fill-height">
-    <v-responsive class="mx-auto pa-4" max-width="600">
-      <v-row justify="center" class="mb-4">
-        <v-col cols="12">
-          <v-img class="mx-auto" width="440" height="132" src="@/assets/img/logo.png" />
+    <v-responsive class="mx-auto pa-2" max-width="600">
+      <v-row justify="center" class="mb-sm-4">
+        <v-col cols="8" sm="12">
+          <v-img class="mx-auto" max-width="440" height="auto" aspect-ratio="440/132" src="@/assets/img/logo.png" />
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col cols="12">
-          <v-card class="pa-8" elevation="4">
+          <v-card class="pa-6 pa-sm-8" elevation="4">
             <form @submit.prevent="submit">
-              <v-card-title class="text-h5 pa-0 mb-6" align="center">Sign in to continue</v-card-title>
+              <v-card-title class="text-h5 pa-0 mb-4 mb-sm-6" align="center">Sign in to continue</v-card-title>
               <v-card-text class="pa-0">
                 <v-text-field
                   class="mb-2"
                   prepend-inner-icon="mdi-account"
                   variant="outlined"
+                  :density="$vuetify?.display?.xs ? 'compact' : 'default'"
                   v-model="username"
                   v-bind="username_attrs"
                   :error-messages="errors.username"
@@ -24,6 +25,7 @@
                   class="mb-2"
                   prepend-inner-icon="mdi-lock"
                   variant="outlined"
+                  :density="$vuetify?.display?.xs ? 'compact' : 'default'"
                   v-model="password"
                   v-bind="password_attrs"
                   :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -39,8 +41,7 @@
                   class="text-none"
                   variant="elevated"
                   block
-                  width="160"
-                  height="56"
+                  :height="$vuetify?.display?.xs ? '40' : '56'"
                   color="#2b343f"
                   :loading="isLoading"
                   :disabled="!meta.valid"

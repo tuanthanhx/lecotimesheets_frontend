@@ -5,7 +5,16 @@
         <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Members</h1>
       </v-col>
       <v-col cols="auto" class="ml-auto">
-        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="50" color="#2b343f" @click="openModalMemberAdd"> Add Member </v-btn>
+        <v-btn
+          class="text-none"
+          prepend-icon="mdi-plus"
+          :width="$vuetify?.display?.mdAndDown ? '150' : '160'"
+          height="50"
+          color="#2b343f"
+          @click="openModalMemberAdd"
+        >
+          Add Member
+        </v-btn>
       </v-col>
     </v-row>
     <v-sheet class="mb-8 section-filters" color="transparent">
@@ -55,6 +64,9 @@
       >
         <template v-slot:[`item.created_at`]="{ item }">
           {{ formatDateString(item.created_at) }}
+        </template>
+        <template v-slot:[`item.username`]="{ item }">
+          <span class="cursor-pointer" @click="openModalMemberDetail(item)">{{ item.username }}</span>
         </template>
         <template v-slot:[`item.name`]="{ item }">
           <span class="cursor-pointer" @click="openModalMemberDetail(item)">{{ item.name }}</span>

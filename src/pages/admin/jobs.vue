@@ -5,7 +5,16 @@
         <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Job</h1>
       </v-col>
       <v-col cols="auto" class="ml-auto">
-        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="50" color="#2b343f" @click="openModalJobAdd"> Add Job </v-btn>
+        <v-btn
+          class="text-none"
+          prepend-icon="mdi-plus"
+          :width="$vuetify?.display?.mdAndDown ? '130' : '160'"
+          height="50"
+          color="#2b343f"
+          @click="openModalJobAdd"
+        >
+          Add Job
+        </v-btn>
       </v-col>
     </v-row>
     <v-sheet class="mb-8 section-filters" color="transparent">

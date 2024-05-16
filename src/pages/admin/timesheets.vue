@@ -5,7 +5,16 @@
         <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Timesheets</h1>
       </v-col>
       <v-col cols="auto" class="ml-auto">
-        <v-btn class="text-none" prepend-icon="mdi-plus" width="160" height="50" color="#2b343f" @click="openModalTimesheetAdd"> Add Time </v-btn>
+        <v-btn
+          class="text-none"
+          prepend-icon="mdi-plus"
+          :width="$vuetify?.display?.mdAndDown ? '130' : '160'"
+          height="50"
+          color="#2b343f"
+          @click="openModalTimesheetAdd"
+        >
+          Add Time
+        </v-btn>
       </v-col>
     </v-row>
     <v-sheet class="mb-8 section-filters" color="transparent">
@@ -77,6 +86,12 @@
           {{ formatDateString(item.date) }}
         </template>
         <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+        <template v-slot:[`item.user.name`]="{ item }">
+          <span class="cursor-pointer" @click="openModalTimesheetDetail(item)">{{ item.user.name }}</span>
+        </template>
+        <template v-slot:[`item.job.name`]="{ item }">
+          <span class="cursor-pointer" @click="openModalTimesheetDetail(item)">{{ item.job.name }}</span>
+        </template>
         <template v-slot:[`item.break`]="{ item }">
           <v-icon v-if="item.break" icon="mdi-check-circle" />
           <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />

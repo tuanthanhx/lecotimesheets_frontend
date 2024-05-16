@@ -20,7 +20,16 @@
         ></v-select>
       </v-col>
       <v-col cols="auto" class="ml-auto" v-if="selectedUser && timesheets.length">
-        <v-btn class="button-pay text-none" prepend-icon="mdi-currency-usd" width="160" height="40" color="#2b343f" @click="payWages"> Pay now </v-btn>
+        <v-btn
+          class="button-pay text-none"
+          prepend-icon="mdi-currency-usd"
+          :width="$vuetify?.display?.mdAndDown ? '140' : '160'"
+          height="40"
+          color="#2b343f"
+          @click="payWages"
+        >
+          Pay now
+        </v-btn>
       </v-col>
     </v-row>
 
