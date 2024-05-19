@@ -6,13 +6,13 @@
         <form @submit.prevent="submit">
           <v-row>
             <v-col cols="12">
-              <h3 class="text-subtitle-2 mb-2">Full Name <span class="text-red">*</span></h3>
+              <h3 class="text-subtitle-2 mb-2">{{ $t('setting.name') }} <span class="text-red">*</span></h3>
               <v-text-field variant="outlined" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12">
-              <h3 class="text-subtitle-2 mb-2">Login <span class="text-red">*</span></h3>
+              <h3 class="text-subtitle-2 mb-2">{{ $t('setting.username') }} <span class="text-red">*</span></h3>
               <v-text-field
                 variant="outlined"
                 density="compact"
@@ -26,7 +26,7 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <h3 class="text-subtitle-2 mb-2">New Password</h3>
+              <h3 class="text-subtitle-2 mb-2">{{ $t('setting.new_password') }}</h3>
               <v-text-field
                 variant="outlined"
                 density="compact"
@@ -43,7 +43,7 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <h3 class="text-subtitle-2 mb-2">Confirm Password <span v-if="password" class="text-red">*</span></h3>
+              <h3 class="text-subtitle-2 mb-2">{{ $t('setting.confirm_password') }} <span v-if="password" class="text-red">*</span></h3>
               <v-text-field
                 variant="outlined"
                 density="compact"
@@ -60,7 +60,7 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <h3 class="text-subtitle-2 mb-2">Language</h3>
+              <h3 class="text-subtitle-2 mb-2">{{ $t('setting.language') }}</h3>
               <v-select
                 style="width: 200px"
                 variant="outlined"
@@ -75,10 +75,12 @@
           </v-row>
           <v-row>
             <v-col cols="auto">
-              <v-btn class="text-none" width="120" height="40" color="#2b343f" type="submit" :loading="isLoading" :disabled="!meta.valid"> Save </v-btn>
+              <v-btn class="text-none" width="120" height="40" color="#2b343f" type="submit" :loading="isLoading" :disabled="!meta.valid">
+                {{ $t('common.button.save') }}
+              </v-btn>
             </v-col>
             <v-col cols="auto">
-              <v-btn class="text-none" width="120" height="40" @click.prevent="reset"> Cancel </v-btn>
+              <v-btn class="text-none" width="120" height="40" @click.prevent="reset"> {{ $t('common.button.cancel') }} </v-btn>
             </v-col>
           </v-row>
         </form>
@@ -95,6 +97,9 @@ import axios from '@/plugins/axios';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { useMessageDialog } from '@/plugins/message_dialogs';
+
+import { useI18n } from 'vue-i18n';
+const { locale, t } = useI18n();
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
 
@@ -172,7 +177,7 @@ const languages = ref([
   },
   {
     code: 'vi',
-    name: 'Vietnamese',
+    name: 'Tiếng Việt',
   },
 ]);
 
@@ -190,9 +195,8 @@ const submit = handleSubmit(async (values) => {
     }
     const response = await axios.post('/settings', object);
     if (response?.data) {
-      formAlert.value = 'Settings updated successfully!';
-      console.log(response.data);
-      console.log(user.value);
+      locale.value = object.language;
+      formAlert.value = t('setting.message.updated');
     }
   } catch (error) {
     console.error(error);

@@ -1,0 +1,30 @@
+{
+  "common": {
+    "button": {
+      "save": "Lưu",
+      "cancel": "Huỷ"
+    }
+  },
+  "sidebar": {
+    "timesheet": "Bảng chấm công",
+    "job": "Công việc",
+    "member": "Thành viên",
+    "report": "Báo cáo",
+    "report_job": "Báo cáo công việc",
+    "report_member": "Báo cáo nhân viên",
+    "report_payroll": "Báo cáo bảng lương",
+    "payroll": "Bảng lương",
+    "setting": "Cài đặt",
+    "logout": "Đăng xuất"
+  },
+  "setting": {
+    "name": "Tên đầy đủ",
+    "username": "Tên đăng nhập",
+    "new_password": "Mật khẩu mới",
+    "confirm_password": "Lặp lại mật khẩu mới",
+    "language": "Ngôn ngữ",
+    "message": {
+      "updated": "Lưu cài đặt thành công!"
+    }
+  }
+}

@@ -12,20 +12,20 @@
       <v-img width="220" height="auto" aspect-ratio="220/66" src="@/assets/img/logo.png" />
     </v-card>
     <v-list v-if="userData?.group === 6">
-      <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link @click="navigate('/admin/timesheets')"></v-list-item>
-      <v-list-item title="Jobs" prepend-icon="mdi-folder-text" link @click="navigate('/admin/jobs')"></v-list-item>
-      <v-list-item title="Members" prepend-icon="mdi-account-group" link @click="navigate('/admin/members')"></v-list-item>
+      <v-list-item :title="$t('sidebar.timesheet')" prepend-icon="mdi-clock-time-three" link @click="navigate('/admin/timesheets')"></v-list-item>
+      <v-list-item :title="$t('sidebar.job')" prepend-icon="mdi-folder-text" link @click="navigate('/admin/jobs')"></v-list-item>
+      <v-list-item :title="$t('sidebar.member')" prepend-icon="mdi-account-group" link @click="navigate('/admin/members')"></v-list-item>
       <v-list-group value="Reports">
         <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props" prepend-icon="mdi-file-chart" title="Reports"></v-list-item>
+          <v-list-item v-bind="props" prepend-icon="mdi-file-chart" :title="$t('sidebar.report')"></v-list-item>
         </template>
-        <v-list-item title="Job Reports" prepend-icon="mdi-file-document-outline" link @click="navigate('/admin/reports/jobs')"></v-list-item>
-        <v-list-item title="Member Reports" prepend-icon="mdi-file-table-outline" link @click="navigate('/admin/reports/members')"></v-list-item>
-        <v-list-item title="Payroll Reports" prepend-icon="mdi-file-send-outline" link @click="navigate('/admin/reports/payrolls')"></v-list-item>
+        <v-list-item :title="$t('sidebar.report_job')" prepend-icon="mdi-file-document-outline" link @click="navigate('/admin/reports/jobs')"></v-list-item>
+        <v-list-item :title="$t('sidebar.report_member')" prepend-icon="mdi-file-table-outline" link @click="navigate('/admin/reports/members')"></v-list-item>
+        <v-list-item :title="$t('sidebar.report_payroll')" prepend-icon="mdi-file-send-outline" link @click="navigate('/admin/reports/payrolls')"></v-list-item>
       </v-list-group>
-      <v-list-item title="Payrolls" prepend-icon="mdi-receipt-text" link @click="navigate('/admin/payrolls')"></v-list-item>
-      <v-list-item title="Settings" prepend-icon="mdi-cog" link @click="navigate('/admin/settings')"></v-list-item>
-      <v-list-item title="Logout" prepend-icon="mdi-logout" link @click="navigate('/logout')"></v-list-item>
+      <v-list-item :title="$t('sidebar.payroll')" prepend-icon="mdi-receipt-text" link @click="navigate('/admin/payrolls')"></v-list-item>
+      <v-list-item :title="$t('sidebar.setting')" prepend-icon="mdi-cog" link @click="navigate('/admin/settings')"></v-list-item>
+      <v-list-item :title="$t('sidebar.logout')" prepend-icon="mdi-logout" link @click="navigate('/logout')"></v-list-item>
     </v-list>
     <v-list v-else>
       <v-list-item title="Timesheets" prepend-icon="mdi-clock-time-three" link @click="navigate('/member/timesheets')"></v-list-item>

@@ -1,0 +1,30 @@
+{
+  "common": {
+    "button": {
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "sidebar": {
+    "timesheet": "Timesheets",
+    "job": "Jobs",
+    "member": "Members",
+    "report": "Reports",
+    "report_job": "Job Reports",
+    "report_member": "Member Reports",
+    "report_payroll": "Payroll Reports",
+    "payroll": "Payrolls",
+    "setting": "Settings",
+    "logout": "Logout"
+  },
+  "setting": {
+    "name": "Full Name",
+    "username": "Login",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "language": "Language",
+    "message": {
+      "updated": "Settings updated successfully!"
+    }
+  }
+}

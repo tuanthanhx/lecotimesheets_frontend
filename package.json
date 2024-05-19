@@ -19,6 +19,7 @@
     "vee-validate": "^4.12.6",
     "vue": "^3.4.0",
     "vue-chartjs": "^5.3.1",
+    "vue-i18n": "^9.13.1",
     "vuetify": "^3.5.0"
   },
   "devDependencies": {

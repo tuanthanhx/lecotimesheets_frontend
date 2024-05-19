@@ -43,6 +43,10 @@ router.beforeEach((to, from, next) => {
     .post('/auth/is_login')
     .then((response) => {
       if (response.data) {
+        // Set Language
+        if (response.data.language) {
+          localStorage.setItem('language', response.data.language);
+        }
         // Redirect based on user group and requested path
         if (response.data.group === 2 && to.path.startsWith('/admin')) {
           next({ name: '/member/timesheets' });
