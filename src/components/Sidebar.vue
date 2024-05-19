@@ -68,7 +68,7 @@ const navigate = (link) => {
     showMenu.value = false;
   }
   router.push(link);
-}
+};
 </script>
 
 <style lang="scss" scoped>
