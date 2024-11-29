@@ -98,7 +98,10 @@ const submit = handleSubmit(async (values) => {
       if (response.data.group === 6) {
         router.push('/admin/timesheets');
       } else {
-        router.push('/member/timesheets');
+        router.push({
+          path: '/member/timesheets',
+          query: { ref: 'login' },
+        });
       }
     }
   } catch (error) {

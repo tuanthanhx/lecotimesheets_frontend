@@ -7,3 +7,9 @@
 5. Date của timesheet khi thêm mới bị sai
 6. Hide row SUM của table khi empty
 7. Set viewport iPad to show PC View
+8. Fix lỗi duration = 0 hour khi chọn thời gian làm chỉ 30p và có nghỉ trưa
+
+# Cach build
+- Sửa file .env.prod
+- Sửa file src/router/index.js
+- Sau khi build xong, copy file .htaccess trong dist_helper rồi bỏ vào thư mục (chú ý server phải hỗ trợ file .htaccess)

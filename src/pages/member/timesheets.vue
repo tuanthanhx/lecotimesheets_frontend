@@ -139,10 +139,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import axios from '@/plugins/axios';
 import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, sortArray } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 import { useConfirmDialog } from '@/plugins/confirm_dialogs';
+
+const route = useRoute();
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showInfo } = useMessageDialog();
 const { isConfirmDialogVisible, confirmTitle, confirmMessage, confirmButtonText, cancelButtonText, showConfirm, confirm, cancel } = useConfirmDialog();
@@ -291,6 +294,10 @@ const confirmDeleteTimesheet = async (item) => {
 
 onMounted(() => {
   getFilters();
+
+  if (route.query?.ref === 'login') {
+    openModalTimesheetAdd();
+  }
 });
 </script>
 
