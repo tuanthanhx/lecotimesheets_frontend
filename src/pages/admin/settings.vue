@@ -58,7 +58,7 @@
               ></v-text-field>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row style="display: none">
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">{{ $t('setting.language') }}</h3>
               <v-select

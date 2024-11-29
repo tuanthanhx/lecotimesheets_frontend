@@ -73,6 +73,7 @@
                   density="compact"
                   v-model="language"
                   v-bind="language_attrs"
+                  disabled
                   :items="languages"
                   item-title="name"
                   item-value="code"

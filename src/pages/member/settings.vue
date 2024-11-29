@@ -80,7 +80,7 @@
               <v-text-field variant="outlined" density="compact" v-model="address" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row style="display: none">
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">Language</h3>
               <v-select
