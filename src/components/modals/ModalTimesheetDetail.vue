@@ -16,8 +16,14 @@
             </v-row>
             <v-row>
               <v-col cols="12">
-                <h3 class="text-subtitle-2 mb-2">Job</h3>
+                <h3 class="text-subtitle-2 mb-2">Job Name</h3>
                 {{ viewItem.job?.name }}
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <h3 class="text-subtitle-2 mb-2">Job Detail</h3>
+                {{ viewItem.job?.detail }}
               </v-col>
             </v-row>
             <v-row>
