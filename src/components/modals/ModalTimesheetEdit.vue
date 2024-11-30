@@ -181,6 +181,10 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
       .test('is-greater-than-start-time', 'End Time must be greater than Start Time', function (value) {
         const { start_time } = this.parent;
         return dayjs(`2024-01-01T${value}`).isAfter(dayjs(`2024-01-01T${start_time}`));
+      })
+      .test('valid-total-hours', 'Total time worked must be greater than 0m', function (value) {
+        const { start_time, has_break } = this.parent;
+        return totalHours(start_time, value, has_break)?.count > 0;
       }),
     note: yup.string().optional().nullable().label('note'),
     has_break: yup.bool().optional().label('Break'),
