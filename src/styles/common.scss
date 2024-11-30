@@ -39,6 +39,17 @@ body,
   }
 }
 
+.chart-wrapper {
+  @media only screen and (min-width: 600px) {
+    margin-top: 30px;
+    min-height: 320px;
+  }
+  
+  @media only screen and (max-width: 599px) {
+    min-height: 80vw;
+  }
+}
+
 // PAGE SETTINGS
 
 .form-settings .v-input {

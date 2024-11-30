@@ -75,9 +75,11 @@
     <v-sheet v-show="selectedJob && job.revenue" class="pa-8 mt-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-row>
         <v-col cols="12" md="6" order-md="last">
-          <Doughnut :data="chartData" :options="chartOptions" />
+          <div class="chart-wrapper">
+            <Doughnut :data="chartData" :options="chartOptions" />
+          </div>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="6" class="overflow-hidden">
           <v-row class="mb-2">
             <v-col cols="auto">
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Revenue</h3>
@@ -95,11 +97,11 @@
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Labour Cost</h3>
               <span class="text-h5">{{ formatCurrencyString(totalAmount) }}</span>
             </v-col>
-            <v-col cols="12" md="auto" class="ml-16">
+            <v-col cols="12" md="auto" class="ml-8 ml-sm-16">
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Paid</h3>
               <span class="text-h5">{{ formatCurrencyString(paidAmount) }}</span>
             </v-col>
-            <v-col cols="12" md="auto" class="ml-16">
+            <v-col cols="12" md="auto" class="ml-8 ml-sm-16">
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Unpaid</h3>
               <span class="text-h5">{{ formatCurrencyString(unpaidAmount) }}</span>
             </v-col>
