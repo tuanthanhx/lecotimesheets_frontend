@@ -1,36 +1,36 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="640px">
+  <v-dialog v-model="isModalVisible" persistent max-width="640px">
     <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Add Job</div>
         <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
-      <form @submit.prevent="submit" class="form-dialog">
+      <form class="form-dialog" @submit.prevent="submit">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Name <span class="text-red">*</span></h3>
-                <v-text-field variant="outlined" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
+                <v-text-field v-model="name" variant="outlined" density="compact" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Detail</h3>
-                <v-textarea variant="outlined" density="compact" v-model="detail" v-bind="detail_attrs" :error-messages="errors.detail"></v-textarea>
+                <v-textarea v-model="detail" variant="outlined" density="compact" v-bind="detail_attrs" :error-messages="errors.detail"></v-textarea>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Revenue</h3>
                 <v-text-field
+                  v-model="revenue"
                   style="width: 200px"
                   variant="outlined"
                   density="compact"
                   prefix="$"
                   type="number"
                   step="0.01"
-                  v-model="revenue"
                   v-bind="revenue_attrs"
                   :error-messages="errors.revenue"
                 ></v-text-field>
@@ -40,13 +40,13 @@
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Material Cost</h3>
                 <v-text-field
+                  v-model="material_cost"
                   style="width: 200px"
                   variant="outlined"
                   density="compact"
                   prefix="$"
                   type="number"
                   step="0.01"
-                  v-model="material_cost"
                   v-bind="material_cost_attrs"
                   :error-messages="errors.material_cost"
                 ></v-text-field>
@@ -56,10 +56,10 @@
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
+                  v-model="status"
                   style="width: 200px"
                   variant="outlined"
                   density="compact"
-                  v-model="status"
                   v-bind="status_attrs"
                   :items="statuses"
                   item-title="name"
@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import axios from '@/plugins/axios';
@@ -90,10 +90,28 @@ import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
 
-const emit = defineEmits(['close', 'submit']);
+const emit = defineEmits(['close', 'submit', 'update:modelValue']);
 
-const isModalVisible = ref(false);
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const isModalVisible = ref(props.modelValue);
 const isLoading = ref(false);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    isModalVisible.value = newValue;
+  },
+);
+
+watch(isModalVisible, (newValue) => {
+  emit('update:modelValue', newValue);
+});
 
 const statuses = ref([
   {
@@ -136,6 +154,7 @@ const [material_cost, material_cost_attrs] = defineField('material_cost');
 const [status, status_attrs] = defineField('status');
 
 const closeModal = () => {
+  isModalVisible.value = false;
   emit('close');
   setTimeout(() => {
     resetForm();
@@ -155,6 +174,7 @@ const submit = handleSubmit(async (values) => {
     console.log(object);
     const response = await axios.post('/jobs', object);
     if (response?.data) {
+      isModalVisible.value = false;
       emit('submit');
       setTimeout(() => {
         resetForm();

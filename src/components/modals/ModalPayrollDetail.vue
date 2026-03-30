@@ -2,26 +2,25 @@
   <v-dialog v-model="isModalVisible" max-width="960px">
     <v-card class="pa-4">
       <v-card-text class="pa-0">
-        {{ props.item }}
         <v-data-table :headers="tableHeaders" :items="viewItem" :items-per-page="-1" :hover="true">
-          <template v-slot:[`item.created_at`]="{ item }">
+          <template #[`item.created_at`]="{ item }">
             {{ formatDateString(item.created_at) }}
           </template>
-          <template v-slot:[`item.date`]="{ item }">
+          <template #[`item.date`]="{ item }">
             {{ formatDateString(item.date) }}
           </template>
-          <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
-          <template v-slot:[`item.break`]="{ item }">
+          <template #[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+          <template #[`item.break`]="{ item }">
             <v-icon v-if="item.break" icon="mdi-check-circle" />
             <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
           </template>
-          <template v-slot:[`item.time_worked`]="{ item }">
+          <template #[`item.time_worked`]="{ item }">
             {{ formatHourString(item.time_worked) }}
           </template>
-          <template v-slot:[`item.hourly_rate`]="{ item }">
+          <template #[`item.hourly_rate`]="{ item }">
             {{ formatCurrencyString(item.hourly_rate) }}
           </template>
-          <template v-slot:[`item.amount`]="{ item }">
+          <template #[`item.amount`]="{ item }">
             {{ formatCurrencyString(item.amount) }}
           </template>
           <template #bottom></template>
@@ -38,16 +37,30 @@
 import { ref, watch } from 'vue';
 import { formatDateString, formatTimeString, formatCurrencyString, formatHourString } from '@/plugins/utils';
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'update:modelValue']);
 
 const props = defineProps({
-  timesheets: Object,
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+  timesheets: {
+    type: Array,
+    default: () => [],
+  },
 });
 
 const viewItem = ref([]);
 viewItem.value = props.timesheets?.length ? [...props.timesheets] : [];
 
-const isModalVisible = ref(false);
+const isModalVisible = ref(props.modelValue);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    isModalVisible.value = newValue;
+  },
+);
 
 watch(
   () => props.timesheets,
@@ -56,7 +69,12 @@ watch(
   },
 );
 
+watch(isModalVisible, (newValue) => {
+  emit('update:modelValue', newValue);
+});
+
 const closeModal = () => {
+  isModalVisible.value = false;
   emit('close');
 };
 

@@ -1,6 +1,6 @@
 <template>
   <v-menu v-model="isMenuOpen" :close-on-content-click="false">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-text-field
         :style="`min-width: 200px; max-width: ${maxWidth ?? 'none'}`"
         :label="label"
@@ -15,7 +15,7 @@
       ></v-text-field>
     </template>
     <v-date-picker v-model="selectedDate" :max="today" hide-actions title="" :color="color">
-      <template v-slot:header></template>
+      <template #header></template>
     </v-date-picker>
   </v-menu>
 </template>
@@ -25,16 +25,40 @@ import { ref, computed, watch } from 'vue';
 import { formatDateString } from '@/plugins/utils';
 import dayjs from 'dayjs';
 
-const { label, variant, density, color, modelValue, maxWidth, placeholder, hideDetails } = defineProps([
-  'label',
-  'variant',
-  'density',
-  'color',
-  'modelValue',
-  'maxWidth',
-  'placeholder',
-  'hideDetails',
-]);
+const { label, variant, density, color, modelValue, maxWidth, placeholder, hideDetails } = defineProps({
+  label: {
+    type: String,
+    default: '',
+  },
+  variant: {
+    type: String,
+    default: 'outlined',
+  },
+  density: {
+    type: String,
+    default: 'default',
+  },
+  color: {
+    type: String,
+    default: 'primary',
+  },
+  modelValue: {
+    type: [String, Date, Object, null],
+    default: null,
+  },
+  maxWidth: {
+    type: String,
+    default: null,
+  },
+  placeholder: {
+    type: String,
+    default: '',
+  },
+  hideDetails: {
+    type: [Boolean, String],
+    default: false,
+  },
+});
 
 const emit = defineEmits(['update:modelValue']);
 

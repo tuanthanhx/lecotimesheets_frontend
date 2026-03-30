@@ -1,20 +1,20 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="700px">
+  <v-dialog v-model="isModalVisible" persistent max-width="700px">
     <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Add Timesheet</div>
         <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
-      <form @submit.prevent="submit" class="form-dialog">
+      <form class="form-dialog" @submit.prevent="submit">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
             <v-row v-if="props.role === 'admin'">
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Member</h3>
                 <v-select
+                  v-model="user"
                   variant="outlined"
                   density="compact"
-                  v-model="user"
                   v-bind="user_attrs"
                   :items="activeUsers"
                   item-title="name"
@@ -27,9 +27,9 @@
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Job</h3>
                 <v-select
+                  v-model="job"
                   variant="outlined"
                   density="compact"
-                  v-model="job"
                   v-bind="job_attrs"
                   :items="activeJobs"
                   item-title="name"
@@ -41,17 +41,17 @@
             <v-row>
               <v-col cols="12" sm="auto">
                 <h3 class="text-subtitle-2 mb-2">Date</h3>
-                <date-picker variant="outlined" density="compact" v-model="date" v-bind="date_attrs" placeholder="Select date"></date-picker>
+                <date-picker v-model="date" variant="outlined" density="compact" v-bind="date_attrs" placeholder="Select date"></date-picker>
                 <span v-if="errors.date">{{ errors.date }}</span>
               </v-col>
               <v-col cols="12" sm="auto">
                 <h3 class="text-subtitle-2 mb-2">Time Range</h3>
                 <div class="d-flex justify-center">
                   <v-select
+                    v-model="start_time"
                     variant="outlined"
                     style="width: 125px"
                     density="compact"
-                    v-model="start_time"
                     v-bind="start_time_attrs"
                     :items="startTimeItems"
                     hide-details
@@ -59,17 +59,17 @@
                   ></v-select>
                   <div class="mx-4" style="margin-top: 12px">-</div>
                   <v-select
+                    v-model="end_time"
                     variant="outlined"
                     style="width: 125px"
                     density="compact"
-                    v-model="end_time"
                     v-bind="end_time_attrs"
                     :items="endTimeItems"
                     hide-details
                     placeholder="End time"
                   ></v-select>
                 </div>
-                <div class="d-flex" style="position: absolute; margin-top: 10px" v-if="start_time && end_time">
+                <div v-if="start_time && end_time" class="d-flex" style="position: absolute; margin-top: 10px">
                   <template v-if="errors.end_time">
                     <span class="text-error">{{ errors.end_time }}</span>
                   </template>
@@ -78,17 +78,17 @@
               </v-col>
               <v-col cols="12" sm="auto" class="mt-4 mt-sm-0">
                 <h3 class="text-subtitle-2 mb-2">Break</h3>
-                <v-checkbox style="margin-top: -8px" v-model="has_break" v-bind="has_break_attrs" hide-details></v-checkbox>
+                <v-checkbox v-model="has_break" style="margin-top: -8px" v-bind="has_break_attrs" hide-details></v-checkbox>
               </v-col>
             </v-row>
             <v-row v-if="props.role === 'admin'">
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
+                  v-model="status"
                   style="width: 200px"
                   variant="outlined"
                   density="compact"
-                  v-model="status"
                   v-bind="status_attrs"
                   :items="statuses"
                   item-title="name"
@@ -100,9 +100,9 @@
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Note</h3>
                 <v-textarea
+                  v-model="note"
                   variant="outlined"
                   density="compact"
-                  v-model="note"
                   v-bind="note_attrs"
                   :error-messages="errors.note"
                   hide-details
@@ -125,7 +125,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import dayjs from 'dayjs';
@@ -135,12 +135,25 @@ import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
 
-const emit = defineEmits(['close', 'submit']);
+const emit = defineEmits(['close', 'submit', 'update:modelValue']);
 
 const props = defineProps({
-  users: Object,
-  jobs: Object,
-  role: String,
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+  users: {
+    type: Array,
+    default: () => [],
+  },
+  jobs: {
+    type: Array,
+    default: () => [],
+  },
+  role: {
+    type: String,
+    default: 'user',
+  },
 });
 
 const activeUsers = computed(() => {
@@ -151,8 +164,19 @@ const activeJobs = computed(() => {
   return props.jobs.filter((job) => job.status === 1);
 });
 
-const isModalVisible = ref(false);
+const isModalVisible = ref(props.modelValue);
 const isLoading = ref(false);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    isModalVisible.value = newValue;
+  },
+);
+
+watch(isModalVisible, (newValue) => {
+  emit('update:modelValue', newValue);
+});
 
 const statuses = ref([
   {
@@ -214,6 +238,7 @@ const [user, user_attrs] = defineField('user');
 const [status, status_attrs] = defineField('status');
 
 const closeModal = () => {
+  isModalVisible.value = false;
   emit('close');
   setTimeout(() => {
     resetForm();
@@ -237,6 +262,7 @@ const submit = handleSubmit(async (values) => {
     }
     const response = await axios.post('/timesheets', object);
     if (response?.data) {
+      isModalVisible.value = false;
       emit('submit');
       setTimeout(() => {
         resetForm();

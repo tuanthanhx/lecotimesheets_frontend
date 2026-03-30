@@ -22,20 +22,21 @@
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Keyword</h3>
           <v-text-field
+            v-model="searchKeyword"
             style="width: 300px"
             variant="solo"
             density="compact"
             clearable
             append-inner-icon="mdi-magnify"
-            v-model="searchKeyword"
             placeholder="Search jobs"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Status</h3>
           <v-select
+            v-model="searchStatus"
             style="width: 200px"
             variant="solo"
             density="compact"
@@ -43,10 +44,9 @@
             :items="statuses"
             item-title="name"
             item-value="id"
-            v-model="searchStatus"
             placeholder="All statuses"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-select>
         </v-col>
       </v-row>
@@ -63,19 +63,19 @@
         :hover="true"
         @update:options="search"
       >
-        <template v-slot:[`item.created_at`]="{ item }">
+        <template #[`item.created_at`]="{ item }">
           {{ formatDateString(item.created_at) }}
         </template>
-        <template v-slot:[`item.name`]="{ item }">
+        <template #[`item.name`]="{ item }">
           <span class="cursor-pointer" @click="openModalJobDetail(item)">{{ item.name }}</span>
         </template>
-        <template v-slot:[`item.revenue`]="{ item }">
+        <template #[`item.revenue`]="{ item }">
           {{ formatCurrencyString(item.revenue) }}
         </template>
-        <template v-slot:[`item.material_cost`]="{ item }">
+        <template #[`item.material_cost`]="{ item }">
           {{ formatCurrencyString(item.material_cost) }}
         </template>
-        <template v-slot:[`item.status`]="{ item }">
+        <template #[`item.status`]="{ item }">
           <template v-if="item.status === 1">
             <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-folder-open">Open</v-chip>
           </template>
@@ -83,9 +83,9 @@
             <v-chip min-width="100" size="small" color="#606060" variant="flat" prepend-icon="mdi-folder-lock">Closed</v-chip>
           </template>
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-menu>
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
             </template>
             <v-list>
@@ -95,10 +95,10 @@
               <v-list-item link @click="openModalJobEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="activateJob(item)" v-if="item.status === 2">
+              <v-list-item v-if="item.status === 2" link @click="activateJob(item)">
                 <v-list-item-title>Change status to "Open"</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="deactivateJob(item)" v-if="item.status === 1">
+              <v-list-item v-if="item.status === 1" link @click="deactivateJob(item)">
                 <v-list-item-title>Change status to "Closed"</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="deleteJob(item)">
@@ -111,8 +111,8 @@
     </v-sheet>
 
     <ModalJobAdd v-model="isModalJobAddVisible" @submit="submitModalJobAdd" @close="closeModalJobAdd" />
-    <ModalJobEdit v-model="isModalJobEditVisible" @submit="submitModalJobEdit" @close="closeModalJobEdit" :item="editItem" />
-    <ModalJobDetail v-model="isModalJobDetailVisible" @close="closeModalJobDetail" :item="viewItem" />
+    <ModalJobEdit v-model="isModalJobEditVisible" :item="editItem" @submit="submitModalJobEdit" @close="closeModalJobEdit" />
+    <ModalJobDetail v-model="isModalJobDetailVisible" :item="viewItem" @close="closeModalJobDetail" />
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"

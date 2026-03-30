@@ -1,5 +1,5 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="700px">
+  <v-dialog v-model="isModalVisible" persistent max-width="700px">
     <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Timesheet Details</div>
@@ -79,17 +79,34 @@
 import { ref, watch } from 'vue';
 import { formatDateString, totalHours } from '@/plugins/utils';
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'update:modelValue']);
 
 const props = defineProps({
-  item: Object,
-  role: String,
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+  item: {
+    type: Object,
+    default: () => ({}),
+  },
+  role: {
+    type: String,
+    default: 'user',
+  },
 });
 
 const viewItem = ref({});
 viewItem.value = { ...props.item };
 
-const isModalVisible = ref(false);
+const isModalVisible = ref(props.modelValue);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    isModalVisible.value = newValue;
+  },
+);
 
 watch(
   () => props.item,
@@ -98,7 +115,12 @@ watch(
   },
 );
 
+watch(isModalVisible, (newValue) => {
+  emit('update:modelValue', newValue);
+});
+
 const closeModal = () => {
+  isModalVisible.value = false;
   emit('close');
 };
 </script>

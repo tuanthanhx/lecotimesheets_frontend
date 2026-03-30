@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app v-model="showAppBar" class="d-flex d-lg-none">
+  <v-app-bar v-model="showAppBar" app class="d-flex d-lg-none">
     <v-app-bar-nav-icon position="absolute" @click="showMenu = !showMenu"></v-app-bar-nav-icon>
     <v-toolbar-title class="d-flex justify-center">
       <v-img class="pa-4" width="160" height="auto" aspect-ratio="220/66" src="@/assets/img/logo.png" />
@@ -7,7 +7,7 @@
   </v-app-bar>
 
   <div class="overlay" :class="{ 'is-active': showMenu }" @click="showMenu = false"></div>
-  <v-navigation-drawer app v-model="showMenu" permanent class="py-6 common-drawer" :class="{ active: showMenu }" :width="300" color="#2b343f">
+  <v-navigation-drawer v-model="showMenu" app permanent class="py-6 common-drawer" :class="{ active: showMenu }" :width="300" color="#2b343f">
     <v-card width="260" height="80" class="d-none d-lg-flex align-center mx-auto mb-8" color="#fff" rounded>
       <v-img width="220" height="auto" aspect-ratio="220/66" src="@/assets/img/logo.png" />
     </v-card>
@@ -16,7 +16,7 @@
       <v-list-item :title="$t('sidebar.job')" prepend-icon="mdi-folder-text" link @click="navigate('/admin/jobs')"></v-list-item>
       <v-list-item :title="$t('sidebar.member')" prepend-icon="mdi-account-group" link @click="navigate('/admin/members')"></v-list-item>
       <v-list-group value="Reports">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-list-item v-bind="props" prepend-icon="mdi-file-chart" :title="$t('sidebar.report')"></v-list-item>
         </template>
         <v-list-item :title="$t('sidebar.report_job')" prepend-icon="mdi-file-document-outline" link @click="navigate('/admin/reports/jobs')"></v-list-item>

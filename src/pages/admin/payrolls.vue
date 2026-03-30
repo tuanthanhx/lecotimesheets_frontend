@@ -6,20 +6,20 @@
       <v-col cols="12" sm="auto">
         <h3 class="text-subtitle-2 mb-2">Select Member</h3>
         <v-select
+          v-model="selectedUser"
           style="width: 300px"
           variant="solo"
           density="compact"
           clearable
-          v-model="selectedUser"
           :items="users"
           item-title="name"
           :item-value="(item) => item"
           placeholder="Select a member"
           hide-details
-          @update:modelValue="() => estimate()"
+          @update:model-value="() => estimate()"
         ></v-select>
       </v-col>
-      <v-col cols="auto" class="ml-auto" v-if="selectedUser && timesheets.length">
+      <v-col v-if="selectedUser && timesheets.length" cols="auto" class="ml-auto">
         <v-btn
           class="button-pay text-none"
           prepend-icon="mdi-currency-usd"
@@ -47,27 +47,27 @@
     <template v-else>
       <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
         <v-data-table :headers="tableHeaders" :items="timesheets" :items-per-page="-1">
-          <template v-slot:[`item.created_at`]="{ item }">
+          <template #[`item.created_at`]="{ item }">
             {{ formatDateString(item.created_at) }}
           </template>
-          <template v-slot:[`item.date`]="{ item }">
+          <template #[`item.date`]="{ item }">
             {{ formatDateString(item.date) }}
           </template>
-          <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
-          <template v-slot:[`item.break`]="{ item }">
+          <template #[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+          <template #[`item.break`]="{ item }">
             <v-icon v-if="item.break" icon="mdi-check-circle" />
             <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
           </template>
-          <template v-slot:[`item.time_worked`]="{ item }">
+          <template #[`item.time_worked`]="{ item }">
             {{ formatHourString(item.time_worked) }}
           </template>
-          <template v-slot:[`item.hourly_rate`]="{ item }">
+          <template #[`item.hourly_rate`]="{ item }">
             {{ formatCurrencyString(item.hourly_rate) }}
           </template>
-          <template v-slot:[`item.amount`]="{ item }">
+          <template #[`item.amount`]="{ item }">
             {{ formatCurrencyString(item.amount) }}
           </template>
-          <template v-slot:[`body.append`]>
+          <template #[`body.append`]>
             <tr class="font-weight-bold">
               <td></td>
               <td></td>

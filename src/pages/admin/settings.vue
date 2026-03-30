@@ -7,18 +7,18 @@
           <v-row>
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">{{ $t('setting.name') }} <span class="text-red">*</span></h3>
-              <v-text-field variant="outlined" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
+              <v-text-field v-model="name" variant="outlined" density="compact" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">{{ $t('setting.username') }} <span class="text-red">*</span></h3>
               <v-text-field
+                v-model="username"
                 variant="outlined"
                 density="compact"
                 readonly
                 disabled
-                v-model="username"
                 v-bind="username_attrs"
                 :error-messages="errors.username"
               ></v-text-field>
@@ -28,10 +28,10 @@
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">{{ $t('setting.new_password') }}</h3>
               <v-text-field
+                v-model="password"
                 variant="outlined"
                 density="compact"
                 autocomplete="new-password"
-                v-model="password"
                 v-bind="password_attrs"
                 :error-messages="errors.password"
                 :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -45,10 +45,10 @@
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">{{ $t('setting.confirm_password') }} <span v-if="password" class="text-red">*</span></h3>
               <v-text-field
+                v-model="password_confirm"
                 variant="outlined"
                 density="compact"
                 autocomplete="new-password"
-                v-model="password_confirm"
                 v-bind="password_confirm_attrs"
                 :error-messages="errors.password_confirm"
                 :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -62,10 +62,10 @@
             <v-col cols="12">
               <h3 class="text-subtitle-2 mb-2">{{ $t('setting.language') }}</h3>
               <v-select
+                v-model="language"
                 style="width: 200px"
                 variant="outlined"
                 density="compact"
-                v-model="language"
                 v-bind="language_attrs"
                 :items="languages"
                 item-title="name"
@@ -84,7 +84,7 @@
             </v-col>
           </v-row>
         </form>
-        <v-alert class="mt-8" type="info" v-if="formAlert" transition="scale-transition"> {{ formAlert }}</v-alert>
+        <v-alert v-if="formAlert" class="mt-8" type="info" transition="scale-transition"> {{ formAlert }}</v-alert>
       </v-responsive>
     </v-sheet>
   </v-container>

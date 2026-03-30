@@ -1,31 +1,31 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="700px">
+  <v-dialog v-model="isModalVisible" persistent max-width="700px">
     <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Edit Member</div>
         <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
-      <form @submit.prevent="submit" class="form-dialog">
+      <form class="form-dialog" @submit.prevent="submit">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
             <v-row>
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Full Name <span class="text-red">*</span></h3>
-                <v-text-field variant="outlined" density="compact" v-model="name" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
+                <v-text-field v-model="name" variant="outlined" density="compact" v-bind="name_attrs" :error-messages="errors.name"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Login <span class="text-red">*</span></h3>
-                <v-text-field variant="outlined" density="compact" v-model="username" v-bind="username_attrs" :error-messages="errors.username"></v-text-field>
+                <v-text-field v-model="username" variant="outlined" density="compact" v-bind="username_attrs" :error-messages="errors.username"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">New Password</h3>
                 <v-text-field
+                  v-model="password"
                   variant="outlined"
                   density="compact"
                   autocomplete="new-password"
-                  v-model="password"
                   v-bind="password_attrs"
                   :error-messages="errors.password"
                   :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -37,10 +37,10 @@
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Confirm Password <span v-if="password" class="text-red">*</span></h3>
                 <v-text-field
+                  v-model="password_confirm"
                   variant="outlined"
                   density="compact"
                   autocomplete="new-password"
-                  v-model="password_confirm"
                   v-bind="password_confirm_attrs"
                   :error-messages="errors.password_confirm"
                   :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -53,25 +53,25 @@
             <v-row>
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">D.O.B</h3>
-                <date-picker variant="outlined" density="compact" v-model="dob" v-bind="dob_attrs"></date-picker>
+                <date-picker v-model="dob" variant="outlined" density="compact" v-bind="dob_attrs"></date-picker>
               </v-col>
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Phone</h3>
-                <v-text-field variant="outlined" density="compact" v-model="phone" v-bind="phone_attrs" :error-messages="errors.phone"></v-text-field>
+                <v-text-field v-model="phone" variant="outlined" density="compact" v-bind="phone_attrs" :error-messages="errors.phone"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Address</h3>
-                <v-text-field variant="outlined" density="compact" v-model="address" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
+                <v-text-field v-model="address" variant="outlined" density="compact" v-bind="address_attrs" :error-messages="errors.address"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Language</h3>
                 <v-select
+                  v-model="language"
                   style="width: 200px"
                   variant="outlined"
                   density="compact"
-                  v-model="language"
                   v-bind="language_attrs"
                   disabled
                   :items="languages"
@@ -84,12 +84,12 @@
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Hourly Rate <span class="text-red">*</span></h3>
                 <v-text-field
+                  v-model="hourly_rate"
                   variant="outlined"
                   density="compact"
                   prefix="$"
                   type="number"
                   step="0.01"
-                  v-model="hourly_rate"
                   v-bind="hourly_rate_attrs"
                   :error-messages="errors.hourly_rate"
                 ></v-text-field>
@@ -97,10 +97,10 @@
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
                 <v-select
+                  v-model="status"
                   style="width: 200px"
                   variant="outlined"
                   density="compact"
-                  v-model="status"
                   v-bind="status_attrs"
                   :items="statuses"
                   item-title="name"
@@ -132,18 +132,32 @@ import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
 
-const emit = defineEmits(['close', 'submit']);
+const emit = defineEmits(['close', 'submit', 'update:modelValue']);
 
 const props = defineProps({
-  item: Object,
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+  item: {
+    type: Object,
+    default: () => ({}),
+  },
 });
 
 const editItem = ref({});
 editItem.value = { ...props.item };
 
-const isModalVisible = ref(false);
+const isModalVisible = ref(props.modelValue);
 const isLoading = ref(false);
 const showPassword = ref(false);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    isModalVisible.value = newValue;
+  },
+);
 
 const statuses = ref([
   {
@@ -233,6 +247,10 @@ watch(
   },
 );
 
+watch(isModalVisible, (newValue) => {
+  emit('update:modelValue', newValue);
+});
+
 const [username, username_attrs] = defineField('username');
 const [password, password_attrs] = defineField('password');
 const [password_confirm, password_confirm_attrs] = defineField('password_confirm');
@@ -245,6 +263,7 @@ const [language, language_attrs] = defineField('language');
 const [status, status_attrs] = defineField('status');
 
 const closeModal = () => {
+  isModalVisible.value = false;
   emit('close');
   setTimeout(() => {
     resetForm();
@@ -269,6 +288,7 @@ const submit = handleSubmit(async (values) => {
     }
     const response = await axios.put(`/users/${editItem.value.id}`, object);
     if (response?.data) {
+      isModalVisible.value = false;
       emit('submit');
       setTimeout(() => {
         resetForm();

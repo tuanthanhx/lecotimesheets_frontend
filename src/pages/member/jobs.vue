@@ -10,20 +10,21 @@
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Keyword</h3>
           <v-text-field
+            v-model="searchKeyword"
             style="width: 300px"
             variant="solo"
             density="compact"
             clearable
             append-inner-icon="mdi-magnify"
-            v-model="searchKeyword"
             placeholder="Search jobs"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Status</h3>
           <v-select
+            v-model="searchStatus"
             style="width: 200px"
             variant="solo"
             density="compact"
@@ -31,10 +32,9 @@
             :items="statuses"
             item-title="name"
             item-value="id"
-            v-model="searchStatus"
             placeholder="All statuses"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-select>
         </v-col>
       </v-row>
@@ -51,16 +51,16 @@
         :hover="true"
         @update:options="search"
       >
-        <template v-slot:[`item.name`]="{ item }">
+        <template #[`item.name`]="{ item }">
           <span class="cursor-pointer" @click="openModalJobDetail(item)">{{ item.name }}</span>
         </template>
-        <template v-slot:[`item.dob`]="{ item }">
+        <template #[`item.dob`]="{ item }">
           {{ item.dob ? formatDateString(item.dob) : '' }}
         </template>
-        <template v-slot:[`item.created_at`]="{ item }">
+        <template #[`item.created_at`]="{ item }">
           {{ formatDateString(item.created_at) }}
         </template>
-        <template v-slot:[`item.status`]="{ item }">
+        <template #[`item.status`]="{ item }">
           <template v-if="item.status === 1">
             <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-folder-open">Open</v-chip>
           </template>
@@ -68,9 +68,9 @@
             <v-chip min-width="100" size="small" color="#606060" variant="flat" prepend-icon="mdi-folder-lock">Closed</v-chip>
           </template>
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-menu>
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
             </template>
             <v-list>
@@ -83,7 +83,7 @@
       </v-data-table-server>
     </v-sheet>
 
-    <ModalJobDetail v-model="isModalJobDetailVisible" @close="closeModalJobDetail" :item="viewItem" />
+    <ModalJobDetail v-model="isModalJobDetailVisible" :item="viewItem" @close="closeModalJobDetail" />
   </v-container>
 </template>
 

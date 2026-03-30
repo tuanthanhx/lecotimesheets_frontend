@@ -8,22 +8,22 @@
 
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-data-table :headers="tableHeaders" :items="payrolls" :items-per-page="25" :hover="true">
-        <template v-slot:[`item.created_at`]="{ item }">
+        <template #[`item.created_at`]="{ item }">
           {{ formatDateString(item.created_at) }}
         </template>
-        <template v-slot:[`item.amount`]="{ item }">
+        <template #[`item.amount`]="{ item }">
           {{ formatCurrencyString(item.amount) }}
         </template>
-        <template v-slot:[`item.time_worked`]="{ item }">
+        <template #[`item.time_worked`]="{ item }">
           {{ formatHourString(item.time_worked) }}
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
-          <v-btn class="text-none" @click="openModalPayrollDetail(item)" color="#2b343f" height="32">Timesheets</v-btn>
+        <template #[`item.actions`]="{ item }">
+          <v-btn class="text-none" color="#2b343f" height="32" @click="openModalPayrollDetail(item)">Timesheets</v-btn>
         </template>
       </v-data-table>
     </v-sheet>
 
-    <ModalPayrollDetail v-model="isModalPayrollDetailVisible" @close="closeModalPayrollDetail" :timesheets="viewItem" />
+    <ModalPayrollDetail v-model="isModalPayrollDetailVisible" :timesheets="viewItem" @close="closeModalPayrollDetail" />
   </v-container>
 </template>
 

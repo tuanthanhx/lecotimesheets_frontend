@@ -22,20 +22,21 @@
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Keyword</h3>
           <v-text-field
+            v-model="searchKeyword"
             style="width: 300px"
             variant="solo"
             density="compact"
             clearable
             append-inner-icon="mdi-magnify"
-            v-model="searchKeyword"
             placeholder="Search members"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Status</h3>
           <v-select
+            v-model="searchStatus"
             style="width: 200px"
             variant="solo"
             density="compact"
@@ -43,10 +44,9 @@
             :items="statuses"
             item-title="name"
             item-value="id"
-            v-model="searchStatus"
             placeholder="All statuses"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-select>
         </v-col>
       </v-row>
@@ -62,19 +62,19 @@
         :hover="true"
         @update:options="search"
       >
-        <template v-slot:[`item.created_at`]="{ item }">
+        <template #[`item.created_at`]="{ item }">
           {{ formatDateString(item.created_at) }}
         </template>
-        <template v-slot:[`item.username`]="{ item }">
+        <template #[`item.username`]="{ item }">
           <span class="cursor-pointer" @click="openModalMemberDetail(item)">{{ item.username }}</span>
         </template>
-        <template v-slot:[`item.name`]="{ item }">
+        <template #[`item.name`]="{ item }">
           <span class="cursor-pointer" @click="openModalMemberDetail(item)">{{ item.name }}</span>
         </template>
-        <template v-slot:[`item.hourly_rate`]="{ item }">
+        <template #[`item.hourly_rate`]="{ item }">
           {{ formatCurrencyString(item.hourly_rate) }}
         </template>
-        <template v-slot:[`item.status`]="{ item }">
+        <template #[`item.status`]="{ item }">
           <template v-if="item.status === 1">
             <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-account-check">Active</v-chip>
           </template>
@@ -83,9 +83,9 @@
           </template>
         </template>
 
-        <template v-slot:[`item.actions`]="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-menu>
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
             </template>
             <v-list>
@@ -95,10 +95,10 @@
               <v-list-item link @click="openModalMemberEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="activateMember(item)" v-if="item.status === 2">
+              <v-list-item v-if="item.status === 2" link @click="activateMember(item)">
                 <v-list-item-title>Activate</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="deactivateMember(item)" v-if="item.status === 1">
+              <v-list-item v-if="item.status === 1" link @click="deactivateMember(item)">
                 <v-list-item-title>Deactivate</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="deleteMember(item)">
@@ -111,8 +111,8 @@
     </v-sheet>
 
     <ModalMemberAdd v-model="isModalMemberAddVisible" @submit="submitModalMemberAdd" @close="closeModalMemberAdd" />
-    <ModalMemberEdit v-model="isModalMemberEditVisible" @submit="submitModalMemberEdit" @close="closeModalMemberEdit" :item="editItem" />
-    <ModalMemberDetail v-model="isModalMemberDetailVisible" @close="closeModalMemberDetail" :item="viewItem" />
+    <ModalMemberEdit v-model="isModalMemberEditVisible" :item="editItem" @submit="submitModalMemberEdit" @close="closeModalMemberEdit" />
+    <ModalMemberDetail v-model="isModalMemberDetailVisible" :item="viewItem" @close="closeModalMemberDetail" />
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"

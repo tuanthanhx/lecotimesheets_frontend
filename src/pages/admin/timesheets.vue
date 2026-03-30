@@ -22,6 +22,7 @@
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Job</h3>
           <v-select
+            v-model="searchJob"
             style="width: 200px"
             variant="solo"
             density="compact"
@@ -29,15 +30,15 @@
             :items="jobs"
             item-title="name"
             item-value="id"
-            v-model="searchJob"
             placeholder="All jobs"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Member</h3>
           <v-select
+            v-model="searchMember"
             style="width: 200px"
             variant="solo"
             density="compact"
@@ -45,15 +46,15 @@
             :items="users"
             item-title="name"
             item-value="id"
-            v-model="searchMember"
             placeholder="All members"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="auto">
           <h3 class="text-subtitle-2 mb-2">Status</h3>
           <v-select
+            v-model="searchStatus"
             style="width: 200px"
             variant="solo"
             density="compact"
@@ -61,10 +62,9 @@
             :items="statuses"
             item-title="name"
             item-value="id"
-            v-model="searchStatus"
             placeholder="All statuses"
             hide-details
-            @update:modelValue="() => search()"
+            @update:model-value="() => search()"
           ></v-select>
         </v-col>
       </v-row>
@@ -82,30 +82,30 @@
         :mobile="true"
         @update:options="search"
       >
-        <template v-slot:[`item.date`]="{ item }">
+        <template #[`item.date`]="{ item }">
           {{ formatDateString(item.date) }}
         </template>
-        <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
-        <template v-slot:[`item.user.name`]="{ item }">
+        <template #[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+        <template #[`item.user.name`]="{ item }">
           <span class="cursor-pointer" @click="openModalTimesheetDetail(item)">{{ item.user.name }}</span>
         </template>
-        <template v-slot:[`item.job.name`]="{ item }">
+        <template #[`item.job.name`]="{ item }">
           <span class="cursor-pointer" @click="openModalTimesheetDetail(item)">{{ item.job.name }}</span>
         </template>
-        <template v-slot:[`item.break`]="{ item }">
+        <template #[`item.break`]="{ item }">
           <v-icon v-if="item.break" icon="mdi-check-circle" />
           <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
         </template>
-        <template v-slot:[`item.time_worked`]="{ item }">
+        <template #[`item.time_worked`]="{ item }">
           {{ formatHourString(item.time_worked) }}
         </template>
-        <template v-slot:[`item.hourly_rate`]="{ item }">
+        <template #[`item.hourly_rate`]="{ item }">
           {{ formatCurrencyString(item.hourly_rate) }}
         </template>
-        <template v-slot:[`item.amount`]="{ item }">
+        <template #[`item.amount`]="{ item }">
           {{ formatCurrencyString(item.amount) }}
         </template>
-        <template v-slot:[`item.status`]="{ item }">
+        <template #[`item.status`]="{ item }">
           <template v-if="item.status === 1">
             <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">In review</v-chip>
           </template>
@@ -116,9 +116,9 @@
             <v-chip min-width="100" size="small" color="#e91e63" variant="flat" prepend-icon="mdi-currency-usd">Paid</v-chip>
           </template>
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-menu>
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
               <v-icon icon="mdi-dots-horizontal" v-bind="props"></v-icon>
             </template>
             <v-list>
@@ -128,10 +128,10 @@
               <v-list-item link @click="openModalTimesheetEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="approveTimesheet(item)" v-if="item.status === 1">
+              <v-list-item v-if="item.status === 1" link @click="approveTimesheet(item)">
                 <v-list-item-title>Approve</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="unapproveTimesheet(item)" v-if="item.status === 2">
+              <v-list-item v-if="item.status === 2" link @click="unapproveTimesheet(item)">
                 <v-list-item-title>Unapprove</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="deleteTimesheet(item)">
@@ -145,22 +145,22 @@
 
     <ModalTimesheetAdd
       v-model="isModalTimesheetAddVisible"
-      @submit="submitModalTimesheetAdd"
-      @close="closeModalTimesheetAdd"
       :users="users"
       :jobs="jobs"
       role="admin"
+      @submit="submitModalTimesheetAdd"
+      @close="closeModalTimesheetAdd"
     />
     <ModalTimesheetEdit
       v-model="isModalTimesheetEditVisible"
-      @submit="submitModalTimesheetEdit"
-      @close="closeModalTimesheetEdit"
       :item="editItem"
       :users="users"
       :jobs="jobs"
       role="admin"
+      @submit="submitModalTimesheetEdit"
+      @close="closeModalTimesheetEdit"
     />
-    <ModalTimesheetDetail v-model="isModalTimesheetDetailVisible" @close="closeModalTimesheetDetail" :item="viewItem" role="admin" />
+    <ModalTimesheetDetail v-model="isModalTimesheetDetailVisible" :item="viewItem" role="admin" @close="closeModalTimesheetDetail" />
     <MessageDialog v-model="isMessageDialogVisible" :title="messageTitle" :message="messageText" :type="messageType" />
     <ConfirmDialog
       v-model="isConfirmDialogVisible"

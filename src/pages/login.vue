@@ -13,20 +13,20 @@
               <v-card-title class="text-h5 pa-0 mb-4 mb-sm-6" align="center">Sign in to continue</v-card-title>
               <v-card-text class="pa-0">
                 <v-text-field
+                  v-model="username"
                   class="mb-2"
                   prepend-inner-icon="mdi-account"
                   variant="outlined"
                   :density="$vuetify?.display?.xs ? 'compact' : 'default'"
-                  v-model="username"
                   v-bind="username_attrs"
                   :error-messages="errors.username"
                 ></v-text-field>
                 <v-text-field
+                  v-model="password"
                   class="mb-2"
                   prepend-inner-icon="mdi-lock"
                   variant="outlined"
                   :density="$vuetify?.display?.xs ? 'compact' : 'default'"
-                  v-model="password"
                   v-bind="password_attrs"
                   :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPassword ? 'text' : 'password'"
@@ -48,7 +48,7 @@
                   >Login</v-btn
                 >
               </v-card-actions>
-              <v-alert class="mt-8" type="error" v-if="formAlert" transition="scale-transition"> {{ formAlert }}</v-alert>
+              <v-alert v-if="formAlert" class="mt-8" type="error" transition="scale-transition"> {{ formAlert }}</v-alert>
             </form>
           </v-card>
         </v-col>

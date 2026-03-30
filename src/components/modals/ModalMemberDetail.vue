@@ -1,11 +1,11 @@
 <template>
-  <v-dialog persistent v-model="isModalVisible" max-width="700px">
+  <v-dialog v-model="isModalVisible" persistent max-width="700px">
     <v-card class="pa-0 pb-4 pa-sm-4">
       <v-card-title class="d-flex justify-space-between align-center mb-4">
         <div class="text-h5">Member Details</div>
         <v-btn class="mr-n2" icon="mdi-close" variant="text" @click="closeModal"></v-btn>
       </v-card-title>
-      <form @submit.prevent="submit" class="form-dialog">
+      <form class="form-dialog" @submit.prevent="submit">
         <v-card-text class="pa-4">
           <v-responsive max-width="100%">
             <v-row>
@@ -68,16 +68,30 @@
 import { ref, watch } from 'vue';
 import { formatDateString, formatCurrencyString } from '@/plugins/utils';
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'update:modelValue']);
 
 const props = defineProps({
-  item: Object,
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+  item: {
+    type: Object,
+    default: () => ({}),
+  },
 });
 
 const viewItem = ref({});
 viewItem.value = { ...props.item };
 
-const isModalVisible = ref(false);
+const isModalVisible = ref(props.modelValue);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    isModalVisible.value = newValue;
+  },
+);
 
 watch(
   () => props.item,
@@ -86,7 +100,12 @@ watch(
   },
 );
 
+watch(isModalVisible, (newValue) => {
+  emit('update:modelValue', newValue);
+});
+
 const closeModal = () => {
+  isModalVisible.value = false;
   emit('close');
 };
 </script>

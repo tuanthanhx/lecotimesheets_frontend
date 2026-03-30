@@ -6,17 +6,17 @@
       <v-col cols="12" sm="auto">
         <h3 class="text-subtitle-2 mb-2">Select Job</h3>
         <v-select
+          v-model="selectedJob"
           style="width: 300px"
           variant="solo"
           density="compact"
           clearable
-          v-model="selectedJob"
           :items="jobs"
           item-title="name"
           :item-value="(item) => item"
           placeholder="Select a job"
           hide-details
-          @update:modelValue="() => fetchTimesheets()"
+          @update:model-value="() => fetchTimesheets()"
         ></v-select>
       </v-col>
     </v-row>
@@ -41,24 +41,24 @@
         :hover="true"
         @update:options="fetchTimesheets"
       >
-        <template v-slot:[`item.date`]="{ item }">
+        <template #[`item.date`]="{ item }">
           {{ formatDateString(item.date) }}
         </template>
-        <template v-slot:[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
-        <template v-slot:[`item.break`]="{ item }">
+        <template #[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
+        <template #[`item.break`]="{ item }">
           <v-icon v-if="item.break" icon="mdi-check-circle" />
           <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
         </template>
-        <template v-slot:[`item.time_worked`]="{ item }">
+        <template #[`item.time_worked`]="{ item }">
           {{ formatHourString(item.time_worked) }}
         </template>
-        <template v-slot:[`item.hourly_rate`]="{ item }">
+        <template #[`item.hourly_rate`]="{ item }">
           {{ formatCurrencyString(item.hourly_rate) }}
         </template>
-        <template v-slot:[`item.amount`]="{ item }">
+        <template #[`item.amount`]="{ item }">
           {{ formatCurrencyString(item.amount) }}
         </template>
-        <template v-slot:[`item.status`]="{ item }">
+        <template #[`item.status`]="{ item }">
           <template v-if="item.status === 1">
             <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">In review</v-chip>
           </template>

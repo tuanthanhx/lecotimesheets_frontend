@@ -15,10 +15,22 @@
 import { ref, watchEffect } from 'vue';
 
 const props = defineProps({
-  modelValue: Boolean,
-  title: String,
-  message: String,
-  type: String,
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
+  title: {
+    type: String,
+    default: '',
+  },
+  message: {
+    type: String,
+    default: '',
+  },
+  type: {
+    type: String,
+    default: 'info',
+  },
 });
 
 const dialog = ref(props.modelValue);
