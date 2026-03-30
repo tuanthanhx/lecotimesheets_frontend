@@ -5,7 +5,7 @@
       <v-card-text class="message-text">{{ message }}</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey darken-1" text @click="cancel">Cancel</v-btn>
+        <v-btn color="grey darken-1" text @click="cancel">{{ cancelButtonText }}</v-btn>
         <v-btn color="red darken-1" text @click="confirm">{{ confirmButtonText }}</v-btn>
       </v-card-actions>
     </v-card>
@@ -39,7 +39,7 @@ const props = defineProps({
 });
 
 const dialog = ref(props.modelValue);
-const emit = defineEmits(['update:modelValue', 'confirm']);
+const emit = defineEmits(['update:modelValue', 'confirm', 'cancel']);
 
 watchEffect(() => {
   dialog.value = props.modelValue;
@@ -55,6 +55,7 @@ const confirm = () => {
 };
 
 const cancel = () => {
+  emit('cancel');
   dialog.value = false;
 };
 </script>

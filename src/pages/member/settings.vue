@@ -118,8 +118,10 @@ import * as yup from 'yup';
 import axios from '@/plugins/axios';
 import { formatDateString } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
+import { useI18n } from 'vue-i18n';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
+const { locale } = useI18n();
 
 const user = ref({});
 const isLoading = ref(false);
@@ -228,6 +230,8 @@ const submit = handleSubmit(async (values) => {
     }
     const response = await axios.post('/settings', object);
     if (response?.data) {
+      localStorage.setItem('language', object.language);
+      locale.value = object.language;
       formAlert.value = 'Settings updated successfully!';
       console.log(response.data);
       console.log(user.value);

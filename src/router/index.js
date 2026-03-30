@@ -6,6 +6,7 @@
 
 // Composables
 import axios from '@/plugins/axios';
+import i18n from '@/i18n/i18n';
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from 'vue-router/auto-routes';
 
@@ -46,6 +47,7 @@ router.beforeEach((to, from, next) => {
         // Set Language
         if (response.data.language) {
           localStorage.setItem('language', response.data.language);
+          i18n.global.locale.value = response.data.language;
         }
         // Redirect based on user group and requested path
         if (response.data.group === 2 && to.path.startsWith('/admin')) {

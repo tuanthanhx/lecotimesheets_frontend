@@ -1,5 +1,6 @@
 import axios from 'axios';
 import router from '@/router';
+import i18n from '@/i18n/i18n';
 
 axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
 
@@ -51,6 +52,8 @@ axios.interceptors.response.use(
         .catch((refreshError) => {
           console.error('Refresh token request failed:', refreshError);
           localStorage.removeItem('access_token');
+          localStorage.removeItem('userData');
+          i18n.global.locale.value = localStorage.getItem('language') || 'en';
           router.push('/login');
           return Promise.reject(refreshError);
         });
