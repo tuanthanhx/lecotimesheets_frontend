@@ -133,7 +133,7 @@ import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import dayjs from 'dayjs';
 import axios from '@/plugins/axios';
-import { idValueComparator, normalizeSelectId, totalHours } from '@/plugins/utils';
+import { formatDateString, idValueComparator, normalizeSelectId, totalHours } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -253,7 +253,7 @@ const submit = handleSubmit(async (values) => {
   try {
     const object = {
       job_id: normalizeSelectId(values.job),
-      date: values.date,
+      date: values.date ? formatDateString(values.date) : null,
       start_time: values.start_time,
       end_time: values.end_time,
       break: values.has_break,
