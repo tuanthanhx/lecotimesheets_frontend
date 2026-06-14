@@ -32,6 +32,36 @@ export function normalizeBoolean(value) {
   return value === true || value === 1 || value === '1' || value === 'true';
 }
 
+export function getComparableId(value) {
+  if (value && typeof value === 'object' && 'id' in value) {
+    return value.id;
+  }
+
+  return value;
+}
+
+export function idValueComparator(value, itemValue) {
+  const normalizedValue = getComparableId(value);
+  const normalizedItemValue = getComparableId(itemValue);
+
+  if (normalizedValue == null || normalizedItemValue == null) {
+    return normalizedValue === normalizedItemValue;
+  }
+
+  return String(normalizedValue) === String(normalizedItemValue);
+}
+
+export function normalizeSelectId(value) {
+  const normalizedValue = getComparableId(value);
+
+  if (normalizedValue == null || normalizedValue === '') {
+    return normalizedValue;
+  }
+
+  const numericValue = Number(normalizedValue);
+  return Number.isNaN(numericValue) ? normalizedValue : numericValue;
+}
+
 export function totalHours(start, end, hasBreak) {
   if (!start || !end) {
     return null;

@@ -46,7 +46,7 @@
               </v-col>
               <v-col cols="12" sm="6">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
-                <template v-if="viewItem.status === 1">
+                <template v-if="idValueComparator(viewItem.status, 1)">
                   <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-account-check">Active</v-chip>
                 </template>
                 <template v-else>
@@ -66,7 +66,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { formatDateString, formatCurrencyString } from '@/plugins/utils';
+import { formatDateString, formatCurrencyString, idValueComparator } from '@/plugins/utils';
 
 const emit = defineEmits(['close', 'update:modelValue']);
 

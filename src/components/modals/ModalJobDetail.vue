@@ -35,7 +35,7 @@
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
-                <template v-if="viewItem.status === 1">
+                <template v-if="idValueComparator(viewItem.status, 1)">
                   <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-folder-open">Open</v-chip>
                 </template>
                 <template v-else>
@@ -56,7 +56,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
-import { formatCurrencyString } from '@/plugins/utils';
+import { formatCurrencyString, idValueComparator } from '@/plugins/utils';
 
 const userStore = useUserStore();
 const userData = userStore.userData;

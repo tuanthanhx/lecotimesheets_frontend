@@ -105,6 +105,7 @@
                   :items="statuses"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                 ></v-select>
               </v-col>
             </v-row>
@@ -127,7 +128,7 @@ import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import axios from '@/plugins/axios';
-import { formatDateString } from '@/plugins/utils';
+import { formatDateString, idValueComparator, normalizeSelectId } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -238,7 +239,7 @@ const submit = handleSubmit(async (values) => {
       address: values.address,
       hourly_rate: values.hourly_rate,
       language: values.language,
-      status: values.status,
+      status: normalizeSelectId(values.status),
     };
     const response = await axios.post('/users', object);
     if (response?.data) {

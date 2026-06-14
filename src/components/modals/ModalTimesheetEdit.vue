@@ -19,6 +19,7 @@
                   :items="props.users"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                   placeholder="Select member"
                 ></v-select>
               </v-col>
@@ -34,6 +35,7 @@
                   :items="props.jobs"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                   placeholder="Select job"
                 ></v-select>
               </v-col>
@@ -92,6 +94,7 @@
                   :items="statuses"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                 ></v-select>
               </v-col>
             </v-row>
@@ -129,7 +132,7 @@ import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import dayjs from 'dayjs';
 import axios from '@/plugins/axios';
-import { formatDateString, normalizeBoolean, totalHours } from '@/plugins/utils';
+import { formatDateString, idValueComparator, normalizeBoolean, normalizeSelectId, totalHours } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -164,6 +167,9 @@ editItem.value = { ...props.item };
 
 const isModalVisible = ref(props.modelValue);
 const isLoading = ref(false);
+
+const getTimesheetJobId = (item) => item?.job_id ?? item?.job?.id;
+const getTimesheetUserId = (item) => item?.user_id ?? item?.user?.id;
 
 watch(
   () => props.modelValue,
@@ -215,15 +221,16 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
     status: yup.number().when('$role', (role, schema) => (role === 'admin' ? schema.required().label('Status') : schema.label('Status'))),
   }),
   initialValues: {
-    job: editItem.value.job_id,
+    job: normalizeSelectId(getTimesheetJobId(editItem.value)),
     date: editItem.value.date ? new Date(editItem.value.date) : null,
     start_time: editItem.value.start_time,
     end_time: editItem.value.end_time,
     note: editItem.value.note,
     has_break: normalizeBoolean(editItem.value.break),
-    user: props.role === 'admin' ? editItem.value.user_id : undefined,
-    status: props.role === 'admin' ? editItem.value.status : undefined,
+    user: props.role === 'admin' ? normalizeSelectId(getTimesheetUserId(editItem.value)) : undefined,
+    status: props.role === 'admin' ? normalizeSelectId(editItem.value.status) : undefined,
   },
+  context: { role: props.role },
 });
 
 watch(
@@ -232,14 +239,14 @@ watch(
     editItem.value = { ...newValue };
     resetForm({
       values: {
-        job: newValue.job_id,
+        job: normalizeSelectId(getTimesheetJobId(newValue)),
         date: newValue.date ? new Date(newValue.date) : null,
         start_time: newValue.start_time,
         end_time: newValue.end_time,
         note: newValue.note,
         has_break: normalizeBoolean(newValue.break),
-        user: props.role === 'admin' ? newValue.user_id : undefined,
-        status: props.role === 'admin' ? newValue.status : undefined,
+        user: props.role === 'admin' ? normalizeSelectId(getTimesheetUserId(newValue)) : undefined,
+        status: props.role === 'admin' ? normalizeSelectId(newValue.status) : undefined,
       },
     });
   },
@@ -270,7 +277,7 @@ const submit = handleSubmit(async (values) => {
   isLoading.value = true;
   try {
     const object = {
-      job_id: values.job,
+      job_id: normalizeSelectId(values.job),
       date: values.date ? formatDateString(values.date) : null,
       start_time: values.start_time,
       end_time: values.end_time,
@@ -278,8 +285,8 @@ const submit = handleSubmit(async (values) => {
       note: values.note,
     };
     if (props.role === 'admin') {
-      object.user_id = values.user;
-      object.status = values.status;
+      object.user_id = normalizeSelectId(values.user);
+      object.status = normalizeSelectId(values.status);
     }
     const response = await axios.put(`/timesheets/${editItem.value.id}`, object);
     if (response?.data) {

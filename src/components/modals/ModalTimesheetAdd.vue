@@ -19,6 +19,7 @@
                   :items="activeUsers"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                   placeholder="Select member"
                 ></v-select>
               </v-col>
@@ -34,6 +35,7 @@
                   :items="activeJobs"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                   placeholder="Select job"
                 ></v-select>
               </v-col>
@@ -93,6 +95,7 @@
                   :items="statuses"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                 ></v-select>
               </v-col>
             </v-row>
@@ -130,7 +133,7 @@ import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import dayjs from 'dayjs';
 import axios from '@/plugins/axios';
-import { totalHours } from '@/plugins/utils';
+import { idValueComparator, normalizeSelectId, totalHours } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -157,11 +160,11 @@ const props = defineProps({
 });
 
 const activeUsers = computed(() => {
-  return props.users.filter((user) => user.status === 1);
+  return props.users.filter((user) => idValueComparator(user.status, 1));
 });
 
 const activeJobs = computed(() => {
-  return props.jobs.filter((job) => job.status === 1);
+  return props.jobs.filter((job) => idValueComparator(job.status, 1));
 });
 
 const isModalVisible = ref(props.modelValue);
@@ -249,7 +252,7 @@ const submit = handleSubmit(async (values) => {
   isLoading.value = true;
   try {
     const object = {
-      job_id: values.job,
+      job_id: normalizeSelectId(values.job),
       date: values.date,
       start_time: values.start_time,
       end_time: values.end_time,
@@ -257,8 +260,8 @@ const submit = handleSubmit(async (values) => {
       note: values.note,
     };
     if (props.role === 'admin') {
-      object.user_id = values.user;
-      object.status = values.status;
+      object.user_id = normalizeSelectId(values.user);
+      object.status = normalizeSelectId(values.status);
     }
     const response = await axios.post('/timesheets', object);
     if (response?.data) {

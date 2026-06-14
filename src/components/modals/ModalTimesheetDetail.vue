@@ -48,13 +48,13 @@
             <v-row>
               <v-col cols="12">
                 <h3 class="text-subtitle-2 mb-2">Status</h3>
-                <template v-if="viewItem.status === 1">
+                <template v-if="idValueComparator(viewItem.status, 1)">
                   <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">In review</v-chip>
                 </template>
-                <template v-else-if="viewItem.status === 2">
+                <template v-else-if="idValueComparator(viewItem.status, 2)">
                   <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-checkbox-marked-circle">Approved</v-chip>
                 </template>
-                <template v-else-if="viewItem.status === 3">
+                <template v-else-if="idValueComparator(viewItem.status, 3)">
                   <v-chip min-width="100" size="small" color="#e91e63" variant="flat" prepend-icon="mdi-currency-usd">Paid</v-chip>
                 </template>
               </v-col>
@@ -77,7 +77,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { formatDateString, normalizeBoolean, totalHours } from '@/plugins/utils';
+import { formatDateString, idValueComparator, normalizeBoolean, totalHours } from '@/plugins/utils';
 
 const emit = defineEmits(['close', 'update:modelValue']);
 

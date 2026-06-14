@@ -14,6 +14,7 @@
           :items="jobs"
           item-title="name"
           :item-value="(item) => item"
+          :value-comparator="idValueComparator"
           placeholder="Select a job"
           hide-details
           @update:model-value="() => fetchTimesheets()"
@@ -59,13 +60,13 @@
           {{ formatCurrencyString(item.amount) }}
         </template>
         <template #[`item.status`]="{ item }">
-          <template v-if="item.status === 1">
+          <template v-if="idValueComparator(item.status, 1)">
             <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">In review</v-chip>
           </template>
-          <template v-else-if="item.status === 2">
+          <template v-else-if="idValueComparator(item.status, 2)">
             <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-checkbox-marked-circle">Approved</v-chip>
           </template>
-          <template v-else-if="item.status === 3">
+          <template v-else-if="idValueComparator(item.status, 3)">
             <v-chip min-width="100" size="small" color="#e91e63" variant="flat" prepend-icon="mdi-currency-usd">Paid</v-chip>
           </template>
         </template>
@@ -123,7 +124,7 @@ import { ref, computed, onMounted } from 'vue';
 import axios from '@/plugins/axios';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'vue-chartjs';
-import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, normalizeBoolean, sortArray } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, idValueComparator, normalizeBoolean, sortArray } from '@/plugins/utils';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

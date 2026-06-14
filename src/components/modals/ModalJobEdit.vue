@@ -62,6 +62,7 @@
                   :items="statuses"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                 ></v-select>
               </v-col>
             </v-row>
@@ -84,6 +85,7 @@ import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import axios from '@/plugins/axios';
+import { idValueComparator, normalizeSelectId } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -148,7 +150,7 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
     detail: editItem.value.detail,
     revenue: editItem.value.revenue,
     material_cost: editItem.value.material_cost,
-    status: editItem.value.status,
+    status: normalizeSelectId(editItem.value.status),
   },
 });
 
@@ -162,7 +164,7 @@ watch(
         detail: newValue.detail,
         revenue: newValue.revenue,
         material_cost: newValue.material_cost,
-        status: newValue.status,
+        status: normalizeSelectId(newValue.status),
       },
     });
   },
@@ -194,7 +196,7 @@ const submit = handleSubmit(async (values) => {
       detail: values.detail,
       revenue: values.revenue,
       material_cost: values.material_cost,
-      status: values.status,
+      status: normalizeSelectId(values.status),
     };
     console.log(object);
     const response = await axios.put(`/jobs/${editItem.value.id}`, object);

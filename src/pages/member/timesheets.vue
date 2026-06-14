@@ -30,6 +30,7 @@
             :items="jobs"
             item-title="name"
             item-value="id"
+            :value-comparator="idValueComparator"
             placeholder="All jobs"
             hide-details
             @update:model-value="() => search()"
@@ -46,6 +47,7 @@
             :items="statuses"
             item-title="name"
             item-value="id"
+            :value-comparator="idValueComparator"
             placeholder="All statuses"
             hide-details
             @update:model-value="() => search()"
@@ -69,13 +71,13 @@
           <span class="cursor-pointer" @click="openModalTimesheetDetail(item)">{{ item.job.name }}</span>
         </template>
         <template #[`item.status`]="{ item }">
-          <template v-if="item.status === 1">
+          <template v-if="idValueComparator(item.status, 1)">
             <v-chip min-width="100" size="small" color="#1e88c9" variant="flat" prepend-icon="mdi-sync">In review</v-chip>
           </template>
-          <template v-else-if="item.status === 2">
+          <template v-else-if="idValueComparator(item.status, 2)">
             <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-checkbox-marked-circle">Approved</v-chip>
           </template>
-          <template v-else-if="item.status === 3">
+          <template v-else-if="idValueComparator(item.status, 3)">
             <v-chip min-width="100" size="small" color="#e91e63" variant="flat" prepend-icon="mdi-currency-usd">Paid</v-chip>
           </template>
         </template>
@@ -102,10 +104,10 @@
               <v-list-item link @click="openModalTimesheetDetail(item)">
                 <v-list-item-title>Detail</v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="item.status === 1" link @click="openModalTimesheetEdit(item)">
+              <v-list-item v-if="idValueComparator(item.status, 1)" link @click="openModalTimesheetEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="item.status === 1" link @click="deleteTimesheet(item)">
+              <v-list-item v-if="idValueComparator(item.status, 1)" link @click="deleteTimesheet(item)">
                 <v-list-item-title>Delete</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -141,7 +143,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from '@/plugins/axios';
-import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, normalizeBoolean, sortArray } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, idValueComparator, normalizeBoolean, sortArray } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 import { useConfirmDialog } from '@/plugins/confirm_dialogs';
 
@@ -257,7 +259,7 @@ const getFilters = async () => {
     const jobsResponse = await axios.get('/jobs?type=select&limit=-1');
     if (jobsResponse?.data?.data) {
       const jobsObject = jobsResponse?.data?.data.map((job) => {
-        if (job.status !== 1) {
+        if (!idValueComparator(job.status, 1)) {
           job.name = `${job.name} (Closed)`;
         }
         return job;

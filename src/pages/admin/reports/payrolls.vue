@@ -14,6 +14,7 @@
           :items="users"
           item-title="name"
           :item-value="(item) => item"
+          :value-comparator="idValueComparator"
           placeholder="Select a member"
           hide-details
           @update:model-value="() => fetchPayrolls()"
@@ -58,7 +59,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '@/plugins/axios';
-import { formatDateString, formatHourString, formatCurrencyString, sortArray } from '@/plugins/utils';
+import { formatDateString, formatHourString, formatCurrencyString, idValueComparator, sortArray } from '@/plugins/utils';
 
 const payrolls = ref([]);
 const users = ref([]);

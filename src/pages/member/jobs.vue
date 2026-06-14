@@ -32,6 +32,7 @@
             :items="statuses"
             item-title="name"
             item-value="id"
+            :value-comparator="idValueComparator"
             placeholder="All statuses"
             hide-details
             @update:model-value="() => search()"
@@ -61,7 +62,7 @@
           {{ formatDateString(item.created_at) }}
         </template>
         <template #[`item.status`]="{ item }">
-          <template v-if="item.status === 1">
+          <template v-if="idValueComparator(item.status, 1)">
             <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-folder-open">Open</v-chip>
           </template>
           <template v-else>
@@ -90,7 +91,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from '@/plugins/axios';
-import { formatDateString } from '@/plugins/utils';
+import { formatDateString, idValueComparator } from '@/plugins/utils';
 
 const searchKeyword = ref('');
 const searchStatus = ref(null);

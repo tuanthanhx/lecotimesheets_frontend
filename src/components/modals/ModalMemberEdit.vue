@@ -105,6 +105,7 @@
                   :items="statuses"
                   item-title="name"
                   item-value="id"
+                  :value-comparator="idValueComparator"
                 ></v-select>
               </v-col>
             </v-row>
@@ -127,7 +128,7 @@ import { ref, watch } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import axios from '@/plugins/axios';
-import { formatDateString } from '@/plugins/utils';
+import { formatDateString, idValueComparator, normalizeSelectId } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -221,7 +222,7 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
     phone: editItem.value.phone,
     address: editItem.value.address,
     hourly_rate: editItem.value.hourly_rate,
-    status: editItem.value.status,
+    status: normalizeSelectId(editItem.value.status),
     language: editItem.value.language,
   },
 });
@@ -240,7 +241,7 @@ watch(
         phone: newValue.phone,
         address: newValue.address,
         hourly_rate: newValue.hourly_rate,
-        status: newValue.status,
+        status: normalizeSelectId(newValue.status),
         language: newValue.language,
       },
     });
@@ -281,7 +282,7 @@ const submit = handleSubmit(async (values) => {
       address: values.address,
       hourly_rate: values.hourly_rate,
       language: values.language,
-      status: values.status,
+      status: normalizeSelectId(values.status),
     };
     if (values.password) {
       object.password = values.password;

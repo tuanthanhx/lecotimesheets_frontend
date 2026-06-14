@@ -14,6 +14,7 @@
           :items="users"
           item-title="name"
           :item-value="(item) => item"
+          :value-comparator="idValueComparator"
           placeholder="Select a member"
           hide-details
           @update:model-value="() => estimate()"
@@ -99,7 +100,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '@/plugins/axios';
-import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, normalizeBoolean, sortArray } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, idValueComparator, normalizeBoolean, sortArray } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 import { useConfirmDialog } from '@/plugins/confirm_dialogs';
 

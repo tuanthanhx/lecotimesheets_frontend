@@ -44,6 +44,7 @@
             :items="statuses"
             item-title="name"
             item-value="id"
+            :value-comparator="idValueComparator"
             placeholder="All statuses"
             hide-details
             @update:model-value="() => search()"
@@ -75,7 +76,7 @@
           {{ formatCurrencyString(item.hourly_rate) }}
         </template>
         <template #[`item.status`]="{ item }">
-          <template v-if="item.status === 1">
+          <template v-if="idValueComparator(item.status, 1)">
             <v-chip min-width="100" size="small" color="#4caf50" variant="flat" prepend-icon="mdi-account-check">Active</v-chip>
           </template>
           <template v-else>
@@ -95,10 +96,10 @@
               <v-list-item link @click="openModalMemberEdit(item)">
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="item.status === 2" link @click="activateMember(item)">
+              <v-list-item v-if="idValueComparator(item.status, 2)" link @click="activateMember(item)">
                 <v-list-item-title>Activate</v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="item.status === 1" link @click="deactivateMember(item)">
+              <v-list-item v-if="idValueComparator(item.status, 1)" link @click="deactivateMember(item)">
                 <v-list-item-title>Deactivate</v-list-item-title>
               </v-list-item>
               <v-list-item link @click="deleteMember(item)">
@@ -129,7 +130,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from '@/plugins/axios';
-import { formatDateString, formatCurrencyString } from '@/plugins/utils';
+import { formatDateString, formatCurrencyString, idValueComparator } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 import { useConfirmDialog } from '@/plugins/confirm_dialogs';
 
