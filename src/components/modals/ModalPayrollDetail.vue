@@ -11,7 +11,7 @@
           </template>
           <template #[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
           <template #[`item.break`]="{ item }">
-            <v-icon v-if="item.break" icon="mdi-check-circle" />
+            <v-icon v-if="normalizeBoolean(item.break)" icon="mdi-check-circle" />
             <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
           </template>
           <template #[`item.time_worked`]="{ item }">
@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { formatDateString, formatTimeString, formatCurrencyString, formatHourString } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, normalizeBoolean } from '@/plugins/utils';
 
 const emit = defineEmits(['close', 'update:modelValue']);
 

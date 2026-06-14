@@ -37,7 +37,7 @@
               </v-col>
               <v-col cols="12" sm="auto" class="ml-sm-16">
                 <h3 class="text-subtitle-2 mb-2">Break</h3>
-                <v-icon v-if="viewItem.break" icon="mdi-check-circle" />
+                <v-icon v-if="normalizeBoolean(viewItem.break)" icon="mdi-check-circle" />
                 <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
               </v-col>
               <v-col cols="12" sm="auto" class="ml-sm-16">
@@ -77,7 +77,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { formatDateString, totalHours } from '@/plugins/utils';
+import { formatDateString, normalizeBoolean, totalHours } from '@/plugins/utils';
 
 const emit = defineEmits(['close', 'update:modelValue']);
 

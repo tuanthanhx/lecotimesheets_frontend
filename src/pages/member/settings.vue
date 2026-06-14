@@ -128,6 +128,8 @@ const isLoading = ref(false);
 const showPassword = ref(false);
 const formAlert = ref('');
 
+const getDobValue = (value) => (value ? formatDateString(value) : null);
+
 onMounted(async () => {
   try {
     const response = await axios.get('/settings');
@@ -165,7 +167,7 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
   }),
   initialValues: {
     name: user.value.name,
-    dob: user.value.dob ? new Date(user.value.dob) : null,
+    dob: getDobValue(user.value.dob),
     phone: user.value.phone,
     address: user.value.address,
     username: user.value.username,
@@ -184,7 +186,7 @@ watch(
         password: '',
         password_confirm: '',
         name: newValue.name,
-        dob: newValue.dob ? new Date(newValue.dob) : null,
+        dob: getDobValue(newValue.dob),
         phone: newValue.phone,
         address: newValue.address,
         language: newValue.language,
@@ -220,7 +222,7 @@ const submit = handleSubmit(async (values) => {
     const object = {
       username: values.username,
       name: values.name,
-      dob: values.dob ? formatDateString(values.dob) : null,
+      dob: getDobValue(values.dob),
       phone: values.phone,
       address: values.address,
       language: values.language,
@@ -259,7 +261,7 @@ const reset = async () => {
           password: '',
           password_confirm: '',
           name: user.value.name,
-          dob: user.value.dob ? formatDateString(user.value.dob) : null,
+          dob: getDobValue(user.value.dob),
           phone: user.value.phone,
           address: user.value.address,
           language: user.value.language,

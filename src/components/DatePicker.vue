@@ -65,22 +65,33 @@ const emit = defineEmits(['update:modelValue']);
 const isMenuOpen = ref(false);
 const selectedDate = ref(modelValue);
 const today = dayjs().format('YYYY-MM-DD');
+let isSyncingModelValue = false;
+
+const normalizeDate = (date) => (date ? formatDateString(date) : '');
 
 const formattedDate = computed(() => {
-  if (selectedDate.value) {
-    return formatDateString(selectedDate.value);
-  }
-  return '';
+  return normalizeDate(selectedDate.value);
 });
 
 watch(
   () => modelValue,
   (newDate) => {
+    if (normalizeDate(newDate) === normalizeDate(selectedDate.value)) {
+      return;
+    }
+    isSyncingModelValue = true;
     selectedDate.value = newDate;
   },
 );
 
-watch(selectedDate, (newDate) => {
+watch(selectedDate, (newDate, oldDate) => {
+  if (isSyncingModelValue) {
+    isSyncingModelValue = false;
+    return;
+  }
+  if (normalizeDate(newDate) === normalizeDate(oldDate)) {
+    return;
+  }
   emit('update:modelValue', newDate);
   isMenuOpen.value = false;
 });

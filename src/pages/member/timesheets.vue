@@ -87,7 +87,7 @@
           {{ formatHourString(item.time_worked) }}
         </template>
         <template #[`item.break`]="{ item }">
-          <v-icon v-if="item.break" icon="mdi-check-circle" />
+          <v-icon v-if="normalizeBoolean(item.break)" icon="mdi-check-circle" />
           <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
         </template>
         <template #[`item.amount`]="{ item }">
@@ -141,7 +141,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from '@/plugins/axios';
-import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, sortArray } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, normalizeBoolean, sortArray } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 import { useConfirmDialog } from '@/plugins/confirm_dialogs';
 

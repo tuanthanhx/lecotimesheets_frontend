@@ -28,6 +28,10 @@ export function formatHourString(count) {
   return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
 }
 
+export function normalizeBoolean(value) {
+  return value === true || value === 1 || value === '1' || value === 'true';
+}
+
 export function totalHours(start, end, hasBreak) {
   if (!start || !end) {
     return null;
@@ -35,7 +39,7 @@ export function totalHours(start, end, hasBreak) {
   const startTime = dayjs(`2024-01-01T${start}`);
   const endTime = dayjs(`2024-01-01T${end}`);
   const duration = endTime.diff(startTime, 'hour', true);
-  const breakTime = hasBreak ? 0.5 : 0;
+  const breakTime = normalizeBoolean(hasBreak) ? 0.5 : 0;
   const totalHoursWorked = duration - breakTime;
   const totalHoursText = formatHourString(totalHoursWorked);
   return {

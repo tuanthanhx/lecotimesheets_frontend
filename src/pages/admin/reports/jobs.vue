@@ -46,7 +46,7 @@
         </template>
         <template #[`item.time_range`]="{ item }"> {{ formatTimeString(item.start_time) }} - {{ formatTimeString(item.end_time) }} </template>
         <template #[`item.break`]="{ item }">
-          <v-icon v-if="item.break" icon="mdi-check-circle" />
+          <v-icon v-if="normalizeBoolean(item.break)" icon="mdi-check-circle" />
           <v-icon v-else icon="mdi-checkbox-blank-circle-outline" />
         </template>
         <template #[`item.time_worked`]="{ item }">
@@ -123,7 +123,7 @@ import { ref, computed, onMounted } from 'vue';
 import axios from '@/plugins/axios';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'vue-chartjs';
-import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, sortArray } from '@/plugins/utils';
+import { formatDateString, formatTimeString, formatCurrencyString, formatHourString, normalizeBoolean, sortArray } from '@/plugins/utils';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

@@ -129,7 +129,7 @@ import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import dayjs from 'dayjs';
 import axios from '@/plugins/axios';
-import { formatDateString, totalHours } from '@/plugins/utils';
+import { formatDateString, normalizeBoolean, totalHours } from '@/plugins/utils';
 import { useMessageDialog } from '@/plugins/message_dialogs';
 
 const { isMessageDialogVisible, messageTitle, messageText, messageType, showError } = useMessageDialog();
@@ -220,7 +220,7 @@ const { meta, errors, defineField, handleSubmit, resetForm } = useForm({
     start_time: editItem.value.start_time,
     end_time: editItem.value.end_time,
     note: editItem.value.note,
-    has_break: editItem.value.break ? true : false,
+    has_break: normalizeBoolean(editItem.value.break),
     user: props.role === 'admin' ? editItem.value.user_id : undefined,
     status: props.role === 'admin' ? editItem.value.status : undefined,
   },
@@ -237,7 +237,7 @@ watch(
         start_time: newValue.start_time,
         end_time: newValue.end_time,
         note: newValue.note,
-        has_break: newValue.break ? true : false,
+        has_break: normalizeBoolean(newValue.break),
         user: props.role === 'admin' ? newValue.user_id : undefined,
         status: props.role === 'admin' ? newValue.status : undefined,
       },
