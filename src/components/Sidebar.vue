@@ -7,7 +7,7 @@
   </v-app-bar>
 
   <div class="overlay" :class="{ 'is-active': showMenu }" @click="showMenu = false"></div>
-  <v-navigation-drawer v-model="showMenu" app permanent class="py-6 common-drawer" :class="{ active: showMenu }" :width="300" color="#2b343f">
+  <v-navigation-drawer v-model="showMenu" app permanent class="py-6 common-drawer" :class="{ active: showMenu }" :width="mdAndDown ? 500 : 300" color="#2b343f">
     <v-card width="260" height="80" class="d-none d-lg-flex align-center mx-auto mb-8" color="#fff" rounded>
       <v-img width="220" height="auto" aspect-ratio="220/66" src="@/assets/img/logo.png" />
     </v-card>
