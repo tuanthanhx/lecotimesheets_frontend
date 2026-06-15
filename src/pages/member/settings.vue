@@ -235,8 +235,6 @@ const submit = handleSubmit(async (values) => {
       localStorage.setItem('language', object.language);
       locale.value = object.language;
       formAlert.value = 'Settings updated successfully!';
-      console.log(response.data);
-      console.log(user.value);
     }
   } catch (error) {
     console.error(error);

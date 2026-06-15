@@ -198,7 +198,6 @@ const submit = handleSubmit(async (values) => {
       material_cost: values.material_cost,
       status: normalizeSelectId(values.status),
     };
-    console.log(object);
     const response = await axios.put(`/jobs/${editItem.value.id}`, object);
     if (response?.data) {
       isModalVisible.value = false;
