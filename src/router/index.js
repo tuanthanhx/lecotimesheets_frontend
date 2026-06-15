@@ -17,53 +17,29 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  // Redirect root to login
-  if (to.path === '/') {
-    next('/login');
-    return;
-  }
+router.beforeEach(async (to) => {
+  if (to.path === '/') return '/login';
 
-  // Handle redirections for admin and member pages with undefined names
-  if (to.path.startsWith('/admin') && to.name === undefined) {
-    next('/admin/timesheets');
-    return;
-  } else if (to.path.startsWith('/member') && to.name === undefined) {
-    next('/member/timesheets');
-    return;
-  }
+  if (to.path.startsWith('/admin') && to.name === undefined) return '/admin/timesheets';
+  if (to.path.startsWith('/member') && to.name === undefined) return '/member/timesheets';
 
-  // Skip authentication check for log-related paths
-  if (to.path.startsWith('/log')) {
-    next();
-    return;
-  }
+  if (to.path.startsWith('/log')) return true;
 
-  // Check login status for non-log paths
-  axios
-    .post('/auth/is_login')
-    .then((response) => {
-      if (response.data) {
-        // Set Language
-        if (response.data.language) {
-          localStorage.setItem('language', response.data.language);
-          i18n.global.locale.value = response.data.language;
-        }
-        // Redirect based on user group and requested path
-        if (response.data.group === 2 && to.path.startsWith('/admin')) {
-          next({ name: '/member/timesheets' });
-        } else if (response.data.group === 6 && to.path.startsWith('/member')) {
-          next({ name: '/admin/timesheets' });
-        } else {
-          next();
-        }
-      } else {
-        next({ name: '/login' });
+  try {
+    const response = await axios.post('/auth/is_login');
+    if (response.data) {
+      if (response.data.language) {
+        localStorage.setItem('language', response.data.language);
+        i18n.global.locale.value = response.data.language;
       }
-    })
-    .catch(() => {
-      next({ name: '/login' });
-    });
+      if (response.data.group === 2 && to.path.startsWith('/admin')) return { name: '/member/timesheets' };
+      if (response.data.group === 6 && to.path.startsWith('/member')) return { name: '/admin/timesheets' };
+      return true;
+    }
+    return { name: '/login' };
+  } catch {
+    return { name: '/login' };
+  }
 });
 
 export default router;
