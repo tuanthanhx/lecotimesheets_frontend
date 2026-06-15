@@ -73,7 +73,7 @@
       </v-data-table-server>
     </v-sheet>
 
-    <v-sheet v-show="selectedJob && job.revenue" class="pa-8 mt-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
+    <v-sheet v-show="selectedJob" class="pa-8 mt-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-row>
         <v-col cols="12" md="6" order-md="last">
           <div class="chart-wrapper">
@@ -110,7 +110,7 @@
           <v-row>
             <v-col cols="auto">
               <h3 class="text-subtitle-2 mb-2" style="color: #888">Profit</h3>
-              <span class="text-h5">{{ formatCurrencyString(job.revenue - job.material_cost - totalAmount) }}</span>
+              <span class="text-h5">{{ formatCurrencyString((job.revenue || 0) - (job.material_cost || 0) - totalAmount) }}</span>
             </v-col>
           </v-row>
         </v-col>
@@ -201,7 +201,7 @@ const chartData = computed(() => ({
   datasets: [
     {
       backgroundColor: ['#66BB6A', '#FFA726', '#FF7043', '#42A5F5'],
-      data: [job.value.material_cost, paidAmount.value, unpaidAmount.value, job.value.revenue - job.value.material_cost - totalAmount.value],
+      data: [job.value.material_cost || 0, paidAmount.value, unpaidAmount.value, (job.value.revenue || 0) - (job.value.material_cost || 0) - totalAmount.value],
     },
   ],
 }));

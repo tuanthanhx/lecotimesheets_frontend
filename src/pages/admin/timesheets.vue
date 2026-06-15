@@ -4,7 +4,18 @@
       <v-col cols="auto">
         <h1 class="text-h5 pt-2 pt-sm-0 mb-4 mb-sm-8">Timesheets</h1>
       </v-col>
-      <v-col cols="auto" class="ml-auto">
+      <v-col cols="auto" class="ml-auto d-flex flex-wrap align-center ga-3">
+        <v-btn
+          v-if="selectedItems.length > 0"
+          class="text-none"
+          prepend-icon="mdi-checkbox-marked-circle-outline"
+          height="50"
+          color="#4caf50"
+          :loading="bulkApproving"
+          @click="approveSelectedTimesheets"
+        >
+          Approve ({{ selectedItems.length }})
+        </v-btn>
         <v-btn
           class="text-none"
           prepend-icon="mdi-plus"
@@ -76,11 +87,13 @@
     <v-sheet class="pa-4" color="#ffffff" border="sm" rounded="lg" elevation="2">
       <v-data-table-server
         v-model:items-per-page="tableOptions.itemsPerPage"
+        v-model="selectedItems"
         :headers="tableHeaders"
         :items="timesheets"
         :items-length="tableTotalItems"
         :loading="tableLoading"
         item-value="id"
+        show-select
         :hover="true"
         @update:options="search"
       >
@@ -206,6 +219,8 @@ const statuses = ref([
 ]);
 
 const timesheets = ref([]);
+const selectedItems = ref([]);
+const bulkApproving = ref(false);
 
 const tableLoading = ref(true);
 const tableTotalItems = ref(0);
@@ -317,6 +332,27 @@ const getFilters = async () => {
     }
   } catch (error) {
     console.error(error);
+  }
+};
+
+const approveSelectedTimesheets = async () => {
+  const toApprove = timesheets.value.filter(
+    (t) => selectedItems.value.some((id) => idValueComparator(t.id, id)) && idValueComparator(t.status, 1),
+  );
+  if (toApprove.length === 0) {
+    showInfo('No "In review" timesheets selected.', null);
+    return;
+  }
+  bulkApproving.value = true;
+  try {
+    await Promise.all(toApprove.map((t) => axios.post(`/timesheets/${t.id}/approve`)));
+    selectedItems.value = [];
+    search();
+    showInfo(`${toApprove.length} timesheet(s) have been approved.`, null);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    bulkApproving.value = false;
   }
 };
 
