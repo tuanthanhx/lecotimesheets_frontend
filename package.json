@@ -1,5 +1,5 @@
 {
-  "name": "leco_timesheets_frontend",
+  "name": "tiko_timesheets_frontend",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",

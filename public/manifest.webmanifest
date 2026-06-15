@@ -1,7 +1,7 @@
 {
-  "name": "Leco Timesheets",
+  "name": "Tiko Timesheets",
   "short_name": "Timesheets",
-  "description": "Leco Timesheets",
+  "description": "Tiko Timesheets",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
