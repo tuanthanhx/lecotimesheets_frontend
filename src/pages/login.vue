@@ -92,6 +92,7 @@ const submit = handleSubmit(async (values) => {
     if (response?.data) {
       localStorage.setItem('access_token', response.data.access_token);
       userStore.setUser({
+        id: response.data.id,
         username: response.data.username,
         group: response.data.group,
       });

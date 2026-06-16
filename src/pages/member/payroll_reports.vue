@@ -23,6 +23,23 @@
       </v-data-table>
     </v-sheet>
 
+    <v-sheet class="pa-8 mt-8" color="#ffffff" border="sm" rounded="lg" elevation="2">
+      <v-row class="mb-2">
+        <v-col cols="12" md="auto" class="mr-md-16">
+          <h3 class="text-subtitle-2 mb-2" style="color: #888">Total Amount</h3>
+          <span class="text-h5">{{ formatCurrencyString(totalAmount) }}</span>
+        </v-col>
+        <v-col cols="12" md="auto" class="mr-md-16">
+          <h3 class="text-subtitle-2 mb-2" style="color: #888">Paid</h3>
+          <span class="text-h5">{{ formatCurrencyString(paidAmount) }}</span>
+        </v-col>
+        <v-col cols="12" md="auto">
+          <h3 class="text-subtitle-2 mb-2" style="color: #888">Unpaid</h3>
+          <span class="text-h5">{{ formatCurrencyString(unpaidAmount) }}</span>
+        </v-col>
+      </v-row>
+    </v-sheet>
+
     <ModalPayrollDetail v-model="isModalPayrollDetailVisible" :timesheets="viewItem" @close="closeModalPayrollDetail" />
   </v-container>
 </template>
@@ -31,8 +48,13 @@
 import { ref, onMounted } from 'vue';
 import axios from '@/plugins/axios';
 import { formatDateString, formatHourString, formatCurrencyString } from '@/plugins/utils';
+import { useUserStore } from '@/stores/userStore';
 
+const userStore = useUserStore();
 const payrolls = ref([]);
+const totalAmount = ref(0);
+const paidAmount = ref(0);
+const unpaidAmount = ref(0);
 
 const fetchPayrolls = async () => {
   try {
@@ -40,6 +62,22 @@ const fetchPayrolls = async () => {
     if (response?.data?.data) {
       payrolls.value = response.data.data;
     }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const fetchAmounts = async () => {
+  const userId = userStore.userData?.id;
+  if (!userId) {
+    return;
+  }
+
+  try {
+    const response = await axios.get(`/timesheets/amount?user=${userId}`);
+    totalAmount.value = response?.data?.totalAmount ?? 0;
+    paidAmount.value = response?.data?.paidAmount ?? 0;
+    unpaidAmount.value = response?.data?.unpaidAmount ?? 0;
   } catch (error) {
     console.error(error);
   }
@@ -67,6 +105,7 @@ const closeModalPayrollDetail = () => {
 
 onMounted(() => {
   fetchPayrolls();
+  fetchAmounts();
 });
 </script>
 
