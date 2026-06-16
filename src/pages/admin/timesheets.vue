@@ -12,9 +12,22 @@
           height="50"
           color="#4caf50"
           :loading="bulkApproving"
+          :disabled="bulkUnapproving"
           @click="approveSelectedTimesheets"
         >
           Approve ({{ selectedItems.length }})
+        </v-btn>
+        <v-btn
+          v-if="selectedItems.length > 0"
+          class="text-none"
+          prepend-icon="mdi-undo"
+          height="50"
+          color="#1e88c9"
+          :loading="bulkUnapproving"
+          :disabled="bulkApproving"
+          @click="unapproveSelectedTimesheets"
+        >
+          Unapprove ({{ selectedItems.length }})
         </v-btn>
         <v-btn
           class="text-none"
@@ -221,6 +234,7 @@ const statuses = ref([
 const timesheets = ref([]);
 const selectedItems = ref([]);
 const bulkApproving = ref(false);
+const bulkUnapproving = ref(false);
 
 const tableLoading = ref(true);
 const tableTotalItems = ref(0);
@@ -353,6 +367,27 @@ const approveSelectedTimesheets = async () => {
     console.error(error);
   } finally {
     bulkApproving.value = false;
+  }
+};
+
+const unapproveSelectedTimesheets = async () => {
+  const toUnapprove = timesheets.value.filter(
+    (t) => selectedItems.value.some((id) => idValueComparator(t.id, id)) && idValueComparator(t.status, 2),
+  );
+  if (toUnapprove.length === 0) {
+    showInfo('No "Approved" timesheets selected.', null);
+    return;
+  }
+  bulkUnapproving.value = true;
+  try {
+    await Promise.all(toUnapprove.map((t) => axios.post(`/timesheets/${t.id}/unapprove`)));
+    selectedItems.value = [];
+    search();
+    showInfo(`${toUnapprove.length} timesheet(s) have been unapproved.`, null);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    bulkUnapproving.value = false;
   }
 };
 
