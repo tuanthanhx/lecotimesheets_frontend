@@ -41,10 +41,12 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
+import { useAppStore } from '@/stores/app';
 import { useUserStore } from '@/stores/userStore';
 
 const router = useRouter();
 
+const appStore = useAppStore();
 const userStore = useUserStore();
 const userData = userStore.userData;
 
@@ -64,9 +66,14 @@ onMounted(() => {
 });
 
 const navigate = (link) => {
+  if (router.currentRoute.value.path !== link) {
+    appStore.startRouteLoading();
+  }
+
   if (mdAndDown.value && showMenu.value) {
     showMenu.value = false;
   }
+
   router.push(link);
 };
 </script>

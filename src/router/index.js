@@ -7,8 +7,12 @@
 // Composables
 import axios from '@/plugins/axios';
 import i18n from '@/i18n/i18n';
+import pinia from '@/stores';
+import { useAppStore } from '@/stores/app';
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from 'vue-router/auto-routes';
+
+const appStore = useAppStore(pinia);
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +21,11 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to) => {
+router.beforeEach(async (to, from) => {
+  if (to.fullPath !== from.fullPath) {
+    appStore.startRouteLoading();
+  }
+
   if (to.path === '/') return '/login';
 
   if (to.path.startsWith('/admin') && to.name === undefined) return '/admin/timesheets';
@@ -40,6 +48,14 @@ router.beforeEach(async (to) => {
   } catch {
     return { name: '/login' };
   }
+});
+
+router.afterEach(() => {
+  appStore.stopRouteLoading();
+});
+
+router.onError(() => {
+  appStore.stopRouteLoading();
 });
 
 export default router;
