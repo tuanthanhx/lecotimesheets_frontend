@@ -257,6 +257,7 @@ const tableHeaders = ref([
 ]);
 
 const search = async (options = tableOptions.value) => {
+  selectedItems.value = [];
   tableLoading.value = true;
   try {
     const response = await axios.get(
